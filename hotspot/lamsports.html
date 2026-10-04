@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>عرض المحتوى</title>
+  <style>
+    body, html {
+      margin:0; padding:0; width:100%; height:100%;
+      background:#000;
+      overflow:hidden;
+    }
+    iframe {
+      border:none;
+      width:100%; 
+      height:100%;
+      display:block;
+    }
+    /* إخفاء زر ملء الشاشة على الموبايل إذا الشاشة أفقية */
+    #fullscreenBtn {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <button id="fullscreenBtn">⛶ ملء الشاشة</button>
+  <iframe id="videoFrame" src="http://89.117.50.191:8088/watch/AL_KHALED_Net2025" allowfullscreen></iframe>
+
+  <script>
+    const iframe = document.getElementById("videoFrame");
+    const btn = document.getElementById("fullscreenBtn");
+
+    // زر الملء اليدوي
+    btn.addEventListener("click", () => {
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) {
+        iframe.msRequestFullscreen();
+      }
+    });
+
+    // مراقبة التدوير - لو الشاشة صارت landscape خلي iframe يتمدد
+    function handleResize() {
+      if (window.innerWidth > window.innerHeight) {
+        document.body.style.background = "#000";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        btn.style.display = "none"; // نخفي الزر لأنه تلقائي
+      } else {
+        btn.style.display = "block"; // نظهر الزر بالوضع الطولي
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
+    handleResize();
+  </script>
+</body>
+</html>

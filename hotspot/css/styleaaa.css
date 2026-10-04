@@ -1,0 +1,385 @@
+@import url(../fonts/Almarai.css);
+
+a, body, div, form, html, img, input, label, p, span {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: Almarai, sans-serif, Arial;
+    direction: rtl
+}
+
+body, html {
+    min-height: 100%;
+    overflow-x: hidden
+}
+
+input, label, select {
+    vertical-align: middle;
+    white-space: normal;
+    background: 0 0;
+    line-height: 1
+}
+
+input[type=password], input[type=text], input[type=tel], select {
+    width: 100%;
+    border: 1px solid;
+    background-color: rgba(255, 255, 255, .8);
+    height: 44px;
+    padding: 3px 20px 3px 40px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    -webkit-transition: -webkit-box-shadow .3s ease-in-out;
+    transition: -webkit-box-shadow .3s ease-in-out;
+    transition: box-shadow .3s ease-in-out, -webkit-box-shadow .3s ease-in-out
+}
+
+body {
+	background: ffa200;
+	background: -webkit-linear-gradient(135deg, rgb(37 37 37) 0, hsl(0deg 0% 7%) 70%), linear-gradient(25deg, rgb(17 17 17) 10%, hsl(0deg 0% 16%) 80%), linear-gradient(315deg, hsl(0deg 0% 9%) 15%, hsl(0deg 0% 17%) 80%), linear-gradient(245deg, hsl(0deg 0% 8%) 100%, hsl(0deg 0% 16%) 70%);
+	background: 1b1b1b;
+}
+
+a {
+	color: #FFB100;
+}
+
+input, label {
+    vertical-align: middle;
+    white-space: normal;
+    background: 0 0;
+    line-height: 1
+}
+
+label {
+    position: relative;
+    display: block
+}
+
+p::first-letter {
+    text-transform: uppercase
+}
+
+.main {
+	min-height: calc(100vh - 90px);
+	width: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	 background: #000000; /* Old Browsers */
+  background: -webkit-radial-gradient(top right,#000000,#00ffe0); /*Safari 5.1-6*/
+  background: -o-radial-gradient(top right,#000000,#00ffe0); /*Opera 11.1-12*/
+  background: -moz-radial-gradient(top right,#000000,#00ffe0); /*Fx 3.6-15*/
+  background: radial-gradient(top right, #000000, #00ffe0); /*Standard*/
+
+  direction: rtl;
+}
+
+.ie-fixMinHeight {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex
+}
+
+.ico {
+    height: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 13px;
+    margin-left: 14px
+}
+
+.logo {
+    max-width: 200px;
+    display: block;
+    margin: 0 auto 10px auto
+}
+
+.logo * {
+    fill: #fff
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 24px !important
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.wrap {
+    margin: auto;
+    padding: 40px;
+    -webkit-transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out
+}
+
+@media only screen and (min-width: 1px) and (max-width: 575px) {
+    .wrap {
+        width: 100%
+    }
+}
+
+form {
+    width: 100%;
+    margin-bottom: 20px
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0
+    }
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0
+    }
+    to {
+        opacity: 1
+    }
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn
+}
+
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+}
+
+.info {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px
+}
+
+input {
+    outline: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    direction: ltr;
+    text-align: center
+}
+
+input:focus {
+    outline: 0
+}
+
+input[type=password], input[type=text],input[type=number], input[type=tel] {
+    width: 100%;
+    border: 1px solid;
+    background-color: rgba(255, 255, 255, .8);
+    height: 44px;
+    padding: 3px 20px 3px 40px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    -webkit-transition: -webkit-box-shadow .3s ease-in-out;
+    transition: -webkit-box-shadow .3s ease-in-out;
+    transition: box-shadow .3s ease-in-out, -webkit-box-shadow .3s ease-in-out
+}
+
+input[type=password]:focus, input[type=text]:focus,input[type=number]:focus, input[type=tel]:focus {
+    -webkit-box-shadow: 0 0 5px 0 #fff;
+    box-shadow: 0 0 5px 0 #fff
+}
+
+.bt {
+    opacity: .4
+}
+
+.sell-points, input[type=submit] {
+    background: #000000;
+    color: #fff;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    height: 44px;
+    border-radius: 6px;
+    -webkit-transition: background .3s ease-in-out;
+    transition: background .3s ease-in-out;
+}
+
+.sell-points:hover, input[type=submit]:focus, input[type=submit]:hover {
+	background-color: #585858
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px
+}
+
+table td {
+    color: #fff;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 10px 4px 10px 0
+}
+
+table td:first-child {
+    font-weight: 700
+}
+
+.info.alert {
+    color: #da3d41
+}
+
+@media (min-width: 576px) {
+    .wrap {
+        width: 410px
+    }
+
+    * {
+        font-size: 14px !important;
+    }
+}
+
+#navbar {
+    background: linear-gradient(245deg, #000000 50%, hsl(0deg 0% 13%) 50%);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    transition: top .3s;
+}
+
+#navbar a {
+    white-space: nowrap;
+    float: right;
+    width: 25%;
+    display: block;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    text-decoration: none
+}
+
+#navbar a:hover {
+    background: linear-gradient(245deg, #212121 82%, rgba(49,49,49,1.00) 0);
+    color: #fff
+}
+
+#navbarReverse a:hover {
+    background: linear-gradient(65deg, #000000 83%, rgba(49,49,49,1.00) 0);
+    color: #fff
+}
+
+@media only screen and (min-width: 1px) and (max-width: 390px) {
+    td, th {
+        font-size: 80%;
+    }
+
+    #navbar a {
+        font-size: small
+    }
+}
+
+.sell-points {
+    padding: 11px;
+    margin-bottom: 10px;
+    height: 44px
+}
+
+.custom-wrap {
+    padding: 0 40px 0 40px;
+    margin-top: 100px
+}
+
+td, th {
+    padding: 15px;
+    background-color: rgba(255, 255, 255, .2);
+    color: #fff;
+}
+
+th {
+    text-align: center
+}
+
+thead th {
+    background-color: #000000;
+}
+
+tbody tr:hover {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+tbody td {
+    text-align: center
+}
+
+tbody td:hover:before {
+    content: "";
+    left: 0;
+    right: 0;
+    top: -9999px;
+    bottom: -9999px;
+    background-color: rgba(255, 255, 255, .2);
+    z-index: -1
+}
+
+@media screen and (max-width: 452px) {
+    table {
+        border: 0;
+    }
+
+    table caption {
+        font-size: 1.3em;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        padding-right: 5px;
+        padding-left: 5px;
+        font-size: .8em;
+        text-align: left;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        float: right;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+}
+
+.address-title {
+    text-align: center;
+}

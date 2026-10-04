@@ -1,0 +1,137 @@
+﻿<html>
+<head>
+    $(if refresh-timeout)
+    <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
+    $(endif)
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>الخالد نت</title>
+    <link rel="stylesheet" href="css/styleaaa.css">
+    <script src="js/mine.js"></script>
+    <script src="js/hotCookie.min.js"></script>
+    <script>
+        function openLogout() {
+            if (window.name !== 'hotspot_status') return true;
+            open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
+            window.close();
+            return false;
+        }
+    </script>
+
+</head>
+<body>
+<div class="ie-fixMinHeight">
+    <div class="main">
+        <div class="wrap animated fadeIn">
+            <img src="img/logo.png" class="logo" alt="عدن">
+			
+			
+			  <p class="info $(if error)alert$(endif)">
+			  
+			 
+			<br><br>
+						عزيزي العميل تتميز الشبكة بتطبيق لتسجيل الدخول gمعرفة الرصيد والوقت المتبقي
+						<br>
+						<a href="ALKHALID_LOGIN.apk" class="btn btn-small">اضغط هنا للتحميل</a>
+                        <br><br>
+                        	<br>	
+                        <br>
+						عزيزي العميل لمشاهدة بث المباريات اضغط هنا
+			</p>
+			<p class="info $(if error)alert$(endif)">
+			  
+			 
+			<a href="live/index.html">
+	<img border="0" src="33.png" width="238" height="136"></a><br>
+			</p>
+            <h1 class="logo-title">بيانات الاستخدام</h1>
+            <br>
+            <h2 style="text-align: center">
+                مرحبا
+                <span>
+                    
+                </span>
+            </h2>
+           
+            <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
+                <table>
+                    <tr>
+                        <td>عنوان الشبكة :</td>
+                        <td>$(ip)</td>
+                    </tr>
+                    <tr>
+                        <td>الرفع:</td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicBytes("$(bytes-in)"));
+                            </script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>التحميل:</td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicBytes("$(bytes-out)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(if remain-bytes-total)
+                    <tr>
+                        <td>التحميل المتبقي: </td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicBytes("$(remain-bytes-total)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(endif)
+
+                    <tr>
+                        <td>الوقت المستهلك : </td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicTime("$(uptime)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(if session-time-left)
+                    <tr>
+                        <td>الوقت المتبقي : </td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicTime("$(session-time-left)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(endif)
+                </table>
+                $(if login-by-mac != 'yes')
+                <input type="submit" value="تسجيل الخروج" style="margin-bottom: 7px">
+                <input type="submit" name="erase-cookie" value="خروج نهائي" clear-hot-cookie>
+                $(endif)
+				
+				            </form>
+
+        <p class="info bt">
+			  
+			  <span>خدمة العملاء </span> <br>
+                    <span>776418435-734059346</span>
+
+                        <br><br>
+                    <span>للتواصل المباشر عبر واتساب </span>
+                    <span><a href="https://wa.me/967734059346">اضغط هنا</a></span>
+                </p>
+	   </div>
+			<p class="info $(if error)alert$(endif)"> 
+<br/> Copyright © 2023 ALKHALID NET
+ <br/> برمجة وتركيب
+<br/> م/ محمود سهيل سعيدي
+<br/> 772739060 - 737370707
+</p>
+    </div>
+	
+</div>
+</body>
+</html>

@@ -3,22 +3,22 @@
 /* ===== Root Variables - Customize Colors Here ===== */
 :root {
   /* Primary Colors */
-  --loyalty-primary-color: #881337;
-  --loyalty-primary-dark: #4c0519;
+  --loyalty-primary-color: #0f766e;
+  --loyalty-primary-dark: #04272b;
   --loyalty-accent-color: #D4AF37;         /* اللون الأساسي الفاتح */
   --loyalty-text-success: #FFFFFF;           /* نص أبيض */
   /* Highlight Colors */
-  --loyalty-highlight-bg-start: rgba(80, 20, 25, 0.45);     /* بداية تدرج الصندوق المميز */
-  --loyalty-highlight-bg-end: rgba(136, 19, 55, 0.35);       /* نهاية تدرج الصندوق المميز */
+  --loyalty-highlight-bg-start: rgba(15, 118, 110, 0.40);     /* بداية تدرج الصندوق المميز */
+  --loyalty-highlight-bg-end: rgba(13, 148, 136, 0.30);       /* نهاية تدرج الصندوق المميز */
   
   /* Accent Colors */
   --loyalty-accent-color: #D4AF37;           /* لون التمييز (ذهبي) */
   --loyalty-accent-dark: #B8860B;            /* لون التمييز الداكن */
   
   /* Background Colors */
-  --loyalty-bg-white: #501419;               /* خلفية عنابية */
-  --loyalty-bg-gray: #30060e;                /* خلفية عنابية داكنة */
-  --loyalty-overlay-bg: rgba(18, 2, 6, 0.75); /* خلفية الأوفرلاي */
+  --loyalty-bg-white: #0f766e;               /* خلفية فيروزية */
+  --loyalty-bg-gray: #04272b;                /* خلفية فيروزية داكنة */
+  --loyalty-overlay-bg: rgba(2, 20, 24, 0.75); /* خلفية الأوفرلاي */
   
   /* Text Colors */
   --loyalty-text-dark: #FFFFFF;              /* نص داكن */
@@ -39,8 +39,8 @@
   --loyalty-btn-accent-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
   
   /* Scrollbar Colors */
-  --loyalty-scrollbar-track: #180208;        /* مسار السكرول */
-  --loyalty-scrollbar-thumb: #881337;        /* السكرول */
+  --loyalty-scrollbar-track: #021114;        /* مسار السكرول */
+  --loyalty-scrollbar-thumb: #0f766e;        /* السكرول */
   
   /* Close Button */
   --loyalty-close-hover-bg: rgba(212, 175, 55, 0.4);         /* لون زر الإغلاق عند التمرير */

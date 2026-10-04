@@ -1,0 +1,99 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>تم تسجيل الخروج</title>
+    <link rel="stylesheet" href="css/styleaaa.css">
+    <script src="js/mine.js"></script>
+    <script>
+        function openLogin() {
+            if (window.name !== 'hotspot_logout') return true;
+            open('$(link-login)', '_blank', '');
+            window.close();
+            return false;
+        }
+    </script>
+</head>
+
+<body>
+<div class="ie-fixMinHeight">
+    <div class="main">
+        <div class="wrap animated fadeIn">
+            <img src="img/logo.png" class="logo" alt="عدن">
+            <h1 class="logo-title">تم تسجيل خروجك بنجاح!</h1>
+            <p class="info">شكرا لاستخدامك شبكتنا</p>
+            <br>
+            <form action="$(link-login)" name="login" onSubmit="return openLogin()">
+                <table>
+                    <tr>
+                        <td>عنوان الشبكة :</td>
+                        <td>$(ip)</td>
+                    </tr>
+                    <tr>
+                        <td>التحميل:</td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicBytes("$(bytes-in)"));
+                            </script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>الرفع:</td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicBytes("$(bytes-out)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(if remain-bytes-total)
+                    <tr>
+                        <td>التحميل المتبقي:</td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicBytes("$(remain-bytes-total)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(endif)
+
+                    <tr>
+                        <td>الوقت المستهلك :</td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicTime("$(uptime)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(if session-time-left)
+                    <tr>
+                        <td>الوقت المتبقي :</td>
+                        <td>
+                            <script type="text/javascript">
+                                document.write(toArabicTime("$(session-time-left)"));
+                            </script>
+                        </td>
+                    </tr>
+                    $(endif)
+                </table>
+
+	
+
+                <input type="submit" value="تسجيل الدخول">
+            </form>
+        </div>
+		<p align="center">
+<br/> <font color="#FFFFFF">Copyright © 2023 ALKHALID NE</font>
+<br/> <font color="#FFFFFF">برمجة وتركيب</font>
+<br/> <font color="#FFFFFF">م/ محمود سهيل سعيدي</font>
+<br/> <font color="#FFFFFF">772739060 - 737370707
+</font></p>
+		<p align="center">
+</p>
+    </div>
+</div>
+
+</body>
+</html>

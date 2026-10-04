@@ -75,7 +75,7 @@ body.loyalty-system-disabled [data-loyalty-element] {
 }
 
 .loyalty-modal-content {
-  background: linear-gradient(165deg, #6c0e22 0%, #4a0716 50%, #2e040e 100%) !important;
+  background: linear-gradient(165deg, #09333a 0%, #06282d 50%, #031416 100%) !important;
   border: 1.5px solid rgba(212, 175, 55, 0.55) !important;
   border-radius: 20px !important;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.25) !important;
@@ -173,7 +173,7 @@ body.loyalty-system-disabled [data-loyalty-element] {
   font-size: 0.95rem !important;
   box-sizing: border-box !important;
   background: #FFFFFF !important;
-  color: #700B2B !important;
+  color: #0f766e !important;
   font-weight: 800 !important;
   text-align: center !important;
   font-family: 'Almarai', sans-serif !important;
@@ -192,7 +192,7 @@ button.loyalty-btn {
   width: 100% !important;
   padding: 11px 16px !important;
   background: linear-gradient(135deg, #E6C27A 0%, #D4AF37 50%, #B8860B 100%) !important;
-  color: #2D0509 !important;
+  color: #04272b !important;
   border: none !important;
   border-radius: 12px !important;
   font-size: 15px !important;
@@ -268,7 +268,7 @@ button.loyalty-btn:active {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  background: rgba(80, 20, 25, 0.35);
+  background: rgba(15, 118, 110, 0.25);
   border: 1px solid rgba(212, 175, 55, 0.35);
   border-radius: 12px;
   padding: 10px 14px;
@@ -276,7 +276,7 @@ button.loyalty-btn:active {
 }
 
 .card-type-item:hover {
-  background: rgba(100, 25, 32, 0.5);
+  background: rgba(20, 184, 166, 0.35);
   border-color: #D4AF37;
   transform: translateY(-1px);
 }
@@ -310,7 +310,7 @@ button.loyalty-btn:active {
 
 /* Saved Cards Items in Modal */
 .saved-card-item {
-  background: rgba(80, 20, 25, 0.35) !important;
+  background: rgba(15, 118, 110, 0.25) !important;
   border: 1px solid rgba(212, 175, 55, 0.4) !important;
   border-radius: 12px !important;
   padding: 12px 14px !important;
@@ -320,7 +320,7 @@ button.loyalty-btn:active {
 
 .saved-card-item:hover {
   border-color: #D4AF37 !important;
-  background: rgba(100, 25, 32, 0.5) !important;
+  background: rgba(20, 184, 166, 0.35) !important;
 }
 
 .card-code {
@@ -387,7 +387,7 @@ button.loyalty-btn:active {
   width: 280px;
   height: 280px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(190, 18, 60, 0.35) 0%, rgba(108, 14, 34, 0) 70%);
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.35) 0%, rgba(15, 118, 110, 0) 70%);
   filter: blur(40px);
   pointer-events: none;
   animation: floatAmbient 6s ease-in-out infinite alternate;
@@ -407,11 +407,11 @@ button.loyalty-btn:active {
 }
 
 .redirect-loading-card {
-  background: linear-gradient(165deg, rgba(65, 8, 22, 0.88) 0%, rgba(35, 5, 12, 0.92) 50%, rgba(15, 23, 42, 0.95) 100%);
+  background: linear-gradient(165deg, rgba(15, 118, 110, 0.88) 0%, rgba(4, 39, 43, 0.92) 50%, rgba(2, 20, 24, 0.95) 100%);
   border: 1.5px solid rgba(212, 175, 55, 0.4);
   border-radius: 26px;
   box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85),
-              0 0 35px rgba(190, 18, 60, 0.35),
+              0 0 35px rgba(20, 184, 166, 0.35),
               0 0 45px rgba(14, 165, 233, 0.25),
               inset 0 1px 1px rgba(255, 255, 255, 0.2);
   padding: 32px 26px;
@@ -449,8 +449,8 @@ button.loyalty-btn:active {
 }
 
 .redirect-brand-tag.burgundy {
-  color: #fb7185;
-  text-shadow: 0 0 10px rgba(251, 113, 133, 0.5);
+  color: #2dd4bf;
+  text-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
 }
 
 .redirect-brand-tag.cyan {
@@ -524,11 +524,11 @@ button.loyalty-btn:active {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #881337 0%, #be123c 45%, #0284c7 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 45%, #0284c7 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 22px rgba(225, 29, 72, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 22px rgba(20, 184, 166, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.3);
   z-index: 2;
   animation: redirectFloat 2.5s ease-in-out infinite alternate;
 }
@@ -570,7 +570,7 @@ button.loyalty-btn:active {
 .redirect-progress-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #881337 0%, #e11d48 30%, #d4af37 60%, #38bdf8 100%);
+  background: linear-gradient(90deg, #0f766e 0%, #14b8a6 30%, #d4af37 60%, #38bdf8 100%);
   background-size: 250% 100%;
   border-radius: 999px;
   box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
@@ -588,7 +588,7 @@ button.loyalty-btn:active {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: linear-gradient(135deg, rgba(136, 19, 55, 0.35) 0%, rgba(14, 165, 233, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.35) 0%, rgba(14, 165, 233, 0.2) 100%);
   border: 1px solid rgba(212, 175, 55, 0.35);
   padding: 6px 14px;
   border-radius: 999px;
@@ -609,7 +609,7 @@ button.loyalty-btn:active {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #881337 0%, #be123c 40%, #0284c7 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 40%, #0284c7 100%);
   border: 1px solid rgba(212, 175, 55, 0.5);
   color: #ffffff !important;
   font-weight: 800;
@@ -617,7 +617,7 @@ button.loyalty-btn:active {
   padding: 6px 14px;
   border-radius: 12px;
   font-size: 0.88rem;
-  box-shadow: 0 4px 15px rgba(190, 18, 60, 0.35), 0 0 10px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 4px 15px rgba(20, 184, 166, 0.35), 0 0 10px rgba(56, 189, 248, 0.25);
   transition: all 0.25s ease;
   cursor: pointer;
 }
