@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title data-network-name>شبكة{{network-name}} اللاسلكيه</title>
+    <title data-network-name>شبكة تونس نت اللاسلكيه</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -76,6 +76,105 @@
     </style>
     <script>
         var hotspotConfig = window.hotspotConfig || {};
+        function applyInstantConfig(cfg) {
+            if (!cfg) return;
+            var netName = cfg['network-name'] ? ('' + cfg['network-name']).trim() : '';
+            var newsLine = cfg['news-line'] ? ('' + cfg['news-line']).trim() : '';
+            var srvNum = cfg['service-number'] ? ('' + cfg['service-number']).trim() : '';
+
+            if (netName) {
+                document.title = 'شبكة ' + netName + ' اللاسلكيه';
+                var brandEls = document.querySelectorAll('[data-network-name]');
+                for (var i = 0; i < brandEls.length; i++) {
+                    brandEls[i].textContent = netName;
+                }
+                var h1 = document.querySelector('h1');
+                if (h1 && (h1.textContent.indexOf('مرحبا بك') !== -1 || h1.hasAttribute('data-welcome-title'))) {
+                    h1.textContent = 'مرحبا بك في شبكة ' + netName + ' اللاسلكيه';
+                }
+            }
+            if (newsLine) {
+                var newsEls = document.querySelectorAll('[data-news-line]');
+                for (var j = 0; j < newsEls.length; j++) {
+                    newsEls[j].textContent = newsLine;
+                }
+            }
+            if (srvNum) {
+                var srvEls = document.querySelectorAll('[data-service-number]');
+                for (var k = 0; k < srvEls.length; k++) {
+                    srvEls[k].textContent = 'خدمة العملاء: ' + srvNum;
+                }
+                var srvLinks = document.querySelectorAll('a[href^="tel:"]');
+                for (var l = 0; l < srvLinks.length; l++) {
+                    srvLinks[l].setAttribute('href', 'tel:' + srvNum);
+                }
+                var cleanPhone = srvNum.replace(/\D/g, '');
+                var waPhone = cleanPhone.startsWith('967') ? cleanPhone : ('967' + cleanPhone);
+                var waText = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + (netName || 'تونس نت') + ' اللاسلكية');
+                var waLinks = document.querySelectorAll('.support-btn-whatsapp');
+                for (var m = 0; m < waLinks.length; m++) {
+                    waLinks[m].setAttribute('href', 'whatsapp://send?phone=' + waPhone + '&text=' + waText);
+                }
+            }
+            if (Array.isArray(cfg.profiles) && cfg.profiles.length > 0) {
+                var profBody = document.getElementById('profiles');
+                if (profBody) {
+                    var profHtml = '';
+                    for (var p = 0; p < cfg.profiles.length; p++) {
+                        var pi = cfg.profiles[p];
+                        profHtml += '<tr><td>' + (pi.price || '') + '</td><td>' + (pi.time || '') + '</td></tr>';
+                    }
+                    profBody.innerHTML = profHtml;
+                }
+            }
+            if (Array.isArray(cfg['sell-points']) && cfg['sell-points'].length > 0) {
+                var spBody = document.getElementById('sell-points');
+                if (spBody) {
+                    var spHtml = '';
+                    for (var s = 0; s < cfg['sell-points'].length; s++) {
+                        var spi = cfg['sell-points'][s];
+                        spHtml += '<tr><td>' + (spi.name || '') + '</td></tr>';
+                    }
+                    spBody.innerHTML = spHtml;
+                }
+            }
+            if (cfg['news-title']) {
+                var nt = document.getElementById('loan-news-title');
+                if (nt) nt.textContent = cfg['news-title'];
+            }
+            if (cfg['news-content']) {
+                var nc = document.getElementById('loan-news-content');
+                if (nc) nc.innerHTML = cfg['news-content'];
+            }
+            if (cfg['news-code']) {
+                var ncd = document.getElementById('loan-news-code');
+                if (ncd) ncd.textContent = cfg['news-code'];
+            }
+            if (cfg['news-extra-title']) {
+                var net = document.getElementById('loan-news-extra-title');
+                if (net) net.textContent = cfg['news-extra-title'];
+            }
+            if (cfg['news-extra-content']) {
+                var nec = document.getElementById('loan-news-extra-content');
+                if (nec) nec.textContent = cfg['news-extra-content'];
+            }
+            if (cfg['news-extra-badge']) {
+                var neb = document.getElementById('loan-news-extra-badge');
+                if (neb) neb.textContent = cfg['news-extra-badge'];
+            }
+            if (cfg['price-button'] === false) {
+                var pBtns = document.querySelectorAll('[data-price-button]');
+                for (var pb = 0; pb < pBtns.length; pb++) pBtns[pb].style.display = 'none';
+            }
+            if (cfg['sell-point-button'] === false) {
+                var spBtns = document.querySelectorAll('[data-sell-point-button]');
+                for (var spb = 0; spb < spBtns.length; spb++) spBtns[spb].style.display = 'none';
+            }
+            if (cfg['loan-button'] === false) {
+                var lnBtns = document.querySelectorAll('[data-loan-button]');
+                for (var lnb = 0; lnb < lnBtns.length; lnb++) lnBtns[lnb].style.display = 'none';
+            }
+        }
         function Config(a) {
             hotspotConfig = a;
             window.hotspotConfig = a;
@@ -83,6 +182,13 @@
                 document.documentElement.classList.add('loyalty-system-disabled');
             } else {
                 document.documentElement.classList.remove('loyalty-system-disabled');
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    applyInstantConfig(a);
+                });
+            } else {
+                applyInstantConfig(a);
             }
         }
     </script>
@@ -240,7 +346,7 @@
                                 </svg>
                             </div>
                             <div class="brand-info">
-                                <span class="brand-name" data-network-name>{{network-name}}</span>
+                                <span class="brand-name" data-network-name>تونس نت</span>
                             </div>
                         </div>
 
@@ -260,7 +366,7 @@
                     <section class="section">
                         <div class="ticker-container">
                             <div class="ticker-content-track">
-                                <p class="marquee" data-news-line>{{news-line}}</p>
+                                <p class="marquee" data-news-line>{بسم الله الرحمن الرحيم} ( قل للمؤمنين يغضوا من أبصرهم ويحفظوا فروجهم ذلك ازكى لهم إن الله خبير بما يصنعون ) صدق الله العظيم</p>
                             </div>
                         </div>
                     </section>
@@ -876,7 +982,7 @@
                                         <path
                                             d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                                     </svg>
-                                    <span class="contact" data-service-number>خدمة العملاء: {{service-number}}</span>
+                                    <span class="contact" data-service-number>خدمة العملاء: 772131004</span>
                                 </a>
                             </div>
                         </div>
@@ -912,7 +1018,7 @@
                                         <path
                                             d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                                     </svg>
-                                    <span class="contact" data-service-number>خدمة العملاء: {{service-number}}</span>
+                                    <span class="contact" data-service-number>خدمة العملاء: 772131004</span>
                                 </a>
                             </div>
                         </div>
@@ -971,7 +1077,7 @@
                                         <path
                                             d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                                     </svg>
-                                    <span class="contact" data-service-number>خدمة العملاء: {{service-number}}</span>
+                                    <span class="contact" data-service-number>خدمة العملاء: 772131004</span>
                                 </a>
                             </div>
                         </div>
@@ -1089,7 +1195,7 @@
                         <section class="section" style="margin-top: 10px; margin-bottom: 10px;">
                             <div class="ticker-container">
                                 <div class="ticker-content-track">
-                                    <p class="marquee" data-news-line>{{news-line}}</p>
+                                    <p class="marquee" data-news-line>{بسم الله الرحمن الرحيم} ( قل للمؤمنين يغضوا من أبصرهم ويحفظوا فروجهم ذلك ازكى لهم إن الله خبير بما يصنعون ) صدق الله العظيم</p>
                                 </div>
                             </div>
                         </section>
@@ -1481,7 +1587,7 @@
                                 <path
                                     d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                             </svg>
-                            <span class="contact back" data-service-number>خدمة العملاء: {{service-number}}</span>
+                            <span class="contact back" data-service-number>خدمة العملاء: 772131004</span>
                         </a>
                     </div>
                 </div>
@@ -2407,7 +2513,7 @@
                         <div class="redirect-ambient-glow-cyan"></div>
                         <div class="redirect-loading-card">
                             <div class="redirect-brand-connector">
-                                <span class="redirect-brand-tag burgundy">تونس نت</span>
+                                <span class="redirect-brand-tag burgundy">${(window.hotspotConfig && window.hotspotConfig['network-name'] ? ('' + window.hotspotConfig['network-name']).trim() : 'تونس نت')}</span>
                                 <div class="redirect-connector-line">
                                     <div class="redirect-connector-dot"></div>
                                     <div class="redirect-connector-dot"></div>
@@ -3292,14 +3398,18 @@
 
             // 6. UNIVERSAL WHATSAPP INTENT DISPATCHER (WHATSAPP & WHATSAPP BUSINESS)
             const waButtons = document.querySelectorAll('.support-btn-whatsapp');
-            const waPhone = '967772131004';
-            const waMsg = encodeURIComponent('مرحبا خدمة عملاء شبكة تونس نت اللاسلكية');
-            const waSchemeUrl = `whatsapp://send?phone=${waPhone}&text=${waMsg}`;
-            const waWebUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${waMsg}`;
 
             waButtons.forEach(function(btn) {
                 btn.addEventListener('click', function (e) {
                     e.preventDefault();
+
+                    const activeCfg = window.hotspotConfig || {};
+                    const rawPhone = (activeCfg['service-number'] || '772131004').toString().replace(/\D/g, '');
+                    const waPhone = rawPhone.startsWith('967') ? rawPhone : ('967' + rawPhone);
+                    const netName = (activeCfg['network-name'] || 'تونس نت').toString().trim();
+                    const waMsg = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + netName + ' اللاسلكية');
+                    const waSchemeUrl = `whatsapp://send?phone=${waPhone}&text=${waMsg}`;
+                    const waWebUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${waMsg}`;
 
                     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
