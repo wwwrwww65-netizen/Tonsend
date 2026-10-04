@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title data-network-name>شبكة تونس نت اللاسلكيه</title>
+    <title data-network-name>شبكة الخالد نت اللاسلكيه</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -110,7 +110,7 @@
                 }
                 var cleanPhone = srvNum.replace(/\D/g, '');
                 var waPhone = cleanPhone.startsWith('967') ? cleanPhone : ('967' + cleanPhone);
-                var waText = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + (netName || 'تونس نت') + ' اللاسلكية');
+                var waText = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + (netName || 'الخالد نت') + ' اللاسلكية');
                 var waLinks = document.querySelectorAll('.support-btn-whatsapp');
                 for (var m = 0; m < waLinks.length; m++) {
                     waLinks[m].setAttribute('href', 'whatsapp://send?phone=' + waPhone + '&text=' + waText);
@@ -173,6 +173,22 @@
             if (cfg['loan-button'] === false) {
                 var lnBtns = document.querySelectorAll('[data-loan-button]');
                 for (var lnb = 0; lnb < lnBtns.length; lnb++) lnBtns[lnb].style.display = 'none';
+            }
+            if (cfg['app-store-status-button'] === false || cfg['show-app-download-buttons'] === false) {
+                var appDlBtns = document.querySelectorAll('[data-app-download-links], [data-app-store-status-button]');
+                for (var ad = 0; ad < appDlBtns.length; ad++) appDlBtns[ad].style.display = 'none';
+            }
+            if (cfg['show-esterahah-button'] === false) {
+                var estBtns = document.querySelectorAll('[data-esterahah-link]');
+                for (var eb = 0; eb < estBtns.length; eb++) estBtns[eb].style.display = 'none';
+            }
+            if (cfg['redirect-to-mobasher']) {
+                var mobLinks = document.querySelectorAll('[data-mobasher-link]');
+                for (var ml = 0; ml < mobLinks.length; ml++) mobLinks[ml].setAttribute('href', cfg['redirect-to-mobasher']);
+            }
+            if (cfg['redirect-to-esterahah']) {
+                var estLinksH = document.querySelectorAll('[data-esterahah-link]');
+                for (var eh = 0; eh < estLinksH.length; eh++) estLinksH[eh].setAttribute('href', cfg['redirect-to-esterahah']);
             }
         }
         function Config(a) {
@@ -346,7 +362,7 @@
                                 </svg>
                             </div>
                             <div class="brand-info">
-                                <span class="brand-name" data-network-name>تونس نت</span>
+                                <span class="brand-name" data-network-name>الخالد نت</span>
                             </div>
                         </div>
 
@@ -373,7 +389,7 @@
 
 
                     <!-- Main Welcome Title -->
-                    <h1>مرحبا بك في شبكة تونس نت الاسلكيه</h1>
+                    <h1>مرحبا بك في شبكة الخالد نت الاسلكيه</h1>
 
                     <!-- 2026 Swipeable Touch Carousel (With 3D Legacy compatibility) -->
                     <div class="ads-carousel-wrapper" id="adsCarouselWrapper">
@@ -555,13 +571,12 @@
                             <div class="input-group-modern">
                                 <span class="input-label-text">أدخل رقم الكرت الذي لديك للاتصال فوراً بالإنترنت</span>
                                 <div class="input-wrapper-glass">
-                                    <button type="button" class="input-icon-badge camera-scan-btn" id="openQrScannerBtn"
-                                        title="مسح رمز QR بالكاميرا" aria-label="مسح رمز QR بالكاميرا">
-                                        <svg viewBox="0 0 24 24" class="camera-icon-svg">
+                                    <span class="input-icon-badge" title="رقم الكرت" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24">
                                             <path
-                                                d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
+                                                d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
                                         </svg>
-                                    </button>
+                                    </span>
                                     <input name="username" class="login-input" placeholder="ادخل رقم الكرت هنا"
                                         username-field improve-input autocomplete="off" enterkeyhint="go"
                                         inputmode="text">
@@ -703,119 +718,7 @@
                     </div>
                 </div>
 
-                <!-- 2026 MODAL BOTTOM SHEET: QR CODE CAMERA SCANNER (#qr-scanner-modal) -->
-                <div class="app" id="qr-scanner-modal">
-                    <div class="modal-sheet-card qr-scanner-sheet">
-                        <div class="modal-header">
-                            <span class="title">
-                                <svg viewBox="0 0 24 24" class="modal-title-icon">
-                                    <path
-                                        d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
-                                </svg>
-                                <span>مسح رمز QR للكرت</span>
-                            </span>
-                            <button class="modal-close-btn" id="closeQrScannerBtn" type="button">✕ إغلاق</button>
-                        </div>
 
-                        <div class="qr-scanner-body">
-                            <!-- Camera Viewport Box -->
-                            <div class="qr-viewport-container" id="qrViewportContainer">
-                                <video id="qrVideo" playsinline autoplay muted></video>
-                                <canvas id="qrCanvas" style="display: none;"></canvas>
-
-                                <!-- Scanner Reticle Overlay & Laser -->
-                                <div class="qr-overlay-box">
-                                    <div class="qr-reticle-corner top-left"></div>
-                                    <div class="qr-reticle-corner top-right"></div>
-                                    <div class="qr-reticle-corner bottom-left"></div>
-                                    <div class="qr-reticle-corner bottom-right"></div>
-                                    <div class="qr-scanner-laser"></div>
-                                </div>
-
-                                <!-- Camera Loading / Permission Fallback -->
-                                <div class="qr-camera-loading" id="qrCameraLoading">
-                                    <div class="qr-spinner"></div>
-                                    <span>جاري تشغيل الكاميرا...</span>
-                                </div>
-
-                                <div class="qr-camera-error" id="qrCameraError" style="display: none;">
-                                    <svg viewBox="0 0 24 24">
-                                        <path
-                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                                    </svg>
-                                    <p id="qrCameraErrorText">تم رفض الإذن أو حظر الكاميرا من المتصفح. يرجى الضغط على
-                                        أيقونة القفل/الإعدادات في شريط المتصفح والسماح للكاميرا، أو يمكنك فتح كاميرا
-                                        الهاتف مباشرة عبر الزر أدناه.</p>
-
-                                    <div
-                                        style="display: flex; gap: 8px; flex-direction: column; width: 100%; max-width: 280px; margin-top: 10px;">
-                                        <!-- Native System Camera Button (bypasses browser permission block) -->
-                                        <button type="button" class="button" id="qrSystemCamFallbackBtn"
-                                            style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-size: 0.9rem; padding: 10px 14px; font-weight: 700; border: none; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
-                                            <svg viewBox="0 0 24 24"
-                                                style="width: 18px; height: 18px; fill: currentColor;">
-                                                <path
-                                                    d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
-                                            </svg>
-                                            <span>📷 مسح بكاميرا الهاتف البديلة</span>
-                                        </button>
-
-                                        <button type="button" class="button" id="qrRetryCamBtn"
-                                            style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 0.85rem; padding: 8px 14px; color: #fff; border-radius: 8px;">إعادة
-                                            محاولة الكاميرا الحية</button>
-                                    </div>
-
-                                    <!-- Hidden System Camera Capture Input -->
-                                    <input type="file" id="qrSystemCameraInput" accept="image/*" capture="environment"
-                                        style="display: none;">
-                                </div>
-                            </div>
-
-                            <!-- Camera Controls (Torch / Switch Camera) -->
-                            <div class="qr-controls-row">
-                                <button type="button" class="qr-tool-btn" id="qrTorchBtn" title="تشغيل الكشاف"
-                                    style="display: none;">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M7 2v11h3v9l7-12h-4l4-8z" />
-                                    </svg>
-                                    <span id="qrTorchText">الكشاف</span>
-                                </button>
-                                <button type="button" class="qr-tool-btn" id="qrSwitchCameraBtn" title="تبديل الكاميرا">
-                                    <svg viewBox="0 0 24 24">
-                                        <path
-                                            d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 11.5V13H9v2.5L5.5 12 9 8.5V11h6V8.5l3.5 3.5-3.5 3.5z" />
-                                    </svg>
-                                    <span>تبديل الكاميرا</span>
-                                </button>
-                            </div>
-
-                            <!-- Instruction / Status Badge -->
-                            <div class="qr-status-badge" id="qrScanStatus">
-                                <span class="status-pulse-dot"></span>
-                                <span id="qrStatusText">وجه الكاميرا نحو رمز QR على الكرت</span>
-                            </div>
-
-                            <div id="qrScanSuccessCard" class="qr-success-card" style="display: none;">
-                                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #10b981;">
-                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                                </svg>
-                                <div>
-                                    <strong style="color: #34d399; font-size: 0.95rem; display: block;">تم مسح الكرت
-                                        بنجاح!</strong>
-                                    <span id="qrScannedResultDisplay"
-                                        style="color: #ffffff; font-family: monospace; font-size: 1.1rem; font-weight: 800;"></span>
-                                </div>
-                            </div>
-
-                            <button type="button" class="button app-submit modal-cancel-btn" style="margin-top: 14px;">
-                                <svg viewBox="0 0 24 24" class="btn-icon">
-                                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                                </svg>
-                                <span>رجوع</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- 2026 MODAL BOTTOM SHEET: POINTS REGISTRATION & AUTH (#points-register-modal) -->
                 <div class="app" id="points-register-modal">
@@ -1029,7 +932,7 @@
                                     <p id="loan-news-title"
                                         style="font-weight: 800; font-size: 1.1rem; color: #fde047; margin-bottom: 8px;">
                                         زبائننا الكرام</p>
-                                    <p id="loan-news-content">صارت كروت شبكة تونس نت متوفرة عبر <strong>محفظة
+                                    <p id="loan-news-content">صارت كروت شبكة الخالد نت متوفرة عبر <strong>محفظة
                                             جيب</strong></p>
                                     <div id="loan-news-code" class="loan-highlight-badge">رقم كود الشبكة: (21124)</div>
                                     <br id="loan-news-break"><br id="loan-news-break-2">
@@ -1278,26 +1181,26 @@
                             </div>
                         </div>
 
-                        <!-- Entertainment Direct Links -->
-                        <div class="entertainment-links">
-                            <a class="stream-card-link" href="http://30.10.10.10" target="_blank">
+                        <!-- Entertainment Direct Links (Controlled via config.js) -->
+                        <div class="entertainment-links" style="display: flex; gap: 10px;">
+                            <a class="stream-card-link" data-esterahah-link href="lamsports.html" style="display: none; flex: 1;">
                                 <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;">
                                     <path
                                         d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z" />
                                 </svg>
                                 <span>الاستراحة</span>
                             </a>
-                            <a class="stream-card-link" href="http://30.10.10.10:88" target="_blank">
+                            <a class="stream-card-link" data-mobasher-link href="live/index.html" style="flex: 1;">
                                 <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;">
                                     <path
                                         d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zm-11-2l6-4-6-4v8z" />
                                 </svg>
-                                <span>البث المباشر</span>
+                                <span>البث المباشر للمباريات</span>
                             </a>
                         </div>
 
-                        <!-- User Requested App Download Links -->
-                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                        <!-- App Download Links (Controlled via config.js: show-app-download-buttons) -->
+                        <div data-app-download-links style="display: none; flex-direction: column; gap: 8px; margin-top: 10px;">
                             <a class="stream-card-link" href="https://play.google.com/store/apps/details?id=com.glasswire.android" target="_blank" style="justify-content: center;">
                                 <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor; margin-left: 6px;">
                                     <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
@@ -1584,7 +1487,6 @@
     <span style="display: none;" id="winmsg"></span>
 
     <!-- Hotspot System Scripts -->
-    <script src="js/jsqr.min.js"></script>
     <script src="js/init.min.js"></script>
     <script src="js/hotInImprover.min.js"></script>
     <script src="js/hotCookie.min.js"></script>
@@ -1956,9 +1858,6 @@
                 } else {
                     document.body.style.overflow = 'hidden';
                 }
-
-                // Camera is started by the button handler before openAppModal is called.
-                // Do NOT call startCamera() here to avoid a second duplicate request.
             }
 
             function closeAppModal(modalOrId) {
@@ -1977,9 +1876,6 @@
                             target.style.display = 'none';
                         }
                     }, 180);
-                    if (target.id === 'qr-scanner-modal' && typeof window.stopCamera === 'function') {
-                        window.stopCamera();
-                    }
                 } else {
                     document.querySelectorAll('.app.active').forEach(m => {
                         if (m.id !== 'status') {
@@ -1989,9 +1885,6 @@
                                     m.style.display = 'none';
                                 }
                             }, 180);
-                            if (m.id === 'qr-scanner-modal' && typeof window.stopCamera === 'function') {
-                                window.stopCamera();
-                            }
                         }
                     });
                 }
@@ -2039,7 +1932,6 @@
             // Modal Trigger Buttons (parent-id and dedicated IDs)
             document.querySelectorAll('button[parent-id], [data-open-modal]').forEach(btn => {
                 btn.addEventListener('click', function (e) {
-                    if (this.id === 'openQrScannerBtn') return; // Handled specifically with direct camera start
                     const parentId = this.getAttribute('parent-id') || this.getAttribute('data-open-modal');
                     if (parentId && parentId !== 'status') {
                         e.preventDefault();
@@ -2395,7 +2287,7 @@
                         <div class="redirect-ambient-glow-cyan"></div>
                         <div class="redirect-loading-card">
                             <div class="redirect-brand-connector">
-                                <span class="redirect-brand-tag burgundy">${(window.hotspotConfig && window.hotspotConfig['network-name'] ? ('' + window.hotspotConfig['network-name']).trim() : 'تونس نت')}</span>
+                                <span class="redirect-brand-tag burgundy">${(window.hotspotConfig && window.hotspotConfig['network-name'] ? ('' + window.hotspotConfig['network-name']).trim() : 'الخالد نت')}</span>
                                 <div class="redirect-connector-line">
                                     <div class="redirect-connector-dot"></div>
                                     <div class="redirect-connector-dot"></div>
@@ -2631,528 +2523,7 @@
                 });
             });
 
-            // 4. QR CODE CAMERA SCANNER ENGINE (2026 ULTRA-COMPATIBLE ENGINE)
-            const qrScannerModal = document.getElementById('qr-scanner-modal');
-            const openQrBtn = document.getElementById('openQrScannerBtn');
-            const qrVideo = document.getElementById('qrVideo');
-            const qrCanvas = document.getElementById('qrCanvas');
-            const qrLoading = document.getElementById('qrCameraLoading');
-            const qrError = document.getElementById('qrCameraError');
-            const qrErrorText = document.getElementById('qrCameraErrorText');
-            const qrRetryBtn = document.getElementById('qrRetryCamBtn');
-            const qrTorchBtn = document.getElementById('qrTorchBtn');
-            const qrTorchText = document.getElementById('qrTorchText');
-            const qrSwitchCamBtn = document.getElementById('qrSwitchCameraBtn');
-            const qrStatusText = document.getElementById('qrStatusText');
-            const qrSuccessCard = document.getElementById('qrScanSuccessCard');
-            const qrResultDisplay = document.getElementById('qrScannedResultDisplay');
-
-            let qrMediaStream = null;
-            let qrAnimationId = null;
-            let currentFacingMode = 'environment';
-            let isTorchActive = false;
-            let isScanningActive = false;
-            let barcodeDetectorInstance = null;
-
-            // Initialize native barcode detector if available
-            if ('BarcodeDetector' in window) {
-                try {
-                    barcodeDetectorInstance = new BarcodeDetector({ formats: ['qr_code'] });
-                } catch (e) {
-                    barcodeDetectorInstance = null;
-                }
-            }
-
-            function playBeepSound() {
-                try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-                    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08);
-                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.25);
-                } catch (e) { }
-            }
-
-            function extractCardNumberFromQR(raw) {
-                if (!raw) return '';
-                raw = String(raw).trim();
-
-                // 1. Check if URL
-                if (raw.startsWith('http://') || raw.startsWith('https://')) {
-                    try {
-                        const url = new URL(raw);
-                        const params = ['username', 'user', 'card', 'code', 'u', 'pin', 'id'];
-                        for (let i = 0; i < params.length; i++) {
-                            if (url.searchParams.has(params[i])) {
-                                const val = url.searchParams.get(params[i]);
-                                if (val) return val.trim();
-                            }
-                        }
-                        if (url.hash && url.hash.length > 1) {
-                            return url.hash.substring(1).trim();
-                        }
-                    } catch (e) { }
-                }
-
-                // 2. Check if JSON
-                if (raw.startsWith('{') && raw.endsWith('}')) {
-                    try {
-                        const obj = JSON.parse(raw);
-                        const val = obj.username || obj.user || obj.card || obj.code || obj.pin;
-                        if (val) return String(val).trim();
-                    } catch (e) { }
-                }
-
-                // 3. Check for PREFIX:VALUE (e.g. USER:12345 or CARD:12345)
-                const match = raw.match(/^(?:user|username|card|pin|code)[\s:=_-]+([a-zA-Z0-9_-]+)/i);
-                if (match && match[1]) {
-                    return match[1].trim();
-                }
-
-                return raw;
-            }
-
-            function ensureJsQr() {
-                if (typeof window.jsQR === 'function' || barcodeDetectorInstance) {
-                    return Promise.resolve();
-                }
-                return new Promise(function (resolve) {
-                    var s = document.createElement('script');
-                    s.src = 'js/jsqr.min.js';
-                    s.async = true;
-                    s.onload = resolve;
-                    s.onerror = resolve;
-                    document.head.appendChild(s);
-                });
-            }
-
-            // Universal media stream acquisition with progressive degradation
-            async function requestCameraStream(facing) {
-                const constraintTiers = [
-                    { video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
-                    { video: { facingMode: facing }, audio: false },
-                    { video: { facingMode: (facing === 'environment' ? 'user' : 'environment') }, audio: false },
-                    { video: true, audio: false }
-                ];
-
-                const modernApi = navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function';
-
-                for (let i = 0; i < constraintTiers.length; i++) {
-                    try {
-                        if (modernApi) {
-                            return await navigator.mediaDevices.getUserMedia(constraintTiers[i]);
-                        }
-                        const legacyGUM = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-                        if (legacyGUM) {
-                            return await new Promise((res, rej) => legacyGUM.call(navigator, constraintTiers[i], res, rej));
-                        }
-                    } catch (err) {
-                        if (i === constraintTiers.length - 1) throw err;
-                    }
-                }
-                throw new Error('متصفحك لا يدعم الوصول المباشر للكاميرا');
-            }
-
-            async function startCamera() {
-                stopCamera();
-                if (qrLoading) qrLoading.style.display = 'flex';
-                if (qrError) qrError.style.display = 'none';
-                if (qrSuccessCard) qrSuccessCard.style.display = 'none';
-                if (qrStatusText) qrStatusText.textContent = 'وجه الكاميرا نحو رمز QR على الكرت';
-                isScanningActive = true;
-
-                // Load jsQR in background without delaying camera permission prompt
-                ensureJsQr().catch(() => { });
-
-                try {
-                    qrMediaStream = await requestCameraStream(currentFacingMode);
-
-                    if (qrVideo) {
-                        qrVideo.muted = true;
-                        qrVideo.playsInline = true;
-                        qrVideo.setAttribute('playsinline', 'true');
-                        qrVideo.setAttribute('webkit-playsinline', 'true');
-                        qrVideo.setAttribute('muted', 'true');
-                        qrVideo.setAttribute('autoplay', 'true');
-                        qrVideo.srcObject = qrMediaStream;
-
-                        // Ensure video starts playing smoothly
-                        qrVideo.onloadedmetadata = function () {
-                            qrVideo.play().catch(function (e) {
-                                console.warn('Autoplay caught:', e);
-                            });
-                            if (qrLoading) qrLoading.style.display = 'none';
-                        };
-
-                        const playPromise = qrVideo.play();
-                        if (playPromise !== undefined) {
-                            playPromise.then(function() {
-                                if (qrLoading) qrLoading.style.display = 'none';
-                            }).catch(function (e) {
-                                console.warn('Autoplay caught:', e);
-                            });
-                        }
-
-                        qrVideo.onloadeddata = function () {
-                            if (qrLoading) qrLoading.style.display = 'none';
-                        };
-                    }
-
-                    // Failsafe timeout to hide loading spinner
-                    setTimeout(function() {
-                        if (qrLoading && isScanningActive) {
-                            qrLoading.style.display = 'none';
-                        }
-                    }, 400);
-
-                    // Check torch capability
-                    try {
-                        const track = qrMediaStream.getVideoTracks()[0];
-                        if (track && track.getCapabilities && typeof track.getCapabilities === 'function') {
-                            const capabilities = track.getCapabilities();
-                            if (capabilities && capabilities.torch && qrTorchBtn) {
-                                qrTorchBtn.style.display = 'inline-flex';
-                            } else if (qrTorchBtn) {
-                                qrTorchBtn.style.display = 'none';
-                            }
-                        }
-                    } catch (e) { }
-
-                    // Start Scan Loop
-                    requestAnimationFrame(scanVideoFrame);
-
-                } catch (err) {
-                    console.warn('Camera access status:', err ? (err.message || err.name || err) : 'Error');
-                    if (qrLoading) qrLoading.style.display = 'none';
-                    if (qrError) {
-                        qrError.style.display = 'flex';
-                        if (qrErrorText) {
-                            const errMsg = (err && (err.message || err.name)) ? String(err.message || err.name).toLowerCase() : '';
-                            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError' || errMsg.includes('permission') || errMsg.includes('denied') || errMsg.includes('notallowed')) {
-                                qrErrorText.textContent = 'تم رفض الإذن أو حظر الكاميرا من المتصفح. يرجى الضغط على أيقونة القفل/الإعدادات في شريط المتصفح والسماح للكاميرا ثم النقر على إعادة المحاولة.';
-                            } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError' || errMsg.includes('notfound')) {
-                                qrErrorText.textContent = 'لم يتم العثور على جهاز كاميرا متصل.';
-                            } else {
-                                qrErrorText.textContent = 'تعذر تشغيل الكاميرا حالياً. يرجى التأكد من صلاحيات المتصفح ثم إعادة المحاولة.';
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Expose globally
-            window.startCamera = startCamera;
-            window.stopCamera = stopCamera;
-
-            async function scanVideoFrame() {
-                if (!isScanningActive || !qrVideo) return;
-
-                if (qrVideo.readyState < 2) {
-                    if (isScanningActive) {
-                        qrAnimationId = requestAnimationFrame(scanVideoFrame);
-                    }
-                    return;
-                }
-
-                // If loading is still visible, hide it now
-                if (qrLoading && qrLoading.style.display !== 'none') {
-                    qrLoading.style.display = 'none';
-                }
-
-                let detectedCode = null;
-
-                // Priority 1: Native Hardware BarcodeDetector
-                if (barcodeDetectorInstance) {
-                    try {
-                        const barcodes = await barcodeDetectorInstance.detect(qrVideo);
-                        if (barcodes && barcodes.length > 0) {
-                            detectedCode = barcodes[0].rawValue;
-                        }
-                    } catch (e) { }
-                }
-
-                // Priority 2: jsQR Canvas Decoding (Fast captive portal safe engine)
-                if (!detectedCode && typeof window.jsQR === 'function' && qrCanvas && qrVideo.videoWidth > 0) {
-                    try {
-                        const ctx = qrCanvas.getContext('2d', { willReadFrequently: true });
-                        if (ctx) {
-                            const w = Math.min(qrVideo.videoWidth, 640);
-                            const h = Math.round(w * (qrVideo.videoHeight / qrVideo.videoWidth));
-                            qrCanvas.width = w;
-                            qrCanvas.height = h;
-                            ctx.drawImage(qrVideo, 0, 0, w, h);
-                            const imageData = ctx.getImageData(0, 0, w, h);
-                            const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
-                                inversionAttempts: "dontInvert"
-                            });
-                            if (code && code.data) {
-                                detectedCode = code.data;
-                            }
-                        }
-                    } catch (e) { }
-                }
-
-                if (detectedCode) {
-                    handleSuccessfulQrScan(detectedCode);
-                    return;
-                }
-
-                if (isScanningActive) {
-                    qrAnimationId = requestAnimationFrame(scanVideoFrame);
-                }
-            }
-
-            function handleSuccessfulQrScan(rawData) {
-                isScanningActive = false;
-                const cleanCard = extractCardNumberFromQR(rawData);
-
-                playBeepSound();
-                if (navigator.vibrate) {
-                    try { navigator.vibrate([80, 40, 80]); } catch (e) { }
-                }
-
-                if (qrSuccessCard && qrResultDisplay) {
-                    qrResultDisplay.textContent = cleanCard;
-                    qrSuccessCard.style.display = 'flex';
-                }
-
-                // Auto-fill username field in login form
-                const usernameInput = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
-                if (usernameInput) {
-                    usernameInput.value = cleanCard;
-                    usernameInput.dispatchEvent(new Event('input', { bubbles: true }));
-                    usernameInput.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-
-                // Auto-close modal after brief visual confirmation
-                setTimeout(function() {
-                    stopCamera();
-                    var closeBtn = document.getElementById('closeQrScannerBtn');
-                    if (closeBtn) {
-                        closeBtn.click();
-                    } else {
-                        var logoutBtn = qrScannerModal ? qrScannerModal.querySelector('.app-logout') : null;
-                        if (logoutBtn) logoutBtn.click();
-                    }
-                }, 600);
-            }
-
-            function stopCamera() {
-                isScanningActive = false;
-                if (qrAnimationId) {
-                    cancelAnimationFrame(qrAnimationId);
-                    qrAnimationId = null;
-                }
-                if (qrMediaStream) {
-                    qrMediaStream.getTracks().forEach(function(track) {
-                        try { track.stop(); } catch (e) { }
-                    });
-                    qrMediaStream = null;
-                }
-                if (qrVideo) {
-                    qrVideo.srcObject = null;
-                }
-                isTorchActive = false;
-                if (qrTorchText) qrTorchText.textContent = 'الكشاف';
-            }
-
-            // Open QR Scanner button click & immediate camera initialization
-            // IMPORTANT: startCamera() must be called BEFORE openAppModal to keep the
-            // getUserMedia call within the direct user-gesture activation chain.
-            if (openQrBtn) {
-                const handleOpenQr = function (e) {
-                    if (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                    // Request camera FIRST (still inside user gesture), then open modal UI
-                    startCamera();
-                    openAppModal('qr-scanner-modal');
-                };
-                openQrBtn.addEventListener('click', handleOpenQr);
-            }
-
-            // Switch Camera
-            if (qrSwitchCamBtn) {
-                qrSwitchCamBtn.addEventListener('click', function () {
-                    currentFacingMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
-                    startCamera();
-                });
-            }
-
-            // Torch Toggle
-            if (qrTorchBtn) {
-                qrTorchBtn.addEventListener('click', async function () {
-                    if (!qrMediaStream) return;
-                    const track = qrMediaStream.getVideoTracks()[0];
-                    if (track && track.applyConstraints) {
-                        try {
-                            isTorchActive = !isTorchActive;
-                            await track.applyConstraints({
-                                advanced: [{ torch: isTorchActive }]
-                            });
-                            if (qrTorchText) {
-                                qrTorchText.textContent = isTorchActive ? 'إطفاء الكشاف' : 'الكشاف';
-                            }
-                        } catch (e) {
-                            console.error('Torch error:', e);
-                        }
-                    }
-                });
-            }
-
-            // System Camera Capture Fallback elements
-            const qrSystemCamFallbackBtn = document.getElementById('qrSystemCamFallbackBtn');
-            const qrSystemCameraInput = document.getElementById('qrSystemCameraInput');
-
-            // Decode QR Code from Native Camera Snapshot (Multi-Scale & ES5 Compatible)
-            function decodeQrFromImageFile(file) {
-                if (!file) return;
-                if (qrLoading) {
-                    qrLoading.style.display = 'flex';
-                    var span = qrLoading.querySelector('span');
-                    if (span) span.textContent = 'جاري قراءة الرمز بدقة...';
-                }
-                if (qrError) qrError.style.display = 'none';
-
-                var processImage = function() {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        var img = new Image();
-                        img.onload = function () {
-                            var detectedCode = null;
-
-                            function tryDecode(scaleMax) {
-                                if (detectedCode) return;
-                                if (typeof window.jsQR !== 'function') return;
-
-                                var c = qrCanvas || document.createElement('canvas');
-                                var ctx = c.getContext('2d', { willReadFrequently: true });
-                                
-                                var w = img.naturalWidth || img.width;
-                                var h = img.naturalHeight || img.height;
-
-                                if (scaleMax && (w > scaleMax || h > scaleMax)) {
-                                    if (w > h) {
-                                        h = Math.round((h * scaleMax) / w);
-                                        w = scaleMax;
-                                    } else {
-                                        w = Math.round((w * scaleMax) / h);
-                                        h = scaleMax;
-                                    }
-                                }
-
-                                c.width = w;
-                                c.height = h;
-                                
-                                // Improve resizing interpolation
-                                ctx.imageSmoothingEnabled = true;
-                                ctx.imageSmoothingQuality = 'high';
-                                ctx.drawImage(img, 0, 0, w, h);
-                                
-                                var imgData = ctx.getImageData(0, 0, w, h);
-                                var code = window.jsQR(imgData.data, imgData.width, imgData.height, {
-                                    inversionAttempts: "attemptBoth"
-                                });
-                                
-                                if (code && code.data) {
-                                    detectedCode = code.data;
-                                }
-                            }
-
-                            // 1. Try Native BarcodeDetector (Modern Androids)
-                            if (barcodeDetectorInstance) {
-                                try {
-                                    barcodeDetectorInstance.detect(img).then(function(barcodes) {
-                                        if (barcodes && barcodes.length > 0) {
-                                            detectedCode = barcodes[0].rawValue;
-                                        }
-                                        finishDecoding();
-                                    }).catch(function() {
-                                        finishDecoding();
-                                    });
-                                    return;
-                                } catch (err) { }
-                            }
-
-                            finishDecoding();
-
-                            function finishDecoding() {
-                                // 2. Try Original Size (Best for screens)
-                                tryDecode(null);
-                                // 3. Try 800px (Best for printed paper closeups)
-                                tryDecode(800);
-                                // 4. Try 400px (Best for blurry scans)
-                                tryDecode(400);
-
-                                if (qrLoading) qrLoading.style.display = 'none';
-
-                                if (detectedCode) {
-                                    handleSuccessfulQrScan(detectedCode);
-                                } else {
-                                    if (qrError) {
-                                        qrError.style.display = 'flex';
-                                        if (qrErrorText) {
-                                            qrErrorText.textContent = 'الصورة غير واضحة للبرنامج أو الانعكاس قوي جداً. حاول تقريب الكاميرا ليكون المربع الأسود واضحاً ومستوياً.';
-                                        }
-                                    }
-                                }
-                            }
-                        };
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                };
-
-                if (typeof window.jsQR !== 'function') {
-                    ensureJsQr().then(processImage).catch(processImage);
-                } else {
-                    processImage();
-                }
-            }
-
-            // Fallback Native Camera button trigger
-            if (qrSystemCamFallbackBtn && qrSystemCameraInput) {
-                qrSystemCamFallbackBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    qrSystemCameraInput.click();
-                });
-            }
-
-            if (qrSystemCameraInput) {
-                qrSystemCameraInput.addEventListener('change', function (e) {
-                    if (e.target.files && e.target.files[0]) {
-                        decodeQrFromImageFile(e.target.files[0]);
-                    }
-                });
-            }
-
-            // Retry Camera
-            if (qrRetryBtn) {
-                qrRetryBtn.addEventListener('click', function () {
-                    startCamera();
-                });
-            }
-
-            // Stop camera on modal close / logout
-            if (qrScannerModal) {
-                var closeBtns = qrScannerModal.querySelectorAll('.modal-close-btn, .modal-cancel-btn, .app-logout');
-                closeBtns.forEach(function(btn) {
-                    btn.addEventListener('click', function () {
-                        stopCamera();
-                    });
-                });
-            }
-
-            // 5. DIRECT FILL PREVIOUS CARD BUTTON (دخول بكرت سابق)
+            // 4. DIRECT FILL PREVIOUS CARD BUTTON (دخول بكرت سابق)
             const prevCardBtn = document.getElementById('quickPreviousCardBtn');
             let prevCardCycleIndex = 0;
 
@@ -3288,7 +2659,7 @@
                     const activeCfg = window.hotspotConfig || {};
                     const rawPhone = (activeCfg['service-number'] || '772131004').toString().replace(/\D/g, '');
                     const waPhone = rawPhone.startsWith('967') ? rawPhone : ('967' + rawPhone);
-                    const netName = (activeCfg['network-name'] || 'تونس نت').toString().trim();
+                    const netName = (activeCfg['network-name'] || 'الخالد نت').toString().trim();
                     const waMsg = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + netName + ' اللاسلكية');
                     const waSchemeUrl = `whatsapp://send?phone=${waPhone}&text=${waMsg}`;
                     const waWebUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${waMsg}`;
