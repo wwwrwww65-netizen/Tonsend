@@ -261,11 +261,12 @@
                         <div class="carousel-container" id="adCarousel">
                             <div class="carousel-track" id="carouselTrack">
                                 <div class="carousel-slide">
-                                    <img class="im1" src="./adimg/1.jpg" alt="إعلان 1" fetchpriority="high"
-                                        decoding="async">
+                                    <img class="im1" src="./adimg/5.jpg" alt="إعلان 1" fetchpriority="high"
+                                        decoding="sync">
                                 </div>
                                 <div class="carousel-slide">
-                                    <img class="im2" src="./adimg/2.jpg" alt="إعلان 2" loading="lazy" decoding="async">
+                                    <img class="im2" src="./adimg/7.jpg" alt="إعلان 2" fetchpriority="high"
+                                        decoding="sync">
                                 </div>
                             </div>
                             <button class="carousel-nav-btn prev" id="carouselPrev" aria-label="السابق">❮</button>
@@ -279,8 +280,8 @@
                         <!-- Preserving legacy .ads .box for any legacy script checks -->
                         <div class="ads" style="display: none;">
                             <div class="box" id="legacyAdsBox">
-                                <span style="--i:1"><img class="im1" src="./adimg/1.jpg"></span>
-                                <span style="--i:2"><img class="im2" src="./adimg/2.jpg"></span>
+                                <span style="--i:1"><img class="im1" src="./adimg/5.jpg"></span>
+                                <span style="--i:2"><img class="im2" src="./adimg/7.jpg"></span>
                             </div>
                         </div>
                     </div>
@@ -1537,15 +1538,22 @@
 
                 let autoplayInterval = null;
                 let transitionSafetyTimeout = null;
+                let currentRenderedImagesKey = '';
 
                 function renderCarousel(images) {
-                    if (autoplayInterval) clearInterval(autoplayInterval);
-                    autoplayInterval = null;
-
                     if (!images || images.length === 0) {
                         if (wrapper) wrapper.style.display = 'none';
                         return;
                     }
+
+                    const imagesKey = images.join(',');
+                    if (imagesKey === currentRenderedImagesKey && track.children.length > 0) {
+                        return; // Already cleanly rendered, avoid layout jump
+                    }
+                    currentRenderedImagesKey = imagesKey;
+
+                    if (autoplayInterval) clearInterval(autoplayInterval);
+                    autoplayInterval = null;
 
                     if (wrapper) wrapper.style.display = 'block';
 
@@ -1555,7 +1563,7 @@
 
                     track.innerHTML = images.map((img, idx) => `
                         <div class="carousel-slide">
-                            <img class="im${idx + 1}" src="./adimg/${img}" alt="إعلان ${idx + 1}" ${idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">
+                            <img class="im${idx + 1}" src="./adimg/${img}" alt="إعلان ${idx + 1}" fetchpriority="high" decoding="sync">
                         </div>
                     `).join('');
 
@@ -1706,53 +1714,55 @@
                     startAutoplay();
                 }
 
+                // 1. Immediate Instant Initialization from Config or DOM (Zero Delay)
+                var initialConfigImgs = (window.hotspotConfig && Array.isArray(window.hotspotConfig['ad-images']) && window.hotspotConfig['ad-images'].length > 0)
+                    ? window.hotspotConfig['ad-images']
+                    : ['5.jpg', '7.jpg'];
+                renderCarousel(initialConfigImgs);
+
+                // 2. Dynamic Discovery from adimg/ folder via API (Server/Dev/Live Backend mode)
                 fetch('/api/v1/ad-images')
                     .then(res => res.json())
                     .then(data => {
                         if (data && data.success && Array.isArray(data.images) && data.images.length > 0) {
                             renderCarousel(data.images);
                         } else {
-                            fallbackDiscovery();
+                            runStaticProbeDiscovery();
                         }
                     })
                     .catch(() => {
-                        fallbackDiscovery();
+                        runStaticProbeDiscovery();
                     });
 
-                function fallbackDiscovery() {
-                    const candidateImages = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg'];
-                    const verifiedImages = [];
-                    let checkedCount = 0;
-
-                    candidateImages.forEach((imgFile) => {
-                        const img = new Image();
-                        img.onload = function () {
-                            verifiedImages.push(imgFile);
-                            checkedCount++;
-                            if (checkedCount === candidateImages.length) {
-                                sortAndRender();
-                            }
-                        };
-                        img.onerror = function () {
-                            checkedCount++;
-                            if (checkedCount === candidateImages.length) {
-                                sortAndRender();
-                            }
-                        };
-                        img.src = './adimg/' + imgFile;
-                    });
-
-                    function sortAndRender() {
-                        verifiedImages.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-                        if (verifiedImages.length > 0) {
-                            renderCarousel(verifiedImages);
-                        } else {
-                            const existingImgs = Array.from(track.querySelectorAll('img')).map(el => el.getAttribute('src').replace('./adimg/', '')).filter(Boolean);
-                            if (existingImgs.length > 0) {
-                                renderCarousel(existingImgs);
-                            }
-                        }
+                // 3. Smart Static Auto-Probing for Pure MikroTik RouterOS (Runs non-blocking in background)
+                function runStaticProbeDiscovery() {
+                    const candidateNames = [];
+                    for (let i = 1; i <= 20; i++) {
+                        candidateNames.push(i + '.jpg', i + '.png', i + '.webp', i + '.jpeg');
                     }
+
+                    const foundImages = [];
+                    let finished = 0;
+
+                    candidateNames.forEach(function (fileName) {
+                        const testImg = new Image();
+                        testImg.onload = function () {
+                            foundImages.push(fileName);
+                            finished++;
+                            if (finished === candidateNames.length && foundImages.length > 0) {
+                                foundImages.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+                                renderCarousel(foundImages);
+                            }
+                        };
+                        testImg.onerror = function () {
+                            finished++;
+                            if (finished === candidateNames.length && foundImages.length > 0) {
+                                foundImages.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+                                renderCarousel(foundImages);
+                            }
+                        };
+                        testImg.src = './adimg/' + fileName;
+                    });
                 }
             }
 
