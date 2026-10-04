@@ -1,6 +1,6 @@
 {
-  "name": "تونس نت - MikroTik Hotspot",
-  "description": "بوابة تسجيل الدخول لشبكة تونس نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع إدارة السرعات، فحص الكروت، والأسعار",
+  "name": "الخالد نت - MikroTik Hotspot",
+  "description": "بوابة تسجيل الدخول لشبكة الخالد نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات",
   "requestFramePermissions": [
     "camera"
   ],

@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title data-network-name>شبكة الخالد نت اللاسلكيه</title>
+    <title data-network-name>الخالد نت - MikroTik Hotspot</title>
+    <meta name="description" content="بوابة تسجيل الدخول لشبكة الخالد نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات">
+    <meta property="og:title" content="الخالد نت - MikroTik Hotspot">
+    <meta property="og:description" content="بوابة تسجيل الدخول لشبكة الخالد نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -382,25 +385,29 @@
                     <section class="section">
                         <div class="ticker-container">
                             <div class="ticker-content-track">
-                                <p class="marquee" data-news-line>{بسم الله الرحمن الرحيم} ( قل للمؤمنين يغضوا من أبصرهم ويحفظوا فروجهم ذلك ازكى لهم إن الله خبير بما يصنعون ) صدق الله العظيم</p>
+                                <p class="marquee" data-news-line>أهلاً بكم في شبكة الخالد نت | خدمة العملاء: 776418435 - 734059346 | للمحافظة على الرصيد يرجى اختيار سرعة مناسبة</p>
                             </div>
                         </div>
                     </section>
 
 
                     <!-- Main Welcome Title -->
-                    <h1>مرحبا بك في شبكة الخالد نت الاسلكيه</h1>
+                    <h1>مرحبا بك في شبكة الخالد نت اللاسلكيه</h1>
 
                     <!-- 2026 Swipeable Touch Carousel (With 3D Legacy compatibility) -->
                     <div class="ads-carousel-wrapper" id="adsCarouselWrapper">
                         <div class="carousel-container" id="adCarousel">
                             <div class="carousel-track" id="carouselTrack">
                                 <div class="carousel-slide">
-                                    <img class="im1" src="./adimg/5.jpg" alt="إعلان 1" fetchpriority="high"
+                                    <img class="im1" src="./adimg/1.jpg" alt="إعلان 1" fetchpriority="high"
                                         decoding="sync">
                                 </div>
                                 <div class="carousel-slide">
-                                    <img class="im2" src="./adimg/7.jpg" alt="إعلان 2" fetchpriority="high"
+                                    <img class="im2" src="./adimg/5.jpg" alt="إعلان 2" fetchpriority="high"
+                                        decoding="sync">
+                                </div>
+                                <div class="carousel-slide">
+                                    <img class="im3" src="./adimg/7.jpg" alt="إعلان 3" fetchpriority="high"
                                         decoding="sync">
                                 </div>
                             </div>
@@ -410,13 +417,15 @@
                         <div class="carousel-dots" id="carouselDots">
                             <span class="carousel-dot active"></span>
                             <span class="carousel-dot"></span>
+                            <span class="carousel-dot"></span>
                         </div>
 
                         <!-- Preserving legacy .ads .box for any legacy script checks -->
                         <div class="ads" style="display: none;">
                             <div class="box" id="legacyAdsBox">
-                                <span style="--i:1"><img class="im1" src="./adimg/5.jpg"></span>
-                                <span style="--i:2"><img class="im2" src="./adimg/7.jpg"></span>
+                                <span style="--i:1"><img class="im1" src="./adimg/1.jpg"></span>
+                                <span style="--i:2"><img class="im2" src="./adimg/5.jpg"></span>
+                                <span style="--i:3"><img class="im3" src="./adimg/7.jpg"></span>
                             </div>
                         </div>
                     </div>
@@ -533,14 +542,15 @@
                                 </div>
 
                                 <!-- Native select preserved hidden for script/form integration -->
-                                <select id="speed" name="domain" speed-field style="display: none;">
+                                <select id="speed" name="speed" speed-field style="display: none;">
                                     <option value="" disabled hidden>أختيار سرعة الإنترنت</option>
-                                    <option value="128k/512k">سرعة اقتصادية</option>
-                                    <option selected value="256k/700k">سرعة عادية</option>
-                                    <option value="256k/1M">سرعة متوسطة</option>
-                                    <option value="512M/3M">سرعة عالية</option>
-                                    <option value="1M/8M" id="opt-speed-ultra" style="display: none;">سرعة عالية جدا
-                                    </option>
+                                    <option value="@512K">سرعة 512 كيلو</option>
+                                    <option value="@1M">سرعة 1 ميجا</option>
+                                    <option selected value="@2M">سرعة 2 ميجا</option>
+                                    <option value="@4M">سرعة 4 ميجا</option>
+                                    <option value="@8M">سرعة 8 ميجا</option>
+                                    <option value="@12M">سرعة 12 ميجا</option>
+                                    <option value="">بدون تحديد (تلقائي)</option>
                                 </select>
 
                                 <!-- Modern Interactive Speed Trigger Button -->
@@ -554,8 +564,7 @@
                                         </span>
                                         <div class="speed-trigger-text">
                                             <span class="speed-trigger-label">السرعة المختارة:</span>
-                                            <span class="speed-trigger-selected" id="selectedSpeedDisplay">سرعة
-                                                عادية</span>
+                                            <span class="speed-trigger-selected" id="selectedSpeedDisplay">سرعة 2 ميجا</span>
                                         </div>
                                     </div>
                                     <div class="speed-trigger-badge">
@@ -622,7 +631,7 @@
                         </div>
                         <div class="support-actions-grid">
                             <!-- WhatsApp Button with Country Code +967 and formatted pre-filled greeting message -->
-                            <a href="whatsapp://send?phone=967772131004&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D8%B4%D8%A8%D9%83%D8%A9%20%D8%AA%D9%88%D9%86%D8%B3%20%D9%86%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D8%B3%D9%84%D9%83%D9%8A%D8%A9"
+                            <a href="whatsapp://send?phone=967776418435&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D8%B4%D8%A8%D9%83%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%84%D8%AF%20%D9%86%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D8%B3%D9%84%D9%83%D9%8A%D8%A9"
                                 class="support-btn support-btn-whatsapp" aria-label="مراسلة واتساب">
                                 <svg viewBox="0 0 24 24" class="support-btn-icon">
                                     <path
@@ -632,7 +641,7 @@
                             </a>
 
                             <!-- Direct Phone Call Button (Without country code for native phone dialer) -->
-                            <a href="tel:772131004" class="support-btn support-btn-call" aria-label="اتصال مباشر">
+                            <a href="tel:776418435" class="support-btn support-btn-call" aria-label="اتصال مباشر">
                                 <svg viewBox="0 0 24 24" class="support-btn-icon">
                                     <path
                                         d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.11 15.11 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 3.99c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.61c0-.55-.45-1-1-1z" />
@@ -664,54 +673,60 @@
                         </div>
 
                         <div class="speed-cards-list" id="speedModalList">
-                            <!-- Speed Option 1 -->
-                            <div class="speed-card-option" data-speed="128k/512k" data-speed-title="سرعة اقتصادية">
+                            <div class="speed-card-option" data-speed="@512K" data-speed-title="سرعة 512 كيلو">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة اقتصادية</span>
+                                    <span class="speed-card-name">سرعة 512 كيلو</span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 2 (Default / Active) -->
-                            <div class="speed-card-option active" data-speed="256k/700k" data-speed-title="سرعة عادية">
+                            <div class="speed-card-option" data-speed="@1M" data-speed-title="سرعة 1 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة عادية (الموصى بها)</span>
+                                    <span class="speed-card-name">سرعة 1 ميجا</span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 3 -->
-                            <div class="speed-card-option" data-speed="256k/1M" data-speed-title="سرعة متوسطة">
+                            <div class="speed-card-option active" data-speed="@2M" data-speed-title="سرعة 2 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة متوسطة</span>
+                                    <span class="speed-card-name">سرعة 2 ميجا <span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span></span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 4 -->
-                            <div class="speed-card-option" data-speed="512M/3M" data-speed-title="سرعة عالية">
+                            <div class="speed-card-option" data-speed="@4M" data-speed-title="سرعة 4 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة عالية</span>
+                                    <span class="speed-card-name">سرعة 4 ميجا</span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 5 (سرعة عالية جدا - تظهر وتختفي تلقائياً حسب إعداد enable-ultra-speed) -->
-                            <div class="speed-card-option" id="card-speed-ultra" data-speed="1M/8M"
-                                data-speed-title="سرعة عالية جدا" style="display: none;">
+                            <div class="speed-card-option" data-speed="@8M" data-speed-title="سرعة 8 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة عالية جدا</span>
+                                    <span class="speed-card-name">سرعة 8 ميجا</span>
+                                </div>
+                            </div>
+                            <div class="speed-card-option" data-speed="@12M" data-speed-title="سرعة 12 ميجا">
+                                <div class="speed-card-indicator">
+                                    <div class="speed-radio-dot"></div>
+                                </div>
+                                <div class="speed-card-info">
+                                    <span class="speed-card-name">سرعة 12 ميجا</span>
+                                </div>
+                            </div>
+                            <div class="speed-card-option" data-speed="" data-speed-title="بدون تحديد (تلقائي)">
+                                <div class="speed-card-indicator">
+                                    <div class="speed-radio-dot"></div>
+                                </div>
+                                <div class="speed-card-info">
+                                    <span class="speed-card-name">بدون تحديد (تلقائي)</span>
                                 </div>
                             </div>
                         </div>
@@ -862,12 +877,12 @@
                                     </svg>
                                     <span>رجوع</span>
                                 </button>
-                                <a href="tel:772131004" class="fab-support">
+                                <a href="tel:776418435" class="fab-support">
                                     <svg viewBox="0 0 24 24">
                                         <path
                                             d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                                     </svg>
-                                    <span class="contact" data-service-number>خدمة العملاء: 772131004</span>
+                                    <span class="contact" data-service-number>خدمة العملاء: 776418435</span>
                                 </a>
                             </div>
                         </div>
@@ -898,12 +913,12 @@
                                     </svg>
                                     <span>رجوع</span>
                                 </button>
-                                <a href="tel:772131004" class="fab-support">
+                                <a href="tel:776418435" class="fab-support">
                                     <svg viewBox="0 0 24 24">
                                         <path
                                             d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                                     </svg>
-                                    <span class="contact" data-service-number>خدمة العملاء: 772131004</span>
+                                    <span class="contact" data-service-number>خدمة العملاء: 776418435</span>
                                 </a>
                             </div>
                         </div>
@@ -931,10 +946,9 @@
                                 <div class="loan-body" id="loan-news-container">
                                     <p id="loan-news-title"
                                         style="font-weight: 800; font-size: 1.1rem; color: #fde047; margin-bottom: 8px;">
-                                        زبائننا الكرام</p>
-                                    <p id="loan-news-content">صارت كروت شبكة الخالد نت متوفرة عبر <strong>محفظة
-                                            جيب</strong></p>
-                                    <div id="loan-news-code" class="loan-highlight-badge">رقم كود الشبكة: (21124)</div>
+                                        زبائن شبكة الخالد نت الكرام</p>
+                                    <p id="loan-news-content">أهلاً وسهلاً بكم في شبكة الخالد نت. كروت وباقات الإنترنت متوفرة في جميع نقاط البيع ومراكز التوزيع. للمحافظة على الرصيد يرجى اختيار السرعة المناسبة لاحتياجك.</p>
+                                    <div id="loan-news-code" class="loan-highlight-badge">خدمة العملاء: 776418435 - 734059346</div>
                                     <br id="loan-news-break"><br id="loan-news-break-2">
                                     <div id="loan-news-extra-header"
                                         style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
@@ -945,9 +959,8 @@
                                         </svg>
                                         <strong id="loan-news-extra-title">البث المباشر والمباريات:</strong>
                                     </div>
-                                    <p id="loan-news-extra-content">استمتع بمشاهدة الاستراحة والبث المباشر للمباريات
-                                        والدوريات العالمية مجاناً عبر الرابط:</p>
-                                    <div id="loan-news-extra-badge" class="loan-highlight-badge">t.com</div>
+                                    <p id="loan-news-extra-content">استمتع بمشاهدة البث المباشر للمباريات والدوريات العالمية مجاناً عبر منصة وسيرفر الشبكة.</p>
+                                    <div id="loan-news-extra-badge" class="loan-highlight-badge">بث المباريات</div>
                                 </div>
                                 <!-- ========================================================================= -->
 
@@ -957,12 +970,12 @@
                                     </svg>
                                     <span>رجوع</span>
                                 </button>
-                                <a href="tel:772131004" class="fab-support">
+                                <a href="tel:776418435" class="fab-support">
                                     <svg viewBox="0 0 24 24">
                                         <path
                                             d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                                     </svg>
-                                    <span class="contact" data-service-number>خدمة العملاء: 772131004</span>
+                                    <span class="contact" data-service-number>خدمة العملاء: 776418435</span>
                                 </a>
                             </div>
                         </div>
@@ -983,55 +996,60 @@
                         </div>
 
                         <div class="speed-cards-list" id="statusSpeedModalList">
-                            <!-- Speed Option 1 -->
-                            <div class="speed-card-option" data-status-speed="128k/512k"
-                                data-speed-title="سرعة اقتصادية">
+                            <div class="speed-card-option" data-status-speed="@512K" data-speed-title="سرعة 512 كيلو">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة اقتصادية</span>
+                                    <span class="speed-card-name">سرعة 512 كيلو</span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 2 -->
-                            <div class="speed-card-option" data-status-speed="256k/700k" data-speed-title="سرعة عادية">
+                            <div class="speed-card-option" data-status-speed="@1M" data-speed-title="سرعة 1 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة عادية (الموصى بها)</span>
+                                    <span class="speed-card-name">سرعة 1 ميجا</span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 3 -->
-                            <div class="speed-card-option" data-status-speed="256k/1M" data-speed-title="سرعة متوسطة">
+                            <div class="speed-card-option active" data-status-speed="@2M" data-speed-title="سرعة 2 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة متوسطة</span>
+                                    <span class="speed-card-name">سرعة 2 ميجا <span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span></span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 4 -->
-                            <div class="speed-card-option" data-status-speed="512M/3M" data-speed-title="سرعة عالية">
+                            <div class="speed-card-option" data-status-speed="@4M" data-speed-title="سرعة 4 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة عالية</span>
+                                    <span class="speed-card-name">سرعة 4 ميجا</span>
                                 </div>
                             </div>
-
-                            <!-- Speed Option 5 (سرعة عالية جدا - تظهر وتختفي تلقائياً حسب إعداد enable-ultra-speed) -->
-                            <div class="speed-card-option" id="card-status-speed-ultra" data-status-speed="1M/8M"
-                                data-speed-title="سرعة عالية جدا" style="display: none;">
+                            <div class="speed-card-option" data-status-speed="@8M" data-speed-title="سرعة 8 ميجا">
                                 <div class="speed-card-indicator">
                                     <div class="speed-radio-dot"></div>
                                 </div>
                                 <div class="speed-card-info">
-                                    <span class="speed-card-name">سرعة عالية جدا</span>
+                                    <span class="speed-card-name">سرعة 8 ميجا</span>
+                                </div>
+                            </div>
+                            <div class="speed-card-option" data-status-speed="@12M" data-speed-title="سرعة 12 ميجا">
+                                <div class="speed-card-indicator">
+                                    <div class="speed-radio-dot"></div>
+                                </div>
+                                <div class="speed-card-info">
+                                    <span class="speed-card-name">سرعة 12 ميجا</span>
+                                </div>
+                            </div>
+                            <div class="speed-card-option" data-status-speed="" data-speed-title="بدون تحديد (تلقائي)">
+                                <div class="speed-card-indicator">
+                                    <div class="speed-radio-dot"></div>
+                                </div>
+                                <div class="speed-card-info">
+                                    <span class="speed-card-name">بدون تحديد (تلقائي)</span>
                                 </div>
                             </div>
                         </div>
@@ -1080,7 +1098,7 @@
                         <section class="section" style="margin-top: 10px; margin-bottom: 10px;">
                             <div class="ticker-container">
                                 <div class="ticker-content-track">
-                                    <p class="marquee" data-news-line>{بسم الله الرحمن الرحيم} ( قل للمؤمنين يغضوا من أبصرهم ويحفظوا فروجهم ذلك ازكى لهم إن الله خبير بما يصنعون ) صدق الله العظيم</p>
+                                    <p class="marquee" data-news-line>أهلاً بكم في شبكة الخالد نت | خدمة العملاء: 776418435 - 734059346 | للمحافظة على الرصيد يرجى اختيار سرعة مناسبة</p>
                                 </div>
                             </div>
                         </section>
@@ -1347,7 +1365,7 @@
                             </div>
                             <div class="support-actions-grid">
                                 <!-- WhatsApp Button with Country Code +967 and formatted pre-filled greeting message -->
-                                <a href="whatsapp://send?phone=967772131004&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D8%B4%D8%A8%D9%83%D8%A9%20%D8%AA%D9%88%D9%86%D8%B3%20%D9%86%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D8%B3%D9%84%D9%83%D9%8A%D8%A9"
+                                <a href="whatsapp://send?phone=967776418435&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D8%B4%D8%A8%D9%83%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%84%D8%AF%20%D9%86%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D8%B3%D9%84%D9%83%D9%8A%D8%A9"
                                     class="support-btn support-btn-whatsapp" aria-label="مراسلة واتساب">
                                     <svg viewBox="0 0 24 24" class="support-btn-icon">
                                         <path
@@ -1357,7 +1375,7 @@
                                 </a>
 
                                 <!-- Direct Phone Call Button (Without country code for native phone dialer) -->
-                                <a href="tel:772131004" class="support-btn support-btn-call" aria-label="اتصال مباشر">
+                                <a href="tel:776418435" class="support-btn support-btn-call" aria-label="اتصال مباشر">
                                     <svg viewBox="0 0 24 24" class="support-btn-icon">
                                         <path
                                             d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.11 15.11 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 3.99c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.61c0-.55-.45-1-1-1z" />
@@ -1401,7 +1419,7 @@
                             </div>
                             <div class="support-actions-grid">
                                 <!-- WhatsApp Button with Country Code +967 and formatted pre-filled greeting message -->
-                                <a href="whatsapp://send?phone=967772131004&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D8%B4%D8%A8%D9%83%D8%A9%20%D8%AA%D9%88%D9%86%D8%B3%20%D9%86%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D8%B3%D9%84%D9%83%D9%8A%D8%A9"
+                                <a href="whatsapp://send?phone=967776418435&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D8%B4%D8%A8%D9%83%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%84%D8%AF%20%D9%86%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D8%B3%D9%84%D9%83%D9%8A%D8%A9"
                                     class="support-btn support-btn-whatsapp" aria-label="مراسلة واتساب">
                                     <svg viewBox="0 0 24 24" class="support-btn-icon">
                                         <path
@@ -1409,7 +1427,7 @@
                                     </svg>
                                     <span>مراسلة واتساب</span>
                                 </a>
-                                <a href="tel:772131004" class="support-btn support-btn-call" aria-label="اتصال مباشر">
+                                <a href="tel:776418435" class="support-btn support-btn-call" aria-label="اتصال مباشر">
                                     <svg viewBox="0 0 24 24" class="support-btn-icon">
                                         <path
                                             d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.11 15.11 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 3.99c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.61c0-.55-.45-1-1-1z" />
@@ -1438,12 +1456,12 @@
                             <div class="wrapper" id="grid"></div>
                         </div>
                         <button class="app-logout button app-submit back">الصفحة السابقة</button>
-                        <a href="tel:772131004" class="fab-support">
+                        <a href="tel:776418435" class="fab-support">
                             <svg viewBox="0 0 24 24">
                                 <path
                                     d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" />
                             </svg>
-                            <span class="contact back" data-service-number>خدمة العملاء: 772131004</span>
+                            <span class="contact back" data-service-number>خدمة العملاء: 776418435</span>
                         </a>
                     </div>
                 </div>
@@ -1487,6 +1505,7 @@
     <span style="display: none;" id="winmsg"></span>
 
     <!-- Hotspot System Scripts -->
+    <script src="js/md5.js"></script>
     <script src="js/init.min.js"></script>
     <script src="js/hotInImprover.min.js"></script>
     <script src="js/hotCookie.min.js"></script>
@@ -1691,28 +1710,32 @@
                 // 1. Immediate Instant Initialization from Config or DOM (Zero Delay)
                 var initialConfigImgs = (window.hotspotConfig && Array.isArray(window.hotspotConfig['ad-images']) && window.hotspotConfig['ad-images'].length > 0)
                     ? window.hotspotConfig['ad-images']
-                    : ['5.jpg', '7.jpg'];
+                    : ['1.jpg', '5.jpg', '7.jpg'];
                 renderCarousel(initialConfigImgs);
 
-                // 2. Dynamic Discovery from adimg/ folder via API (Server/Dev/Live Backend mode)
-                fetch('/api/v1/ad-images')
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data && data.success && Array.isArray(data.images) && data.images.length > 0) {
-                            renderCarousel(data.images);
-                        } else {
+                // 2. Dynamic Discovery from adimg/ folder
+                if (window.location.port === '3000') {
+                    fetch('/api/v1/ad-images')
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.success && Array.isArray(data.images) && data.images.length > 0) {
+                                renderCarousel(data.images);
+                            } else {
+                                runStaticProbeDiscovery();
+                            }
+                        })
+                        .catch(() => {
                             runStaticProbeDiscovery();
-                        }
-                    })
-                    .catch(() => {
-                        runStaticProbeDiscovery();
-                    });
+                        });
+                } else {
+                    setTimeout(runStaticProbeDiscovery, 900);
+                }
 
-                // 3. Smart Static Auto-Probing for Pure MikroTik RouterOS (Runs non-blocking in background)
+                // 3. Smart Static Auto-Probing for Pure MikroTik RouterOS (7 requests: 1.jpg to 7.jpg)
                 function runStaticProbeDiscovery() {
                     const candidateNames = [];
-                    for (let i = 1; i <= 20; i++) {
-                        candidateNames.push(i + '.jpg', i + '.png', i + '.webp', i + '.jpeg');
+                    for (let i = 1; i <= 7; i++) {
+                        candidateNames.push(i + '.jpg');
                     }
 
                     const foundImages = [];
@@ -1951,11 +1974,13 @@
             const speedchange = document.getElementById('speedchange');
 
             let speedLabelMap = {
-                '128k/512k': 'سرعة اقتصادية',
-                '256k/700k': 'سرعة عادية',
-                '256k/1M': 'سرعة متوسطة',
-                '512M/3M': 'سرعة عالية',
-                '1M/8M': 'سرعة عالية جدا'
+                '@512K': 'سرعة 512 كيلو',
+                '@1M': 'سرعة 1 ميجا',
+                '@2M': 'سرعة 2 ميجا',
+                '@4M': 'سرعة 4 ميجا',
+                '@8M': 'سرعة 8 ميجا',
+                '@12M': 'سرعة 12 ميجا',
+                '': 'بدون تحديد (تلقائي)'
             };
 
             function updateSpeedSelection(val, title, clickedCard) {
@@ -1963,7 +1988,10 @@
                     // Find matching option by value and text if possible
                     let matchedOpt = null;
                     if (title) {
-                        matchedOpt = Array.from(speedSelect.options).find(o => o.value === val && o.text.trim() === title.trim());
+                        matchedOpt = Array.from(speedSelect.options).find(o => !o.disabled && o.value === val && o.text.trim() === title.trim());
+                    }
+                    if (!matchedOpt) {
+                        matchedOpt = Array.from(speedSelect.options).find(o => !o.disabled && o.value === val);
                     }
                     if (matchedOpt) {
                         speedSelect.selectedIndex = matchedOpt.index;
@@ -2022,7 +2050,12 @@
                             statusSpeedTriggerText.textContent = speedTitle;
                         }
                         if (speedchange) {
-                            speedchange.value = val;
+                            let matchedOpt = Array.from(speedchange.options).find(o => !o.disabled && o.value === val);
+                            if (matchedOpt) {
+                                speedchange.selectedIndex = matchedOpt.index;
+                            } else {
+                                speedchange.value = val;
+                            }
                             const ev = new Event('change', { bubbles: true });
                             speedchange.dispatchEvent(ev);
                         }
@@ -2039,7 +2072,7 @@
 
                 speedLabelMap = {};
                 speedsArray.forEach(s => {
-                    if (s.value && s.name) {
+                    if (s.value !== undefined && s.name) {
                         speedLabelMap[s.value] = s.name;
                     }
                 });
@@ -2535,6 +2568,10 @@
                     // Collect all previous cards stored in cookies, localStorage, or memory
                     let cardsList = [];
 
+                    const cleanCardNum = function(str) {
+                        return (str || '').toString().trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
+                    };
+
                     // From hotCookie stored values
                     if (typeof getStoredValuesFromCookie === 'function') {
                         const rawStored = getStoredValuesFromCookie();
@@ -2543,7 +2580,7 @@
                             rawStored.slice().reverse().forEach(function(item) {
                                 if (item) {
                                     var parts = item.toString().split(',');
-                                    var cardNum = parts[0] ? parts[0].trim() : '';
+                                    var cardNum = cleanCardNum(parts[0]);
                                     if (cardNum && !cardsList.includes(cardNum)) {
                                         cardsList.push(cardNum);
                                     }
@@ -2556,7 +2593,7 @@
                     if (typeof getLoginCardCookie === 'function') {
                         const loginCookie = getLoginCardCookie();
                         if (loginCookie && loginCookie.username) {
-                            const u = loginCookie.username.trim();
+                            const u = cleanCardNum(loginCookie.username);
                             if (u && !cardsList.includes(u)) {
                                 cardsList.push(u);
                             }
@@ -2570,16 +2607,16 @@
                             const parsed = JSON.parse(rawLocal);
                             if (Array.isArray(parsed)) {
                                 parsed.slice().reverse().forEach(function(item) {
-                                    var card = item.toString().split(',')[0].trim();
+                                    var card = cleanCardNum(item.toString().split(',')[0]);
                                     if (card && !cardsList.includes(card)) {
                                         cardsList.push(card);
                                     }
                                 });
                             }
                         }
-                        const singleLocal = localStorage.getItem('last_user_card') || localStorage.getItem('username');
-                        if (singleLocal && !cardsList.includes(singleLocal.trim())) {
-                            cardsList.push(singleLocal.trim());
+                        const singleLocal = cleanCardNum(localStorage.getItem('last_user_card') || localStorage.getItem('username'));
+                        if (singleLocal && !cardsList.includes(singleLocal)) {
+                            cardsList.push(singleLocal);
                         }
                     } catch (err) { }
 
@@ -2620,7 +2657,7 @@
             const usernameInputField = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
             if (usernameInputField) {
                 const persistCard = function () {
-                    const val = usernameInputField.value ? usernameInputField.value.trim() : '';
+                    const val = usernameInputField.value ? usernameInputField.value.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '') : '';
                     if (val.length > 1) {
                         try {
                             localStorage.setItem('last_user_card', val);
@@ -2639,7 +2676,7 @@
                     const uInput = document.login.querySelector('input[username-field]') || document.querySelector('input[name="username"]');
                     if (uInput && uInput.value && uInput.value.trim().length > 1) {
                         try {
-                            const val = uInput.value.trim();
+                            const val = uInput.value.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
                             localStorage.setItem('last_user_card', val);
                             if (typeof saveValueToCookie === 'function') {
                                 saveValueToCookie(val, '');
@@ -2657,7 +2694,7 @@
                     e.preventDefault();
 
                     const activeCfg = window.hotspotConfig || {};
-                    const rawPhone = (activeCfg['service-number'] || '772131004').toString().replace(/\D/g, '');
+                    const rawPhone = (activeCfg['service-number'] || '776418435').toString().replace(/\D/g, '');
                     const waPhone = rawPhone.startsWith('967') ? rawPhone : ('967' + rawPhone);
                     const netName = (activeCfg['network-name'] || 'الخالد نت').toString().trim();
                     const waMsg = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + netName + ' اللاسلكية');

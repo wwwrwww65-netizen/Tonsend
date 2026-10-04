@@ -14,17 +14,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// In-memory simulation state for MikroTik Hotspot session
+// In-memory simulation state for MikroTik Hotspot session (Al-Khalid Net)
 let sessionState = {
   isLoggedIn: false,
-  username: 'USER-1234',
-  speed: '256k/700k',
+  username: '123456@2M',
+  speed: '@2M',
   updateOption: '_Uon',
   bytesIn: 14680064,
   bytesOut: 58720256,
-  remainBytes: 536870912,
+  remainBytes: 2147483648, // 2 GB
   startTime: Date.now(),
-  ip: '192.168.88.25',
+  ip: '10.0.0.25',
   mac: '64:6E:97:A1:B2:C3',
 };
 
@@ -54,14 +54,17 @@ function getUptimeString(startTime: number): string {
 app.get('/login', (req, res) => {
   const isCallBack = req.query.var === 'callBack';
   const username = req.query.username as string;
-  const domain = (req.query.domain as string) || '256k/700k';
+  const domain = (req.query.domain as string) || '';
 
   if (isCallBack) {
     if (username) {
-      // User is logging in
+      // Extract @speed suffix from username if present (e.g. 123456@2M)
+      const speedMatch = username.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
+      const extractedSpeed = speedMatch ? `@${speedMatch[1].toUpperCase()}` : (domain.split('_')[0] || '');
+
       sessionState.isLoggedIn = true;
       sessionState.username = username;
-      sessionState.speed = domain.split('_')[0] || '256k/700k';
+      sessionState.speed = extractedSpeed;
       sessionState.updateOption = domain.includes('_Uoff') ? '_Uoff' : '_Uon';
       sessionState.startTime = Date.now();
 
@@ -92,7 +95,7 @@ app.get('/login', (req, res) => {
       link_login_only: '/login',
       link_logout: '/logout',
       link_status: '/status',
-      nas_id: 'TunisNet-MikroTik',
+      nas_id: 'AlKhalidNet-MikroTik',
       ip: sessionState.ip,
       mac: sessionState.mac,
       trial: 'no',
