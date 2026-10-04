@@ -76,8 +76,22 @@
         img {
             -webkit-user-drag: none;
         }
+
+        html.initial-status-view #login {
+            display: none !important;
+        }
+
+        html.initial-status-view #status {
+            display: block !important;
+            animation: none !important;
+        }
     </style>
     <script>
+        try {
+            if (sessionStorage.getItem('hotspot_is_logged_in') === '1') {
+                document.documentElement.classList.add('initial-status-view');
+            }
+        } catch (e) {}
         var hotspotConfig = window.hotspotConfig || {};
         function applyInstantConfig(cfg) {
             if (!cfg) return;
@@ -1386,6 +1400,37 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    (function () {
+                        try {
+                            if (document.documentElement.classList.contains('initial-status-view')) {
+                                var loginEl = document.getElementById('login');
+                                var statusEl = document.getElementById('status');
+                                if (loginEl) {
+                                    loginEl.style.display = 'none';
+                                    loginEl.classList.add('inactive');
+                                    loginEl.classList.remove('active');
+                                }
+                                if (statusEl) {
+                                    statusEl.style.display = 'block';
+                                    statusEl.classList.add('active');
+                                }
+                                var rawCache = sessionStorage.getItem('hotspot_cached_status');
+                                if (rawCache) {
+                                    var cached = JSON.parse(rawCache);
+                                    var ids = ['bytes_out', 'bytes_in', 'remain_bytes_total', 'uptime', 'session_time_left', 'sspeed', 'status-title'];
+                                    for (var i = 0; i < ids.length; i++) {
+                                        var id = ids[i];
+                                        if (cached[id]) {
+                                            var el = document.getElementById(id);
+                                            if (el) el.innerText = cached[id];
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (e) {}
+                    })();
+                </script>
 
                 <!-- 2026 MODAL: BLOCKED USER SCREEN (#block) -->
                 <div class="app" id="block">

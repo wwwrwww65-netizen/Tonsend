@@ -51,7 +51,7 @@ function getUptimeString(startTime: number): string {
 }
 
 // MikroTik Hotspot /login endpoint
-app.get('/login', (req, res) => {
+app.get(['/login', '/login.html', '/alogin', '/alogin.html'], (req, res) => {
   const isCallBack = req.query.var === 'callBack';
   const username = req.query.username as string;
   const domain = (req.query.domain as string) || '';
@@ -68,6 +68,8 @@ app.get('/login', (req, res) => {
       sessionState.updateOption = domain.includes('_Uoff') ? '_Uoff' : '_Uon';
       sessionState.startTime = Date.now();
 
+      const rawToken = `m056fd9fdfdsffsdffdfd1697455${sessionState.username}dsfd6571fgfgfgfgdf53sdfdsfgsd14`;
+
       return res.json({
         logged_in: 'yes',
         username: sessionState.username,
@@ -81,6 +83,7 @@ app.get('/login', (req, res) => {
         remain_bytes_total: String(sessionState.remainBytes),
         session_time_left: '4h30m',
         uptime: getUptimeString(sessionState.startTime),
+        bytesm: rawToken,
         session_time_left_secs: '16200',
         uptime_secs: '300',
         trial: 'no',
@@ -88,6 +91,8 @@ app.get('/login', (req, res) => {
         action: 'onLoggedIn',
       });
     }
+
+    const rawToken = `m056fd9fdfdsffsdffdfd1697455${sessionState.username}dsfd6571fgfgfgfgdf53sdfdsfgsd14`;
 
     // Initial check (before login submitted)
     return res.json({
@@ -100,6 +105,14 @@ app.get('/login', (req, res) => {
       mac: sessionState.mac,
       trial: 'no',
       username: sessionState.isLoggedIn ? sessionState.username : '',
+      sspeed: `${sessionState.speed}_`,
+      update: sessionState.updateOption,
+      bytes_in: String(sessionState.bytesIn),
+      bytes_out: String(sessionState.bytesOut),
+      remain_bytes_total: String(sessionState.remainBytes),
+      session_time_left: '4h15m',
+      uptime: getUptimeString(sessionState.startTime),
+      bytesm: rawToken,
       action: 'onLoginStart',
     });
   }
@@ -109,7 +122,7 @@ app.get('/login', (req, res) => {
 });
 
 // MikroTik Hotspot /status endpoint
-app.get('/status', (req, res) => {
+app.get(['/status', '/status.html'], (req, res) => {
   const isCallBack = req.query.var === 'callBack';
 
   if (isCallBack) {
@@ -138,7 +151,7 @@ app.get('/status', (req, res) => {
 });
 
 // MikroTik Hotspot /logout endpoint
-app.get('/logout', (req, res) => {
+app.get(['/logout', '/logout.html'], (req, res) => {
   sessionState.isLoggedIn = false;
   const isCallBack = req.query.var === 'callBack';
 
