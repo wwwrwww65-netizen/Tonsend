@@ -122,7 +122,7 @@
                     var profHtml = '';
                     for (var p = 0; p < cfg.profiles.length; p++) {
                         var pi = cfg.profiles[p];
-                        profHtml += '<tr><td>' + (pi.price || '') + '</td><td>' + (pi.time || '') + '</td></tr>';
+                        profHtml += '<tr><td>' + (pi.price || '') + '</td><td>' + (pi.time || '') + '</td><td>' + (pi.transfer || '-') + '</td><td>' + (pi.validity || '-') + '</td></tr>';
                     }
                     profBody.innerHTML = profHtml;
                 }
@@ -587,26 +587,6 @@
                                     placeholder="ادخل كلمة السر هنا" improve-input>
                             </div>
 
-                            <!-- Updates & App Store Blocker Toggle -->
-                            <div class="toggle-container-modern">
-                                <div class="toggle-info">
-                                    <span class="toggle-title">
-                                        <svg viewBox="0 0 24 24" class="section-icon">
-                                            <path
-                                                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
-                                        </svg>
-                                        <span>إيقاف التحديثات والمتجر</span>
-                                    </span>
-                                    <span class="toggle-desc">التحديثات والمتجر تستهلك الرصيد بسرعة</span>
-                                </div>
-                                <div class="toggle-action-side">
-                                    <span class="toggle-status-label" id="updateStatusText">متوقف</span>
-                                    <label class="switch-wrap">
-                                        <input type="checkbox" value="_Uon" id="chupdate">
-                                        <span class="slider-pill"></span>
-                                    </label>
-                                </div>
-                            </div>
 
                             <!-- Primary Glow Login Submit Button -->
                             <button class="button login-submit login-submit-btn" parent-id="status" enable-hot-cookie
@@ -967,6 +947,8 @@
                                         <tr>
                                             <th scope="col">الفئة</th>
                                             <th scope="col">الوقت</th>
+                                            <th scope="col">الرصيد</th>
+                                            <th scope="col">الصلاحية</th>
                                         </tr>
                                     </thead>
                                     <tbody id="profiles"></tbody>
@@ -1365,35 +1347,6 @@
                             </select>
                         </div>
 
-                        <!-- Updates & App Store Blocker Toggle (Identical to Login Screen) -->
-                        <div class="toggle-container-modern" style="margin: 12px 0;">
-                            <div class="toggle-info">
-                                <span class="toggle-title">
-                                    <svg viewBox="0 0 24 24" class="section-icon">
-                                        <path
-                                            d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
-                                    </svg>
-                                    <span>إيقاف التحديثات والمتجر</span>
-                                </span>
-                                <span class="toggle-desc">التحديثات والمتجر تستهلك الرصيد بسرعة</span>
-                            </div>
-                            <div class="toggle-action-side">
-                                <span class="toggle-status-label" id="statusUpdateStatusText">متوقف</span>
-                                <label class="switch-wrap">
-                                    <input type="checkbox" id="statusChupdate">
-                                    <span class="slider-pill"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Hidden native select & status span for MikroTik script communication -->
-                        <select id="updatechange" class="tcs" style="display: none;">
-                            <option value="ns" disabled hidden selected>أضغط هنا للتغيير</option>
-                            <option value="_Uon">تفعيل التحديثات</option>
-                            <option value="_Uoff">أيقاف التحديثات</option>
-                            <option value="cancel">إلغاء</option>
-                        </select>
-                        <span id="update" style="display: none;"></span>
 
                         <!-- Live Metrics Dashboard -->
                         <div style="margin-top: 14px;">
@@ -2372,23 +2325,6 @@
                 });
             }
 
-            // 4. UPDATES BLOCKER TOGGLE STATUS TEXT (LOGIN SCREEN)
-            var chUpdate = document.getElementById('chupdate');
-            var updateStatusText = document.getElementById('updateStatusText');
-            if (chUpdate && updateStatusText) {
-                var updateToggleState = function() {
-                    if (chUpdate.checked) {
-                        updateStatusText.textContent = 'مفعل';
-                        updateStatusText.classList.add('active');
-                    } else {
-                        updateStatusText.textContent = 'متوقف';
-                        updateStatusText.classList.remove('active');
-                    }
-                };
-                chUpdate.addEventListener('change', updateToggleState);
-                updateToggleState();
-            }
-
             // 5. STATUS SCREEN: SYNCHRONIZE LIVE SPEED FROM MIKROTIK
             if (sspeedSpan) {
                 const normalizeAr = s => (s || '').replace(/[أإآ]/g, 'ا').trim();
@@ -2427,60 +2363,6 @@
                 const speedObserver = new MutationObserver(syncSpeedFromMikrotik);
                 speedObserver.observe(sspeedSpan, { childList: true, characterData: true, subtree: true });
                 syncSpeedFromMikrotik();
-            }
-
-            // 6. STATUS SCREEN: UPDATES BLOCKER TOGGLE (Identical to Login Screen)
-            const statusChupdate = document.getElementById('statusChupdate');
-            const statusUpdateStatusText = document.getElementById('statusUpdateStatusText');
-            const updatechange = document.getElementById('updatechange');
-            const updateSpan = document.getElementById('update');
-
-            if (statusChupdate && statusUpdateStatusText) {
-                let isSyncing = false;
-                const updateStatusToggleState = (triggerChange = false) => {
-                    if (isSyncing) return;
-                    if (statusChupdate.checked) {
-                        statusUpdateStatusText.textContent = 'مفعل';
-                        statusUpdateStatusText.classList.add('active');
-                        if (triggerChange && updatechange) {
-                            updatechange.value = '_Uoff';
-                            const ev = new Event('change', { bubbles: true });
-                            updatechange.dispatchEvent(ev);
-                        }
-                    } else {
-                        statusUpdateStatusText.textContent = 'متوقف';
-                        statusUpdateStatusText.classList.remove('active');
-                        if (triggerChange && updatechange) {
-                            updatechange.value = '_Uon';
-                            const ev = new Event('change', { bubbles: true });
-                            updatechange.dispatchEvent(ev);
-                        }
-                    }
-                };
-
-                statusChupdate.addEventListener('change', () => updateStatusToggleState(true));
-
-                // Live Sync with MikroTik status query updates
-                if (updateSpan) {
-                    const syncFromMikrotik = () => {
-                        const text = (updateSpan.innerText || updateSpan.textContent || '').trim();
-                        isSyncing = true;
-                        if (text.includes('أيقاف') || text.includes('ايقاف') || text.includes('Uoff')) {
-                            statusChupdate.checked = true;
-                            statusUpdateStatusText.textContent = 'مفعل';
-                            statusUpdateStatusText.classList.add('active');
-                        } else if (text.includes('تفعيل') || text.includes('Uon')) {
-                            statusChupdate.checked = false;
-                            statusUpdateStatusText.textContent = 'متوقف';
-                            statusUpdateStatusText.classList.remove('active');
-                        }
-                        isSyncing = false;
-                    };
-
-                    const observer = new MutationObserver(syncFromMikrotik);
-                    observer.observe(updateSpan, { childList: true, characterData: true, subtree: true });
-                    syncFromMikrotik();
-                }
             }
 
             // 6. POINTS SYSTEM AUTH & REGISTRATION HANDLER
