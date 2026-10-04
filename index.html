@@ -74,6 +74,19 @@
             -webkit-user-drag: none;
         }
     </style>
+    <script>
+        var hotspotConfig = window.hotspotConfig || {};
+        function Config(a) {
+            hotspotConfig = a;
+            window.hotspotConfig = a;
+            if (a && a['enable-loyalty-system'] === false) {
+                document.documentElement.classList.add('loyalty-system-disabled');
+            } else {
+                document.documentElement.classList.remove('loyalty-system-disabled');
+            }
+        }
+    </script>
+    <script src="config/config.js"></script>
     <script src="js/security.min.js"></script>
 </head>
 
@@ -287,7 +300,7 @@
                     </div>
 
                     <!-- Unregistered Loyalty Section -->
-                    <div id="loyalty-unregistered-section">
+                    <div id="loyalty-unregistered-section" style="display: none;">
                         <!-- Notice / Points System Alert Box -->
                         <div class="points-notice-alert" role="alert">
                             <div class="notice-icon-wrap">
@@ -1082,7 +1095,7 @@
                         </section>
 
                         <!-- Unregistered Loyalty Section in Status Screen -->
-                        <div id="loyalty-unregistered-section-status">
+                        <div id="loyalty-unregistered-section-status" style="display: none;">
                             <!-- Notice / Points System Alert Box -->
                             <div class="points-notice-alert" role="alert">
                                 <div class="notice-icon-wrap">
@@ -2148,6 +2161,48 @@
                             if (optUltra) { optUltra.style.display = 'none'; optUltra.setAttribute('disabled', 'disabled'); }
                             if (cardUltra) cardUltra.style.display = 'none';
                             if (cardStatusUltra) cardStatusUltra.style.display = 'none';
+                        }
+                    }
+
+                    // Apply Loyalty / Points system toggle dynamically from config.js
+                    if (configObj['enable-loyalty-system'] === false) {
+                        document.documentElement.classList.add('loyalty-system-disabled');
+                        if (document.body) document.body.classList.add('loyalty-system-disabled');
+                        const loyaltyElements = [
+                            document.getElementById('loyalty-unregistered-section'),
+                            document.getElementById('loyalty-registered-section'),
+                            document.getElementById('loyalty-unregistered-section-status'),
+                            document.getElementById('loyalty-registered-section-status'),
+                            document.getElementById('points-register-modal')
+                        ];
+                        loyaltyElements.forEach(el => {
+                            if (el) el.style.setProperty('display', 'none', 'important');
+                        });
+                        document.querySelectorAll('.points-notice-alert, .loyalty-register-btn, .points-register-btn, .loyalty-user-card, .loyalty-modal').forEach(el => {
+                            if (el) el.style.setProperty('display', 'none', 'important');
+                        });
+                    } else {
+                        document.documentElement.classList.remove('loyalty-system-disabled');
+                        if (document.body) document.body.classList.remove('loyalty-system-disabled');
+                        if (typeof window.updateInlinePointsElements === 'function') {
+                            window.updateInlinePointsElements();
+                        } else {
+                            const isLogged = localStorage.getItem('points_user_logged_in') === 'true';
+                            const regSec = document.getElementById('loyalty-registered-section');
+                            const unregSec = document.getElementById('loyalty-unregistered-section');
+                            const regStatusSec = document.getElementById('loyalty-registered-section-status');
+                            const unregStatusSec = document.getElementById('loyalty-unregistered-section-status');
+                            if (isLogged) {
+                                if (regSec) regSec.style.display = 'block';
+                                if (regStatusSec) regStatusSec.style.display = 'block';
+                                if (unregSec) unregSec.style.display = 'none';
+                                if (unregStatusSec) unregStatusSec.style.display = 'none';
+                            } else {
+                                if (unregSec) unregSec.style.display = 'block';
+                                if (unregStatusSec) unregStatusSec.style.display = 'block';
+                                if (regSec) regSec.style.display = 'none';
+                                if (regStatusSec) regStatusSec.style.display = 'none';
+                            }
                         }
                     }
 

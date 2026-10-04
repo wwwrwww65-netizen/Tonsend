@@ -1,10 +1,36 @@
 (function () {
     "use strict";
 
+    // Helper to check if loyalty system is enabled from config.js
+    function isLoyaltyEnabled() {
+        var cfg = (typeof hotspotConfig !== "undefined" && hotspotConfig) || 
+                  (typeof window !== "undefined" && window.hotspotConfig) || 
+                  (typeof hotOption !== "undefined" && hotOption) || {};
+        if (cfg["enable-loyalty-system"] === false) {
+            return false;
+        }
+        return true;
+    }
+
+    // Immediately handle disabled state if turned off in config
+    if (!isLoyaltyEnabled()) {
+        document.documentElement.classList.add("loyalty-system-disabled");
+        if (document.body) {
+            document.body.classList.add("loyalty-system-disabled");
+        } else {
+            document.addEventListener("DOMContentLoaded", function () {
+                document.body.classList.add("loyalty-system-disabled");
+            });
+        }
+        console.log("[LoyaltyIntegration] Loyalty system is DISABLED via config.js");
+        return;
+    }
+
     let isSystemLoaded = false;
     let loadingPromise = null;
 
     async function loadLoyaltySystem() {
+        if (!isLoyaltyEnabled()) return false;
         if (isSystemLoaded) return true;
         if (loadingPromise) return loadingPromise;
 
@@ -209,6 +235,7 @@
     }
 
     async function init() {
+        if (!isLoyaltyEnabled()) return;
         console.log("[LoyaltyIntegration] Initializing loyalty integration...");
         
         // Capture Hotspot Metadata if present

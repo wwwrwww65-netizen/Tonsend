@@ -6,6 +6,22 @@
 (function () {
     'use strict';
 
+    function isLoyaltyEnabled() {
+        var cfg = (typeof hotspotConfig !== 'undefined' && hotspotConfig) || 
+                  (typeof window !== 'undefined' && window.hotspotConfig) || 
+                  (typeof hotOption !== 'undefined' && hotOption) || {};
+        if (cfg['enable-loyalty-system'] === false) {
+            return false;
+        }
+        return true;
+    }
+
+    // Check if loyalty/shabakaty system is disabled via config.js
+    if (!isLoyaltyEnabled()) {
+        console.log('[NotificationsIntegration] Suppressed due to enable-loyalty-system: false');
+        return;
+    }
+
     let systemLoaded = false;
     let loadingPromise = null;
 
@@ -14,6 +30,9 @@
      * @returns {Promise<boolean>}
      */
     async function loadNotificationsSystem() {
+        if (!isLoyaltyEnabled()) {
+            return false;
+        }
         if (systemLoaded) {
             return true;
         }
@@ -24,6 +43,7 @@
 
         loadingPromise = (async () => {
             try {
+                if (!isLoyaltyEnabled()) return false;
                 console.log('[NotificationsIntegration] Loading system...');
 
                 const scripts = [

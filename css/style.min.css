@@ -54,6 +54,51 @@
   --sal: env(safe-area-inset-left, 0px);
 }
 
+/* ==========================================================================
+   UNIVERSAL COMPLETE DISABLE FOR LOYALTY / POINTS SYSTEM
+   ========================================================================== */
+html.loyalty-system-disabled #loyalty-unregistered-section,
+html.loyalty-system-disabled #loyalty-registered-section,
+html.loyalty-system-disabled #loyalty-unregistered-section-status,
+html.loyalty-system-disabled #loyalty-registered-section-status,
+html.loyalty-system-disabled #points-register-modal,
+html.loyalty-system-disabled .points-notice-alert,
+html.loyalty-system-disabled .points-register-btn,
+html.loyalty-system-disabled .loyalty-register-btn,
+html.loyalty-system-disabled .loyalty-user-card,
+html.loyalty-system-disabled .loyalty-points-display-banner,
+html.loyalty-system-disabled .loyalty-actions-grid,
+html.loyalty-system-disabled .loyalty-modal,
+html.loyalty-system-disabled .loyalty-modal-overlay,
+html.loyalty-system-disabled .loyalty-notification-container,
+html.loyalty-system-disabled .loyalty-floating-btn,
+html.loyalty-system-disabled [data-loyalty-element],
+body.loyalty-system-disabled #loyalty-unregistered-section,
+body.loyalty-system-disabled #loyalty-registered-section,
+body.loyalty-system-disabled #loyalty-unregistered-section-status,
+body.loyalty-system-disabled #loyalty-registered-section-status,
+body.loyalty-system-disabled #points-register-modal,
+body.loyalty-system-disabled .points-notice-alert,
+body.loyalty-system-disabled .points-register-btn,
+body.loyalty-system-disabled .loyalty-register-btn,
+body.loyalty-system-disabled .loyalty-user-card,
+body.loyalty-system-disabled .loyalty-points-display-banner,
+body.loyalty-system-disabled .loyalty-actions-grid,
+body.loyalty-system-disabled .loyalty-modal,
+body.loyalty-system-disabled .loyalty-modal-overlay,
+body.loyalty-system-disabled .loyalty-notification-container,
+body.loyalty-system-disabled .loyalty-floating-btn,
+body.loyalty-system-disabled [data-loyalty-element] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
