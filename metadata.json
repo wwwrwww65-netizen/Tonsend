@@ -1,0 +1,10 @@
+{
+  "name": "تونس نت - MikroTik Hotspot",
+  "description": "بوابة تسجيل الدخول لشبكة تونس نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع إدارة السرعات، فحص الكروت، والأسعار",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

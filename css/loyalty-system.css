@@ -1,0 +1,625 @@
+/**
+ * Loyalty System - Styles (Royal Maroon & Gold 2026 Theme)
+ */
+
+/* Modal Styles */
+.loyalty-modal {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(18, 2, 6, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: 'Almarai', sans-serif;
+  direction: rtl;
+  padding: 16px;
+  box-sizing: border-box;
+  overscroll-behavior: contain !important;
+  touch-action: pan-y;
+}
+
+.loyalty-modal.active {
+  display: flex !important;
+  animation: fadeInBackdrop 0.25s ease forwards;
+  overscroll-behavior: contain !important;
+}
+
+.loyalty-modal-content {
+  background: linear-gradient(165deg, #6c0e22 0%, #4a0716 50%, #2e040e 100%) !important;
+  border: 1.5px solid rgba(212, 175, 55, 0.55) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.25) !important;
+  width: 100%;
+  max-width: 440px;
+  max-height: 86vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y;
+  position: relative;
+  font-family: 'Almarai', sans-serif;
+  direction: rtl;
+  text-align: right;
+  padding: 20px 16px !important;
+  color: #FFFFFF !important;
+  box-sizing: border-box;
+}
+
+.loyalty-modal-close {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  font-size: 18px;
+  cursor: pointer;
+  color: #FFFFFF;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.loyalty-modal-close:hover {
+  background: rgba(212, 175, 55, 0.35);
+  border-color: #D4AF37;
+  transform: scale(1.08);
+}
+
+.loyalty-modal-header {
+  padding: 8px 12px 14px;
+  text-align: center;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  direction: rtl;
+}
+
+.loyalty-modal-header h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  font-family: 'Almarai', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.loyalty-modal-body {
+  padding: 16px 4px 8px;
+  direction: rtl;
+  text-align: right;
+  font-family: 'Almarai', sans-serif;
+  color: #FFFFFF;
+}
+
+.loyalty-form-group {
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.loyalty-form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  direction: rtl;
+  text-align: right;
+}
+
+.loyalty-form-input,
+#loyalty-phone-input,
+#loyalty-password-input,
+#loyalty-reg-phone,
+#loyalty-reg-pass,
+#loyalty-reg-pass-confirm {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  border: 1.5px solid rgba(212, 175, 55, 0.5) !important;
+  border-radius: 10px !important;
+  font-size: 0.95rem !important;
+  box-sizing: border-box !important;
+  background: #FFFFFF !important;
+  color: #700B2B !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  font-family: 'Almarai', sans-serif !important;
+}
+
+.loyalty-form-input:focus,
+#loyalty-phone-input:focus,
+#loyalty-password-input:focus {
+  outline: none;
+  border-color: #D4AF37 !important;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4) !important;
+}
+
+.loyalty-btn,
+button.loyalty-btn {
+  width: 100% !important;
+  padding: 11px 16px !important;
+  background: linear-gradient(135deg, #E6C27A 0%, #D4AF37 50%, #B8860B 100%) !important;
+  color: #2D0509 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  font-family: 'Almarai', sans-serif !important;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.32), inset 0 1.5px 3px rgba(255, 255, 255, 0.45) !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.loyalty-btn:hover,
+button.loyalty-btn:hover {
+  filter: brightness(1.05) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4) !important;
+}
+
+.loyalty-btn:active,
+button.loyalty-btn:active {
+  transform: scale(0.97) !important;
+}
+
+.loyalty-btn:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.8) !important;
+  transform: none !important;
+}
+
+.loyalty-success {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid #10b981;
+  color: #a7f3d0;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.loyalty-error {
+  background: rgba(244, 63, 94, 0.2);
+  border: 1px solid #f43f5e;
+  color: #fecdd3;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* Card list styling in Buy Card modal */
+.card-types-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.card-type-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(80, 20, 25, 0.35);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.card-type-item:hover {
+  background: rgba(100, 25, 32, 0.5);
+  border-color: #D4AF37;
+  transform: translateY(-1px);
+}
+
+.card-type-item .card-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.card-type-item .card-name {
+  font-weight: 800;
+  font-size: 0.94rem;
+  color: #FFFFFF;
+}
+
+.card-type-item .card-points {
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #fde047;
+  white-space: nowrap;
+}
+
+.card-type-item .buy-card-btn {
+  width: auto !important;
+  min-height: 36px !important;
+  padding: 6px 14px !important;
+  font-size: 0.82rem !important;
+  flex-shrink: 0;
+}
+
+/* Saved Cards Items in Modal */
+.saved-card-item {
+  background: rgba(80, 20, 25, 0.35) !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.saved-card-item:hover {
+  border-color: #D4AF37 !important;
+  background: rgba(100, 25, 32, 0.5) !important;
+}
+
+.card-code {
+  background: rgba(0, 0, 0, 0.45) !important;
+  border: 1px dashed rgba(212, 175, 55, 0.6) !important;
+  color: #ffd166 !important;
+  font-family: monospace !important;
+  font-weight: 800 !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  user-select: all !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.card-code:hover {
+  background: rgba(212, 175, 55, 0.2) !important;
+  border-color: #D4AF37 !important;
+}
+
+.loader {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(212, 175, 55, 0.2);
+  border-top-color: #D4AF37;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 16px auto;
+}
+
+/* ==========================================================================
+   PREMIUM ROYAL BURGUNDY & SHABAKATY CYAN REDIRECT LOADING OVERLAY
+   ========================================================================== */
+.redirect-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 30%, rgba(108, 14, 34, 0.55) 0%, rgba(15, 23, 42, 0.92) 50%, rgba(10, 2, 5, 0.98) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+  direction: rtl;
+  font-family: 'Almarai', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.redirect-loading-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Ambient Background Light Flares */
+.redirect-ambient-glow-burgundy {
+  position: absolute;
+  top: 20%;
+  right: 15%;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(190, 18, 60, 0.35) 0%, rgba(108, 14, 34, 0) 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: floatAmbient 6s ease-in-out infinite alternate;
+}
+
+.redirect-ambient-glow-cyan {
+  position: absolute;
+  bottom: 20%;
+  left: 15%;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.3) 0%, rgba(2, 132, 199, 0) 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: floatAmbient 6s ease-in-out infinite alternate-reverse;
+}
+
+.redirect-loading-card {
+  background: linear-gradient(165deg, rgba(65, 8, 22, 0.88) 0%, rgba(35, 5, 12, 0.92) 50%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.4);
+  border-radius: 26px;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85),
+              0 0 35px rgba(190, 18, 60, 0.35),
+              0 0 45px rgba(14, 165, 233, 0.25),
+              inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  padding: 32px 26px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  transform: scale(0.88) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.redirect-loading-overlay.active .redirect-loading-card {
+  transform: scale(1) translateY(0);
+}
+
+/* Connection Brand Bar */
+.redirect-brand-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  display: inline-flex;
+}
+
+.redirect-brand-tag {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.redirect-brand-tag.burgundy {
+  color: #fb7185;
+  text-shadow: 0 0 10px rgba(251, 113, 133, 0.5);
+}
+
+.redirect-brand-tag.cyan {
+  color: #38bdf8;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.redirect-connector-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.redirect-connector-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d4af37;
+  box-shadow: 0 0 6px #d4af37;
+  animation: pulseDot 1.4s infinite ease-in-out;
+}
+
+.redirect-connector-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.redirect-connector-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Dual Orbit Animated Loader */
+.redirect-icon-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 22px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.redirect-pulse-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(225, 29, 72, 0.45);
+  animation: redirectPulseBurgundy 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+.redirect-spinner-outer {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #e11d48;
+  border-right-color: #d4af37;
+  animation: redirectSpin 1.2s cubic-bezier(0.6, 0.05, 0.28, 0.9) infinite;
+}
+
+.redirect-spinner-inner {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 2.5px solid transparent;
+  border-bottom-color: #38bdf8;
+  border-left-color: #06b6d4;
+  animation: redirectSpinReverse 0.9s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+
+.redirect-center-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #881337 0%, #be123c 45%, #0284c7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 22px rgba(225, 29, 72, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  z-index: 2;
+  animation: redirectFloat 2.5s ease-in-out infinite alternate;
+}
+
+.redirect-center-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.redirect-loading-title {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.redirect-loading-subtitle {
+  color: #e2e8f0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  padding: 0 6px;
+}
+
+.redirect-progress-track {
+  height: 7px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.redirect-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #881337 0%, #e11d48 30%, #d4af37 60%, #38bdf8 100%);
+  background-size: 250% 100%;
+  border-radius: 999px;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
+  transition: width 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: redirectBarShimmer 1.8s linear infinite;
+}
+
+.redirect-loading-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.redirect-badge-secure {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, rgba(136, 19, 55, 0.35) 0%, rgba(14, 165, 233, 0.2) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: #f1f5f9;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.redirect-badge-secure svg {
+  width: 15px;
+  height: 15px;
+  fill: #d4af37;
+}
+
+/* Prompt Button Enhancement */
+.points-switch-prompt .points-signup-glow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #881337 0%, #be123c 40%, #0284c7 100%);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  color: #ffffff !important;
+  font-weight: 800;
+  text-decoration: none !important;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  box-shadow: 0 4px 15px rgba(190, 18, 60, 0.35), 0 0 10px rgba(56, 189, 248, 0.25);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.points-switch-prompt .points-signup-glow-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(190, 18, 60, 0.5), 0 0 18px rgba(56, 189, 248, 0.45);
+  border-color: #d4af37;
+}
+
+.points-switch-prompt .points-signup-glow-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@keyframes redirectSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes redirectSpinReverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes redirectPulseBurgundy {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.25); opacity: 0.15; border-color: #38bdf8; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+@keyframes redirectFloat {
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(-4px) scale(1.05); }
+}
+
+@keyframes redirectBarShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes floatAmbient {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-20px, 20px) scale(1.15); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.5); opacity: 1; }
+}
+

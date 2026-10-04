@@ -1,0 +1,291 @@
+﻿<!doctypehtml>
+    <html lang="ar">
+    <meta charset="UTF-8">
+    <title data-network-name>شبكة{{network-name}} اللاسلكيه</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#8277d1">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="css/fontello.min.css">
+    <link rel="stylesheet" href="css/style.min.css">
+<style>
+    .im1::before{
+        content: "عروض وتحديثات" ;
+    }
+    .im2::before{
+        content: " البث المباشر كأس العالم على الرابط a.com";
+    }
+    .im3::before{
+        content: "سرعات جديدة وتطويرات مستمرة";
+    }
+    .im4::before{
+        content: "توصيل خدمات الانترنت للمنازل ";
+    }
+    .im5::before{
+        content: "مع شبكة المحمدي شاهد البث المباشر";
+    }
+</style>
+    <body translate="no">
+        <div class="container">
+            <div class="error-container">
+                <div class="error">
+                    <div class="fade-in">
+                        <p id="error">
+                    </div>
+                </div>
+            </div>
+            <div class="screen">
+                <div class="screen-content">
+                    <div class="login" id="login" style="visibility: hi;">
+                        <section class="section">
+                            <p class="marquee" data-news-line>{{news-line}}
+                        </section>
+                        
+                        <form class="login-form" name="login">
+                            <h1 style="position: absolute; top: -230px;color: #fce2a9 ; padding-right: 80px;">شبكة المحمدي نت اللاسلكية
+                                <br>
+                                 <span style="font-size: 17px;">a.com</span> 
+                            </h1>
+                            <p>مرحبا بك .. قم ب تسجيل الدخول</p>
+                            <span class="screen-background-shape screen-background-shape0">
+                                <div class="ads">
+                                    <div class="box">
+                                        <span style="--i:1"><img class="im1" src="./adimg/1.jpg"></span>
+                                        <span style="--i:2"><img class="im2" src="./adimg/2.jpg"></span>
+                                        <span style="--i:3"><img class="im3" src="./adimg/3.jpg"></span>
+                                        <span style="--i:4"><img class="im4" src="./adimg/4.jpg"></span>
+                                        <span style="--i:5"><img class="im5" src="./adimg/5.jpg"></span>
+                                        <span style="--i:5"><img class="im1" src="./adimg/1.jpg"></span>
+                                        <span style="--i:7"><img class="im2" src="./adimg/2.jpg"></span>
+                                        <span style="--i:8"><img class="im3" src="./adimg/3.jpg"></span>
+                                        <span style="--i:9"><img class="im4" src="./adimg/4.jpg"></span>
+                                        <span style="--i:10"><img class="im5" src="./adimg/5.jpg"></span>
+                                        <span style="--i:11"><img class="im1" src="./adimg/1.jpg"></span>
+                                        <span style="--i:12"><img class="im2" src="./adimg/2.jpg"></span>
+                                        <span style="--i:13"><img class="im3" src="./adimg/3.jpg"></span>
+                                        <span style="--i:14"><img class="im4" src="./adimg/4.jpg"></span>
+                                    </div>
+                                </div>
+                            </span>
+                            <div class="login-field"><i class="login-icon fas icon-user"></i><input name="username"
+                                    class="login-input" placeholder="ادخل رقم الكرت هنا" username-field improve-input
+                                    autocomplete="off">
+                                    <select name="" id="se" >
+                                        <option value="0" selected disabled >دخول بكرت سابق</option>
+                                        <option value="relod">تحديث</option>
+                                    </select>
+                                </div>
+                            <div class="login-field password-field"><i class="login-icon fas icon-lock"></i><input
+                                    type="hidden" name="password" class="login-input" placeholder="ادخل كلمة السر هنا"
+                                    improve-input></div>
+                            <p>أختر سرعتك من هنا</p><select id="speed" name="domain" speed-field>
+                                <option value="" selected disabled hidden>أختيار سرعة الإنترنت</option>
+                                <!--<option value="8M/8M">لعبه بوبجي</option>  -->   
+                                <option value="256k/1M">سرعة أقتصادية256K/1M </option>
+                                <option value="512k/2M">سرعة عادية1M/2M </option>
+                                <option value="512k/4M">سرعة متوسطة1M/4M</option>
+                                <option value="1M/6M">سرعة عالية2M/3M</option>
+                                <!--<option value="2M/8M">سرعة عالية جدا</option>-->
+                            </select><br><br>
+                            <p>التحديثات و المتجر تسبب أنتهاء الرصيد بسرعة يمكنك أيقافهما بالضغط هنا </p>
+                            <div style="margin: 15px;"><input type="checkbox" value="_Uon" id="chupdate"><label
+                                    for="chupdate">أيقاف التحديثات </label></div><button class="button login-submit"
+                                parent-id="status" enable-hot-cookie><span class="button-text">تسجيل
+                                    الدخول</span></i></button>
+                        </form><button class="m" parent-id="loan"
+                            data-loan-button>جديدنا</button>
+                        <div class="social-login"><button class="price-icon" parent-id="price"
+                                data-price-button><span>أسعارالكروت</span></button><button class="sellpoint"
+                                parent-id="sell-point" data-sell-point-button>نقاط البيع</button>
+                            <h5 style="color: #fce2a9; position: absolute; left: 0; right: 0; bottom: -15px; "
+                                class="contact" data-service-number>خدمة العملاء:{{service-number}}</h5>
+                        </div>
+                    </div>
+                    <div class="app" id="price">
+                        <div class="price-div">
+                            <div class="wrapper">
+                                <p class="title">الاسعار
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">الفئة
+                                            <th scope="col">الوقت
+                                            <th scope="col">الرصيد
+                                            <th scope="col">الصلاحية
+                                    <tbody id="profiles">
+                                </table><button class="app-logout button app-submit">رجوع</button>
+                                <h5 class="contact " data-service-number>خدمة العملاء:{{service-number}}</h5>
+                            </div>
+                        </div>
+                        <div class="social-login"></div>
+                    </div>
+                    <div class="app" id="sell-point">
+                        <div class="sell-point-div">
+                            <div class="wrapper">
+                                <p class="title">نقاط البيع
+                                <table>
+                                    <tbody class="sell-point" id="sell-points">
+                                </table><button class="app-logout button app-submit">رجوع</button>
+                                <h5 class="contact" data-service-number>خدمة العملاء:{{service-number}}</h5>
+                            </div>
+                        </div>
+                        <div class="social-login"></div>
+                    </div>
+                    <div class="app" id="status">
+                        <div class="status-div">
+                            <div class="wrapper">
+                                <p class="title" id="status-title">تم تسجيل دخولك بنجاح!
+                                <p>إذا لم يتم الأتصال تلقائيا أضغط <a
+                                        style="text-decoration: none; color: #fce2a9; padding: 5px;border: 1px solid; border-radius: 10px;"
+                                        href="status.html">هنا</a></p>
+                                        <br>
+                                        <a
+                                        style="text-decoration: none; display: block; color: #b4b433; margin: 15px; padding: 15px;border: 1px solid; border-radius: 10px;"
+                                        href="http://f.com/fiberlive/live.html" target="_blank">البث المباشر</a>
+                                        
+                                <p>أختيار سرعات عالية يسبب انتهاء الكرت بسرعة بسبب التطبيقات التي تستهلك أنترنت أكثر
+                                    <br>أختر سرعة اقل للحفاظ على الكرت</p><br>
+                                <div class="statusdiv">
+                                    <table>
+                                        <tr>
+                                            <td class="img" rowspan="2"><img style="height: 100%; width: 100%;"
+                                                    src="img/ss.svg" alt=""></td>
+                                            <td>سرعة الكرت</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="sspeed"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><select id="speedchange" class="tcs">
+                                                    <option value="ns" disabled hidden selected>أضغط هنا لتغيير سرعة
+                                                        الإنترنت </option>
+                                                </select></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>التحديثات و المتجر تسبب أنتهاء الرصيد بسرعة يمكنك أيقافهما من هنا </p><br>
+                                <div class="statusdiv">
+                                    <table>
+                                        <tr>
+                                            <td>التحديثات و متجر التطبيقات </td>
+                                            <td style="position: relative;" class="img" rowspan="2"><img
+                                                    style="height: 100%; width: 100%;" src="img/gs.svg" alt=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td id="update"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><select id="updatechange" class="tcs">
+                                                    <option value="ns" disabled hidden selected>أضغط هنا للتغيير
+                                                    </option>
+                                                    <option value="_Uon">تفعيل التحديثات </option>
+                                                    <option value="_Uoff">أيقاف التحديثات</option>
+                                                    <option value="cancel">إلغاء</option>
+                                                </select></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>معلومات الكرت</p><br>
+                                <table>
+                                    </tr>
+                                    <td>التنزيل
+                                    <td id="bytes_out">
+                                        <tr>
+                                            <td>الرفع
+                                            <td id="bytes_in">
+                                        <tr remain_bytes_total>
+                                            <td>التحميل المتبقي
+                                            <td id="remain_bytes_total">مفتوح
+                                        <tr>
+                                            <td>الوقت المستهلك
+                                            <td id="uptime">
+                                        <tr session_time_left>
+                                            <td>الوقت المتبقي
+                                            <td id="session_time_left">مفتوح
+                                </table><br><br><br><br><button class=" login-submit app-logout" erase-cookie
+                                    clear-hot-cookie>تسجيل الخروج</button><br><button
+                                    class="login-submit app-logout">قطع الاتصال</button><br><br><br>
+                                <p class="pspeed" data-service-number>خدمة العملاء:{{service-number}}</p>
+                            </div>
+                        </div><button class="button app-submit sell-point-icon app-store" parent-id="app-store"
+                            data-app-store-status-button>متجر البرامج</button>
+                    </div>
+                    <div class="app" id="block">
+                        <div class="status-div">
+                            <div class="wrapper">
+                                <p class="title">انت محظور
+                                <div style="padding: 25px">
+                                    <p class="contact-text">لقد تم حظرك بسبب محاولات تسجيل الدخول الكثيرة الخاطئة
+                                    <div class="app-user"><span>بقي على فك الحظر: </span><span count-down-span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="social-login">
+                            <h5 class="contact back" data-service-number>خدمة العملاء:{{service-number}}</h5>
+                        </div>
+                    </div>
+                    <div class="app" id="app-store">
+                        <div class="sell-point-div">
+                            <div class="wrapper" id="grid"></div>
+                        </div>
+                        <div class="social-login"><button class="app-logout button app-submit back">الصفحة
+                                السابقة</button>
+                            <h5 class="contact back" data-service-number>خدمة العملاء:{{service-number}}</h5>
+                        </div>
+                    </div>
+                    <div class="app" id="loan">
+                        <div class="price-div">
+                            <div class="wrapper">
+                                <p class="title">شبكة المحمدي نت</p> 
+                                <!-- هنا يتم كتابة الخدمات و العروض و النصائح -->
+
+
+
+                                <!-- هنا يتم كتابة الخدمات و العروض و النصائح -->
+                                <button class="app-logout button app-submit">رجوع</button>
+                                <h5 class="contact " data-service-number>خدمة العملاء:{{service-number}}</h5>
+                            </div>
+                        </div>
+                        <div class="social-login"></div>
+                    </div>
+                </div>
+                <div class="screen-background"><span
+                        class="screen-background-shape screen-background-shape8"></span><span
+                        class="screen-background-shape screen-background-shape7"></span><span
+                        class="screen-background-shape screen-background-shape6"></span><span
+                        class="screen-background-shape screen-background-shape5"></span><span
+                        class="screen-background-shape screen-background-shape4"></span>
+                        <span
+                        class="screen-background-shape screen-background-shape3">
+                        <svg  class="shape-overlays" viewBox="0 0 100 100" preserveAspectRatio="none">
+
+                            <path d="M 0 30 Q 20 65 100 0 V 80 Q 50 70 0 100  Z" ></path>
+                        </svg></span><span
+                        class="screen-background-shape screen-background-shape2"></span>
+                        
+                        <span
+                        class="screen-background-shape screen-background-shape1"></span></div>
+            </div>
+
+            <span style="display: none;" id="winmsg">
+                <!-- هنا يتم وضع نص الاشعارات -->
+
+                <!-- هنا يتم وضع نص الاشعارات -->
+            </span>
+        </div>
+        </div>
+        <script src="js/init.min.js"></script>
+        <script src="js/hotInImprover.min.js"></script>
+        <script src="js/hotCookie.min.js"></script>
+        <script src="js/hotOptions.min.js"></script>
+        <script src="js/hotBlocker.min.js"></script>
+        <script src="js/main.min.js"></script>
+        <script src="js/hotCookie.min.js"></script>
+        <script src="js/hotOptions.min.js"></script>
+        <script>
+            var e,  m = new Date().toDateString()
+            if(m.includes('Fri')){
+                e = document.getElementById('error').innerText ="شاهد مباريات كاس العالم عبر البث المباشر" ;
+                showErrorPopup()
+            }
+        </script>

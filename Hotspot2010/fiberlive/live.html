@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Fiber Live - Hotspot Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .login-header i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .login-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            direction: ltr;
+            text-align: right;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-danger {
+            background: #fee;
+            color: #c00;
+            border: 2px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #0a0;
+            border: 2px solid #cfc;
+        }
+
+        .alert-info {
+            background: #eef;
+            color: #00a;
+            border: 2px solid #ccf;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .login-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <i class="fas fa-satellite-dish"></i>
+            <h1>Fiber Live</h1>
+            <p>تسجيل الدخول التلقائي للبث المباشر</p>
+        </div>
+
+        <div class="login-body">
+            <div id="alertBox" class="alert alert-info show">
+                <i class="fas fa-spinner fa-spin"></i> جارٍ تسجيل الدخول تلقائياً...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== مسح الكاش بشكل عدواني عند كل فتح للصفحة =====
+        // السبب: ملفات auth.json قد تكون قديمة أو تالفة (خاصة إذا كان السيريال يحتوي على +)
+        try {
+            // 1) مسح Service Worker Cache API بالكامل
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    names.forEach(function(name) { caches.delete(name); });
+                });
+            }
+            // 2) إلغاء تسجيل أي Service Workers قديمة
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(regs) {
+                    regs.forEach(function(reg) { try { reg.unregister(); } catch (e) {} });
+                }).catch(function() {});
+            }
+            // 3) مسح كل التخزين المحلي (وليس مفاتيح محددة فقط)
+            try { sessionStorage.clear(); } catch (e) {}
+            try { localStorage.clear(); } catch (e) {}
+        } catch (e) {}
+
+        // ===== استخراج البارامترات الخام (لتجاوز مشكلة + → مسافة في URLSearchParams) =====
+        function getRawParam(name) {
+            var qs = window.location.search;
+            if (!qs || qs.length < 2) return '';
+            qs = qs.substring(1);
+            var pairs = qs.split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var idx = pairs[i].indexOf('=');
+                if (idx === -1) continue;
+                var key = pairs[i].substring(0, idx);
+                if (key === name) {
+                    var raw = pairs[i].substring(idx + 1);
+                    // فك %2B إلى + ولكن إبقاء + كما هو (لأن + الخام = مسافة)
+                    try { return decodeURIComponent(raw.replace(/\+/g, ' ')).replace(/ /g, '+'); }
+                    catch (e) { return raw; }
+                }
+            }
+            return '';
+        }
+
+        var hwFromMikrotik = '$(interface-mac)';
+        var serialFromMikrotik = '$(username)';
+
+        const borrowedParams = new URLSearchParams(window.location.search);
+        var hwFromUrl = borrowedParams.get('node_id') ||
+                        borrowedParams.get('client_id') ||
+                        borrowedParams.get('hw_id') ||
+                        borrowedParams.get('device_addr') ||
+                        borrowedParams.get('mac') ||
+                        '';
+        // قراءة الـ user من الـ raw query للحفاظ على + في السيريال
+        var serialFromUrl = getRawParam('user') ||
+                            getRawParam('sn') ||
+                            getRawParam('username') ||
+                            getRawParam('serial') ||
+                            borrowedParams.get('user') ||
+                            borrowedParams.get('sn') ||
+                            borrowedParams.get('username') ||
+                            borrowedParams.get('serial') ||
+                            '';
+
+        var nodeIdentifier = '';
+        var serialNumber = '';
+
+        if (hwFromUrl) {
+            nodeIdentifier = hwFromUrl;
+            console.log('✅ معرف الجهاز من URL:', nodeIdentifier);
+        }
+        else if (hwFromMikrotik && hwFromMikrotik.match(/^[0-9A-Fa-f:]{17}$/)) {
+            nodeIdentifier = hwFromMikrotik;
+            console.log('✅ معرف الجهاز من Mikrotik:', nodeIdentifier);
+        }
+        else if (hwFromMikrotik && hwFromMikrotik !== '$(interface-mac)') {
+            nodeIdentifier = hwFromMikrotik;
+            console.log('✅ معرف الجهاز من Mikrotik (نص):', nodeIdentifier);
+        }
+
+        function looksLikeMac(value) {
+            return !!(value && /^[0-9A-Fa-f:]{17}$/.test(value));
+        }
+
+        if (serialFromUrl && !looksLikeMac(serialFromUrl)) {
+            serialNumber = serialFromUrl;
+            console.log('✅ Serial من URL:', serialNumber);
+        }
+        else if (serialFromMikrotik && serialFromMikrotik !== '$(username)' && serialFromMikrotik.length > 2 && !looksLikeMac(serialFromMikrotik)) {
+            serialNumber = serialFromMikrotik;
+            console.log('✅ Serial من Mikrotik username:', serialNumber);
+        }
+
+        // PHP يحوّل + إلى مسافة في URL — نعيدها
+        if (serialNumber) {
+            serialNumber = serialNumber.replace(/ /g, '+');
+        }
+
+        console.log('🔍 معرف الجهاز (MAC):', nodeIdentifier || '(غير متوفر)');
+        console.log('🔍 الرقم التسلسلي:', serialNumber || '(غير متوفر — سيُستخدم MAC أو المستخدم الافتراضي)');
+
+        // مسار auth المموّه — يطابق includes/live_obf_paths.php و mikrotik_update.php
+        var _OBF_AUTH = atob('LmZpL2IqZSpyLi0vYXV0aCouanNvbg==');
+
+        function getLocalAuthPaths() {
+            return [_OBF_AUTH];
+        }
+
+        function buildCacheBust() {
+            return '_ts=' + Date.now() + '&_rnd=' + Math.random().toString(36).slice(2);
+        }
+
+        function showError(title) {
+            console.error('❌ خطأ:', title);
+            document.getElementById('alertBox').className = 'alert alert-danger show';
+            document.getElementById('alertBox').innerHTML =
+                '<i class="fas fa-exclamation-circle"></i> ' + title;
+        }
+
+        function validateCredentials(data) {
+            // ملاحظة: MAC لم يعد مطلوباً للدخول — يكفي السيريال + كلمة اليوم
+            if (!data || typeof data !== 'object') {
+                return false;
+            }
+            if (data.error_reason) {
+                return false;
+            }
+            if (!data.device_id || !data.api_key) {
+                return false;
+            }
+            return true;
+        }
+
+        function adoptSerialFromAuth(data) {
+            if (serialNumber || !data || !data.device_id) {
+                return;
+            }
+            serialNumber = String(data.device_id).replace(/ /g, '+');
+            console.log('✅ Serial من ملف auth المحلي:', serialNumber);
+        }
+
+        function getRemoteBaseUrls(partialData) {
+            var urls = [];
+            var seen = {};
+            function add(url) {
+                if (!url || typeof url !== 'string') {
+                    return;
+                }
+                url = url.trim();
+                if (url === '' || seen[url]) {
+                    return;
+                }
+                seen[url] = true;
+                urls.push(url);
+            }
+            if (partialData && partialData.kora_redirect_url) {
+                add(partialData.kora_redirect_url);
+            }
+            add('https://kora.fiberlive.live/');
+            return urls;
+        }
+
+        function buildAuthQuery() {
+            var parts = [buildCacheBust()];
+            if (serialNumber) {
+                parts.push('user=' + encodeURIComponent(serialNumber));
+            }
+            if (nodeIdentifier) {
+                parts.push('mac=' + encodeURIComponent(nodeIdentifier));
+                parts.push('node_id=' + encodeURIComponent(nodeIdentifier));
+            }
+            return parts.join('&');
+        }
+
+        var _authPaths = getLocalAuthPaths();
+
+        function fetchLocalAuth(index) {
+            if (index >= _authPaths.length) {
+                return Promise.reject(new Error('NOT_FOUND'));
+            }
+            var url = _authPaths[index] + '?' + buildAuthQuery();
+            return fetchAuthJson(url).catch(function(err) {
+                if (err.message === 'NOT_FOUND' && index + 1 < _authPaths.length) {
+                    console.warn('⚠️ لم يُعثر على:', _authPaths[index], '— تجربة مسار بديل');
+                    return fetchLocalAuth(index + 1);
+                }
+                throw err;
+            });
+        }
+
+        function loadAuthData() {
+            return fetchLocalAuth(0).then(function(data) {
+                adoptSerialFromAuth(data);
+                if (!isAuthComplete(data)) {
+                    console.warn('⚠️ ملف auth المحلي ناقص — device_id أو api_key فارغ');
+                    return fetchRemoteAuth(data).catch(function(remoteErr) {
+                        console.warn('⚠️ فشل التحميل من السيرفر:', remoteErr.message || remoteErr);
+                        return data;
+                    });
+                }
+                return data;
+            }).catch(function(localErr) {
+                if (localErr.message === 'NOT_FOUND') {
+                    console.warn('⚠️ auth المحلي غير موجود — محاولة من السيرفر');
+                    return fetchRemoteAuth(null).catch(function() {
+                        throw localErr;
+                    });
+                }
+                throw localErr;
+            });
+        }
+
+        var fetchOptions = {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
+            }
+        };
+
+        function fetchAuthJson(url) {
+            console.log('📂 تحميل auth من:', url);
+            return fetch(url, fetchOptions).then(function(response) {
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('NOT_FOUND');
+                    }
+                    throw new Error('HTTP_' + response.status);
+                }
+                return response.json();
+            });
+        }
+
+        function isAuthComplete(data) {
+            return !!(data && data.device_id && data.api_key);
+        }
+
+        function fetchRemoteAuth(partialData) {
+            adoptSerialFromAuth(partialData);
+            var bases = getRemoteBaseUrls(partialData);
+            if (bases.length === 0) {
+                return Promise.reject(new Error('NO_REMOTE_URL'));
+            }
+
+            document.getElementById('alertBox').innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> جارٍ تحميل بيانات الاعتماد من السيرفر...';
+
+            function tryBase(index) {
+                if (index >= bases.length) {
+                    return Promise.reject(new Error('REMOTE_AUTH_FAILED'));
+                }
+                var base = bases[index];
+                if (base.slice(-1) !== '/') {
+                    base += '/';
+                }
+                var remoteUrl = base + 'live/auth.json.php?' + buildAuthQuery();
+                console.log('🌐 محاولة ' + (index + 1) + '/' + bases.length + ' من:', remoteUrl);
+                return fetchAuthJson(remoteUrl).then(function(data) {
+                    if (!isAuthComplete(data)) {
+                        adoptSerialFromAuth(data);
+                        if (index + 1 < bases.length) {
+                            return tryBase(index + 1);
+                        }
+                    }
+                    return data;
+                }).catch(function(err) {
+                    if (index + 1 < bases.length) {
+                        return tryBase(index + 1);
+                    }
+                    throw err;
+                });
+            }
+
+            return tryBase(0);
+        }
+
+        function goToRedirect(url) {
+            document.getElementById('alertBox').className = 'alert alert-info show';
+            document.getElementById('alertBox').innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> جارٍ التوجيه...';
+            console.log('🔄 توجيه إلى:', url);
+            setTimeout(function() {
+                window.location.replace(url);
+            }, 1200);
+        }
+
+        // المسار الاحتياطي الآمن: إرسال الاعتماد عبر POST (لا يظهر في الرابط)
+        // يُستخدم فقط إذا تعذّر الوصول لـ exchange.php — ومع ذلك لا يُسرّب أي سرّ في URL
+        function legacyRedirect(koraBaseUrl, data) {
+            console.warn('⚠️ المسار الاحتياطي عبر POST — لم يتوفّر exchange.php');
+            document.getElementById('alertBox').className = 'alert alert-info show';
+            document.getElementById('alertBox').innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> جارٍ التوجيه...';
+
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = koraBaseUrl + 'live_redirect.php?' + buildCacheBust();
+            form.style.display = 'none';
+
+            function addField(name, value) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                form.appendChild(input);
+            }
+            addField('client_id', data.device_id);
+            addField('api_key', data.api_key);
+            addField('session', '1');
+            if (nodeIdentifier) {
+                addField('node_id', nodeIdentifier);
+            }
+
+            document.body.appendChild(form);
+            setTimeout(function() { form.submit(); }, 800);
+        }
+
+        // المسار الآمن: تبادل الاعتماد بتذكرة لمرة واحدة عبر POST
+        // الاعتماد (api_key) لا يظهر أبداً في الرابط النهائي
+        function exchangeForTicket(koraBaseUrl, data) {
+            var exchangeUrl = koraBaseUrl + 'live/exchange.php';
+            var body = 'serial=' + encodeURIComponent(data.device_id) +
+                       '&api_key=' + encodeURIComponent(data.api_key);
+
+            return fetch(exchangeUrl, {
+                method: 'POST',
+                cache: 'no-store',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate'
+                },
+                body: body
+            }).then(function(resp) {
+                if (!resp.ok) {
+                    throw new Error('EXCHANGE_HTTP_' + resp.status);
+                }
+                return resp.json();
+            }).then(function(res) {
+                if (!res || !res.ok || !res.ticket) {
+                    throw new Error('EXCHANGE_REJECTED');
+                }
+                var url = koraBaseUrl + 'live_redirect.php' +
+                          '?ticket=' + encodeURIComponent(res.ticket) +
+                          '&' + buildCacheBust();
+                goToRedirect(url);
+            });
+        }
+
+        function processAuthData(data) {
+            console.log('✅ تم تحميل بيانات الاعتماد');
+            console.log('📱 Device ID:', data.device_id || '(فارغ)');
+            console.log('🔑 API Key:', data.api_key ? data.api_key.substring(0, 10) + '...' : '(فارغ)');
+            console.log('🌐 Kora URL:', data.kora_redirect_url || 'غير محدد');
+
+            if (!validateCredentials(data)) {
+                throw new Error('INVALID_CREDENTIALS');
+            }
+
+            console.log('🔐 محاولة تسجيل الدخول الآمن...');
+
+            var koraBaseUrl = data.kora_redirect_url || 'https://kora.fiberlive.live/';
+            if (koraBaseUrl.slice(-1) !== '/') {
+                koraBaseUrl += '/';
+            }
+
+            document.getElementById('alertBox').className = 'alert alert-info show';
+            document.getElementById('alertBox').innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> جارٍ التحقق الآمن...';
+
+            // المحاولة الأساسية: تذكرة لمرة واحدة. وعند الفشل التقني فقط → المسار الاحتياطي
+            exchangeForTicket(koraBaseUrl, data).catch(function(err) {
+                console.warn('⚠️ فشل تبادل التذكرة:', (err && err.message) || err);
+                // إذا رفض السيرفر الاعتماد فعلاً (401/400) لا نُعيد المحاولة بالقديم
+                var msg = (err && err.message) || '';
+                if (msg === 'EXCHANGE_HTTP_401' || msg === 'EXCHANGE_HTTP_400' || msg === 'EXCHANGE_REJECTED') {
+                    showError('تعذّر تسجيل الدخول');
+                    return;
+                }
+                // أعطال شبكة/سيرفر قديم → fallback
+                legacyRedirect(koraBaseUrl, data);
+            });
+        }
+
+        loadAuthData()
+            .then(function(data) {
+                processAuthData(data);
+            })
+            .catch(function(error) {
+                showError('تعذّر تسجيل الدخول');
+            });
+    </script>
+</body>
+</html>

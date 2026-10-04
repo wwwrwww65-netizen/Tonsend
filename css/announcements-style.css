@@ -1,0 +1,151 @@
+/**
+ * Announcements System Styles
+ * Simple persistent banner styling
+ */
+
+/* Container */
+.announcements-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.announcements-wrapper>* {
+    pointer-events: all;
+}
+
+/* Banner Base */
+.announcement-banner {
+    padding: 12px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: slideDown 0.4s ease-out;
+}
+
+.announcement-top {
+    /* Already at top via container */
+}
+
+.announcement-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+}
+
+/* Content Layout */
+.announcement-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* Icon */
+.announcement-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+/* Text */
+.announcement-text {
+    flex: 1;
+    min-width: 200px;
+}
+
+.announcement-title {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 3px;
+    font-weight: 700;
+}
+
+.announcement-message {
+    display: block;
+    font-size: 14px;
+    opacity: 0.95;
+}
+
+/* Action Button */
+.announcement-action {
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: opacity 0.3s, transform 0.2s;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.announcement-action:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Animations */
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .announcement-banner {
+        padding: 10px 15px;
+    }
+
+    .announcement-content {
+        gap: 10px;
+    }
+
+    .announcement-icon {
+        font-size: 18px;
+    }
+
+    .announcement-title {
+        font-size: 14px;
+    }
+
+    .announcement-message {
+        font-size: 13px;
+    }
+
+    .announcement-action {
+        padding: 6px 15px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .announcement-banner {
+        padding: 8px 12px;
+    }
+
+    .announcement-text {
+        min-width: 100%;
+        order: 2;
+    }
+
+    .announcement-action {
+        order: 3;
+        width: 100%;
+        text-align: center;
+    }
+
+    .announcement-icon {
+        order: 1;
+    }
+}

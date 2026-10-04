@@ -1,0 +1,829 @@
+/* ===== Loyalty System Modal Styles ===== */
+
+/* ===== Root Variables - Customize Colors Here ===== */
+:root {
+  /* Primary Colors */
+  --loyalty-primary-color: #881337;
+  --loyalty-primary-dark: #4c0519;
+  --loyalty-accent-color: #D4AF37;         /* اللون الأساسي الفاتح */
+  --loyalty-text-success: #FFFFFF;           /* نص أبيض */
+  /* Highlight Colors */
+  --loyalty-highlight-bg-start: rgba(80, 20, 25, 0.45);     /* بداية تدرج الصندوق المميز */
+  --loyalty-highlight-bg-end: rgba(136, 19, 55, 0.35);       /* نهاية تدرج الصندوق المميز */
+  
+  /* Accent Colors */
+  --loyalty-accent-color: #D4AF37;           /* لون التمييز (ذهبي) */
+  --loyalty-accent-dark: #B8860B;            /* لون التمييز الداكن */
+  
+  /* Background Colors */
+  --loyalty-bg-white: #501419;               /* خلفية عنابية */
+  --loyalty-bg-gray: #30060e;                /* خلفية عنابية داكنة */
+  --loyalty-overlay-bg: rgba(18, 2, 6, 0.75); /* خلفية الأوفرلاي */
+  
+  /* Text Colors */
+  --loyalty-text-dark: #FFFFFF;              /* نص داكن */
+  --loyalty-text-white: #ffffff;             /* نص أبيض */
+ 
+  
+  /* Border & Divider Colors */
+  --loyalty-border-color: rgba(212, 175, 55, 0.45);           /* لون الحدود */
+  --loyalty-divider-color: rgba(212, 175, 55, 0.25);             /* لون الفواصل */
+
+  /* Shadow & Effects */
+  --loyalty-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --loyalty-shadow-medium: 0 3px 10px rgba(0, 0, 0, 0.2);
+  --loyalty-shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.8);
+  
+  /* Button Shadows */
+  --loyalty-btn-primary-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  --loyalty-btn-accent-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+  
+  /* Scrollbar Colors */
+  --loyalty-scrollbar-track: #180208;        /* مسار السكرول */
+  --loyalty-scrollbar-thumb: #881337;        /* السكرول */
+  
+  /* Close Button */
+  --loyalty-close-hover-bg: rgba(212, 175, 55, 0.4);         /* لون زر الإغلاق عند التمرير */
+}
+/* ===== Modal Overlay ===== */
+
+/* ===== Modal Overlay ===== */
+.loyalty-modal-overlay-notifacion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--loyalty-overlay-bg);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  font-family: 'Almarai', 'Tajawal', sans-serif;
+  direction: rtl;
+  padding: 20px;
+}
+
+.loyalty-modal-overlay-notifacion.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.loyalty-modal-notifacion {
+  background: -webkit-linear-gradient(135deg, var(--loyalty-bg-white) 0%, var(--loyalty-bg-gray) 100%);
+  background: -moz-linear-gradient(135deg, var(--loyalty-bg-white) 0%, var(--loyalty-bg-gray) 100%);
+  background: linear-gradient(135deg, var(--loyalty-bg-white) 0%, var(--loyalty-bg-gray) 100%);
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  -webkit-box-shadow: var(--loyalty-shadow-heavy);
+  -moz-box-shadow: var(--loyalty-shadow-heavy);
+  box-shadow: var(--loyalty-shadow-heavy);
+  position: relative;
+  overflow: hidden;
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  -o-transform: scale(0.9);
+  transform: scale(0.9);
+  opacity: 0;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  -moz-transition: -moz-transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  -o-transition: -o-transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  max-height: 85vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.loyalty-modal-overlay-notifacion.active .loyalty-modal-notifacion {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Close Button */
+.loyalty-modal-close-notifacion {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: #e51e0f;
+  /* background: rgba(255, 255, 255, 0.9); */
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  z-index: 10;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  -webkit-box-shadow: var(--loyalty-shadow-light);
+  -moz-box-shadow: var(--loyalty-shadow-light);
+  box-shadow: var(--loyalty-shadow-light);
+}
+
+.loyalty-modal-close-notifacion:hover {
+  background: var(--loyalty-close-hover-bg);
+  color: white;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+/* Header */
+.loyalty-modal-header-notifacion {
+  background: -webkit-linear-gradient(135deg, var(--loyalty-primary-color) 0%, var(--loyalty-primary-dark) 100%);
+  background: -moz-linear-gradient(135deg, var(--loyalty-primary-color) 0%, var(--loyalty-primary-dark) 100%);
+  background: linear-gradient(135deg, var(--loyalty-primary-color) 0%, var(--loyalty-primary-dark) 100%);
+  color: var(--loyalty-text-white);
+  padding: 30px 20px 25px;
+  text-align: center;
+  position: relative;
+  border-bottom: 3px solid rgb(191, 189, 189);
+}
+
+.loyalty-modal-header-notifacion h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.loyalty-modal-header-notifacion .icon {
+  font-size: 28px;
+  margin: 0 5px;
+}
+
+/* Body */
+.loyalty-modal-body-notifacion {
+  padding: 30px 25px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.loyalty-modal-body-notifacion::-webkit-scrollbar {
+  width: 6px;
+}
+
+.loyalty-modal-body-notifacion::-webkit-scrollbar-track {
+  background: var(--loyalty-scrollbar-track);
+  border-radius: 10px;
+}
+
+.loyalty-modal-body-notifacion::-webkit-scrollbar-thumb {
+  background: var(--loyalty-scrollbar-thumb);
+  border-radius: 10px;
+}
+
+.loyalty-modal-body-notifacion::-webkit-scrollbar-thumb:hover {
+  background: var(--loyalty-primary-dark);
+}
+
+/* Firefox scrollbar support */
+.loyalty-modal-body-notifacion{
+  scrollbar-width: thin;
+  scrollbar-color: var(--loyalty-scrollbar-thumb) var(--loyalty-scrollbar-track);
+}
+
+/* Page Content */
+.loyalty-page-notifacion {
+  display: none;
+  -webkit-animation: fadeIn 0.4s ease-in-out;
+  -moz-animation: fadeIn 0.4s ease-in-out;
+  -o-animation: fadeIn 0.4s ease-in-out;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.loyalty-page-notifacion.active {
+  display: block;
+}
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0;
+    -moz-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    -moz-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(10px);
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -o-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+/* ========== تنسيقات أزرار نظام النقاط والقرآن (Loyalty & Quran Buttons) ========== */
+ .quran-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 3px;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    border: 2px solid transparent;
+}
+
+.quran-btn {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+}
+
+.loyalty-system-btn:hover, .quran-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.quran-btn:hover {
+    box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
+}
+
+.loyalty-system-btn:active, .quran-btn:active {
+    transform: translateY(0);
+}
+
+.loyalty-system-btn .icon, .quran-btn .icon {
+    font-size: 18px;
+}
+
+/* نص اختيار السرعة */
+.speed-label {
+    text-align: center;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 15px 0 -5px 0;
+    padding: 8px 15px;
+   background: rgba(78, 128, 44, 0.54);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+
+
+.status-custom-btn.quran-btn {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+}
+
+.status-custom-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.status-custom-btn.quran-btn:hover {
+    box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
+}
+
+.status-custom-btn:active {
+    transform: translateY(0);
+}
+
+.status-custom-btn .icon {
+    font-size: 16px;
+}
+/* ========== END: Buttons Styling ========== */
+
+
+.loyalty-page-content-notifacion {
+  text-align: center;
+}
+
+.loyalty-icon-notifacion {
+  font-size: 64px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.loyalty-page-content-notifacion p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--loyalty-text-dark);
+  margin: 0 0 20px;
+  text-align: right;
+  padding: 0 10px;
+}
+
+.loyalty-page-content-notifacion strong {
+  color:#5189d0;
+  font-weight: 700;
+}
+
+/* Footer */
+.loyalty-modal-footer-notifacion {
+  padding: 20px 25px;
+  background: var(--loyalty-bg-gray);
+  border-top: 1px solid var(--loyalty-border-color);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Progress Dots */
+.loyalty-progress-notifacion {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 8px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.loyalty-progress-dot-notifacion {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--loyalty-divider-color);
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.loyalty-progress-dot-notifacion.active {
+  background: var(--loyalty-primary-color);
+  width: 24px;
+  border-radius: 5px;
+}
+
+/* Buttons */
+.loyalty-btn-notifacion {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  font-family: 'Almarai', sans-serif;
+  white-space: nowrap;
+}
+
+.loyalty-btn-next-notifacion {
+  background: -webkit-linear-gradient(135deg, var(--loyalty-primary-color) 0%, var(--loyalty-primary-dark) 100%);
+  background: -moz-linear-gradient(135deg, var(--loyalty-primary-color) 0%, var(--loyalty-primary-dark) 100%);
+  background: linear-gradient(135deg, var(--loyalty-primary-color) 0%, var(--loyalty-primary-dark) 100%);
+  color: var(--loyalty-text-white);
+  -webkit-box-shadow: var(--loyalty-btn-primary-shadow);
+  -moz-box-shadow: var(--loyalty-btn-primary-shadow);
+  box-shadow: var(--loyalty-btn-primary-shadow);
+}
+
+.loyalty-btn-next-notifacion:hover {
+  -webkit-transform: translateY(-2px);
+  -moz-transform: translateY(-2px);
+  -ms-transform: translateY(-2px);
+  -o-transform: translateY(-2px);
+  transform: translateY(-2px);
+  -webkit-box-shadow: 0 6px 20px rgba(45, 156, 88, 0.4);
+  -moz-box-shadow: 0 6px 20px rgba(45, 156, 88, 0.4);
+  box-shadow: 0 6px 20px rgba(45, 156, 88, 0.4);
+}
+
+.loyalty-btn-prev-notifacion {
+  background: var(--loyalty-text-white);
+  color: var(--loyalty-primary-color);
+  border: 2px solid var(--loyalty-primary-color);
+}
+
+.loyalty-btn-prev-notifacion:hover {
+  background: #f0f0f0;
+}
+
+.loyalty-btn-finish-notifacion {
+  background: -webkit-linear-gradient(135deg, var(--loyalty-accent-color) 0%, var(--loyalty-accent-dark) 100%);
+  background: -moz-linear-gradient(135deg, var(--loyalty-accent-color) 0%, var(--loyalty-accent-dark) 100%);
+  background: linear-gradient(135deg, var(--loyalty-accent-color) 0%, var(--loyalty-accent-dark) 100%);
+  color: var(--loyalty-text-white);
+  -webkit-box-shadow: var(--loyalty-btn-accent-shadow);
+  -moz-box-shadow: var(--loyalty-btn-accent-shadow);
+  box-shadow: var(--loyalty-btn-accent-shadow);
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.loyalty-btn-finish-notifacion:hover {
+  -webkit-transform: translateY(-2px);
+  -moz-transform: translateY(-2px);
+  -ms-transform: translateY(-2px);
+  -o-transform: translateY(-2px);
+  transform: translateY(-2px);
+  -webkit-box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  -moz-box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Highlight Box */
+.loyalty-highlight-notifacion {
+  background: -webkit-linear-gradient(135deg, var(--loyalty-highlight-bg-start) 0%, var(--loyalty-highlight-bg-end) 100%);
+  background: -moz-linear-gradient(135deg, var(--loyalty-highlight-bg-start) 0%, var(--loyalty-highlight-bg-end) 100%);
+  background: linear-gradient(135deg, var(--loyalty-highlight-bg-start) 0%, var(--loyalty-highlight-bg-end) 100%);
+  border-right: 4px solid var(--loyalty-primary-color);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  -webkit-box-shadow: var(--loyalty-shadow-medium);
+  -moz-box-shadow: var(--loyalty-shadow-medium);
+  box-shadow: var(--loyalty-shadow-medium);
+}
+
+.loyalty-highlight-notifacion p {
+  margin: 0;
+  color: var(--loyalty-text-success);
+  font-weight: 600;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .loyalty-modal-notifacion {
+    border-radius: 15px;
+    max-height: 90vh;
+  }
+
+  .loyalty-modal-header-notifacion {
+    padding: 25px 15px 20px;
+  }
+
+  .loyalty-modal-header-notifacion h2 {
+    font-size: 19px;
+  }
+
+  .loyalty-modal-header-notifacion .icon {
+    font-size: 24px;
+  }
+
+  .loyalty-modal-body-notifacion {
+    padding: 25px 20px;
+  }
+
+  .loyalty-page-content-notifacion p {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .loyalty-icon-notifacion {
+    font-size: 52px;
+    margin-bottom: 15px;
+  }
+
+  .loyalty-modal-footer-notifacion {
+    padding: 15px 20px;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+
+  .loyalty-btn-notifacion {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .loyalty-btn-finish-notifacion {
+    width: 100%;
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    order: 1;
+  }
+
+  .loyalty-progress-notifacion {
+    -webkit-box-ordinal-group: 3;
+    -ms-flex-order: 2;
+    order: 2;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+/* Animation for icons */
+@-webkit-keyframes bounce {
+  0%, 100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+
+@-moz-keyframes bounce {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-10px);
+    -moz-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -o-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+
+.loyalty-icon-notifacion {
+  -webkit-animation: bounce 2s ease-in-out infinite;
+  -moz-animation: bounce 2s ease-in-out infinite;
+  -o-animation: bounce 2s ease-in-out infinite;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* ===== Loyalty System Button Styles ===== */
+.loyalty-system-btn-notifacion {
+  display: inline-block;
+  width: 100%;
+  max-width: 100%;
+  padding: 10px 30px;
+  margin: 12px 0;
+ background: linear-gradient(135deg, #2a3e4f 0%, #374060 50%, #4a5776 100%);
+  background-size: 200% 100%;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 15px;
+  border: none;
+  -webkit-box-shadow: 0 8px 25px rgba(210, 152, 25, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.3);
+  -moz-box-shadow: 0 8px 25px rgba(210, 152, 25, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(196, 25, 210, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  -webkit-transition: all 0.4s ease;
+  -moz-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Almarai', 'Tajawal', sans-serif;
+  -webkit-animation: shimmer 3s ease-in-out infinite;
+  -moz-animation: shimmer 3s ease-in-out infinite;
+  -o-animation: shimmer 3s ease-in-out infinite;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.loyalty-system-btn-notifacion::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: -webkit-linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: -moz-linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-animation: shine 3s ease-in-out infinite;
+  -moz-animation: shine 3s ease-in-out infinite;
+  -o-animation: shine 3s ease-in-out infinite;
+  animation: shine 3s ease-in-out infinite;
+}
+
+.loyalty-system-btn-notifacion:hover {
+  -webkit-transform: translateY(-3px) scale(1.02);
+  -moz-transform: translateY(-3px) scale(1.02);
+  -ms-transform: translateY(-3px) scale(1.02);
+  -o-transform: translateY(-3px) scale(1.02);
+  transform: translateY(-3px) scale(1.02);
+  -webkit-box-shadow: 0 12px 35px rgba(167, 25, 210, 0.6), 0 0 0 4px rgba(255, 255, 255, 0.4);
+  -moz-box-shadow: 0 12px 35px rgba(130, 25, 210, 0.6), 0 0 0 4px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 35px rgba(127, 25, 210, 0.6), 0 0 0 4px rgba(255, 255, 255, 0.4);
+  background-position: 100% 0;
+}
+
+.loyalty-system-btn-notifacion:active {
+  -webkit-transform: translateY(-1px) scale(0.98);
+  -moz-transform: translateY(-1px) scale(0.98);
+  -ms-transform: translateY(-1px) scale(0.98);
+  -o-transform: translateY(-1px) scale(0.98);
+  transform: translateY(-1px) scale(0.98);
+}
+
+.loyalty-system-btn-notifacion .icon {
+  display: inline-block;
+  margin: 0 8px;
+  font-size: 24px;
+  vertical-align: middle;
+  -webkit-animation: pulse-icon 2s ease-in-out infinite;
+  -moz-animation: pulse-icon 2s ease-in-out infinite;
+  -o-animation: pulse-icon 2s ease-in-out infinite;
+  animation: pulse-icon 2s ease-in-out infinite;
+}
+
+@-webkit-keyframes shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@-moz-keyframes shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@-webkit-keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@-moz-keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@-webkit-keyframes pulse-icon {
+  0%, 100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}
+
+@-moz-keyframes pulse-icon {
+  0%, 100% {
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  50% {
+    -moz-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}
+
+@keyframes pulse-icon {
+  0%, 100% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}
+
+/* Button in status page - special styling */
+.status-div-notifacion .loyalty-system-btn-notifacion {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .loyalty-system-btn-notifacion {
+    font-size: 16px;
+    padding: 15px 25px;
+  }
+  
+  .loyalty-system-btn-notifacion .icon {
+    font-size: 20px;
+  }
+}
