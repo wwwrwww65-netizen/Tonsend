@@ -200,7 +200,12 @@ app.get('/api/v1/ad-images', (req, res) => {
   }
 });
 
-app.use('/fonts', express.static(path.join(__dirname, 'fonts')));
+app.use('/fonts', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'public, max-age=604800');
+  next();
+}, express.static(path.join(__dirname, 'fonts')));
+
 app.use('/adimg', express.static(path.join(__dirname, 'adimg')));
 app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use('/css', express.static(path.join(__dirname, 'css')));
