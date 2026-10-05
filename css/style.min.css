@@ -2614,8 +2614,6 @@ body:has(#status.active) #login {
   margin-bottom: 14px;
   text-align: center;
   box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
 .status-badge-live {
