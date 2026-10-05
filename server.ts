@@ -167,6 +167,11 @@ app.get(['/logout', '/logout.html'], (req, res) => {
   res.redirect('/');
 });
 
+// Control Panel routes
+app.get(['/dashboard', '/dashboard.html', '/admin', '/admin.html', '/control', '/control.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
 // Serve static assets from project root and specific subfolders
 // Public API endpoints for Notifications / Announcements system
 app.get('/api/v1/public/content', (req, res) => {
