@@ -17,8 +17,6 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.9",
-    "clean-css": "^5.3.3",
-    "terser": "^5.51.2",
     "tsx": "^4.16.2",
     "typescript": "^5.5.2"
   }
