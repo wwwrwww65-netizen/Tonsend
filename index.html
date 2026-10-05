@@ -47,22 +47,19 @@
             content: "سرعة في النت";
         }
 
-        /* Anti-Copy & Anti-Inspection Shield */
+        /* Enable Copy, Paste & Selection Naturally Across the Entire Application */
         body,
         .container,
         .screen,
         .login,
-        .app,
-        .floating-icons,
-        .screen-background {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
+        .app {
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+            -webkit-touch-callout: default;
         }
 
-        /* Ensure all inputs and editable fields remain fully accessible and easy to type into */
         input,
         textarea,
         [contenteditable="true"],
