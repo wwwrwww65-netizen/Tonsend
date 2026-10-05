@@ -145,28 +145,6 @@
             display: block !important;
             animation: none !important;
         }
-
-        /* Ultra-Smooth Mobile Keyboard & Viewport Stability Engine */
-        html, body {
-            overscroll-behavior-y: none;
-            -webkit-text-size-adjust: 100%;
-        }
-
-        /* Lock screen background firmly to prevent mobile keyboard stretch/bounce */
-        .screen-background {
-            position: fixed !important;
-            inset: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            height: 100dvh !important;
-            min-height: -webkit-fill-available !important;
-            pointer-events: none !important;
-        }
-
-        /* Enforce 16px minimum on mobile inputs to completely prevent iOS viewport auto-zoom */
-        .login-input, input[name="username"], input[name="password"] {
-            font-size: 16px !important;
-        }
     </style>
     <script>
         try {
@@ -1940,6 +1918,27 @@
                     document.documentElement.style.overflow = 'hidden';
                 },
 
+                _isLocked: false,
+
+                _preventTouch: function (e) {
+                    var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
+                    if (!scrollable) {
+                        e.preventDefault();
+                    }
+                },
+
+                lock: function () {
+                    this.lockCount++;
+                    if (!this._isLocked) {
+                        this._isLocked = true;
+                        document.documentElement.classList.add('modal-scroll-locked');
+                        document.body.classList.add('modal-scroll-locked');
+                        document.body.style.overflow = 'hidden';
+                        document.documentElement.style.overflow = 'hidden';
+                        document.addEventListener('touchmove', this._preventTouch, { passive: false });
+                    }
+                },
+
                 unlock: function (force) {
                     if (force) {
                         this.lockCount = 0;
@@ -1949,10 +1948,14 @@
 
                     if (this.lockCount === 0 || !this.isAnyModalOpen()) {
                         this.lockCount = 0;
-                        document.documentElement.classList.remove('modal-scroll-locked');
-                        document.body.classList.remove('modal-scroll-locked');
-                        document.body.style.overflow = '';
-                        document.documentElement.style.overflow = '';
+                        if (this._isLocked) {
+                            this._isLocked = false;
+                            document.documentElement.classList.remove('modal-scroll-locked');
+                            document.body.classList.remove('modal-scroll-locked');
+                            document.body.style.overflow = '';
+                            document.documentElement.style.overflow = '';
+                            document.removeEventListener('touchmove', this._preventTouch, { passive: false });
+                        }
                     }
                 },
 
@@ -1965,36 +1968,7 @@
                 },
 
                 init: function () {
-                    var self = this;
-                    document.addEventListener('touchmove', function (e) {
-                        if (!document.body.classList.contains('modal-scroll-locked')) return;
-                        var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
-                        if (!scrollable) {
-                            e.preventDefault();
-                        }
-                    }, { passive: false });
-
-                    document.addEventListener('wheel', function (e) {
-                        if (!document.body.classList.contains('modal-scroll-locked')) return;
-                        var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
-                        if (!scrollable) {
-                            e.preventDefault();
-                        }
-                    }, { passive: false });
-
-                    try {
-                        if (typeof MutationObserver !== 'undefined' && document.body) {
-                            var observer = new MutationObserver(function () {
-                                var anyOpen = self.isAnyModalOpen();
-                                if (anyOpen && !document.body.classList.contains('modal-scroll-locked')) {
-                                    self.lock();
-                                } else if (!anyOpen && document.body.classList.contains('modal-scroll-locked')) {
-                                    self.unlock(true);
-                                }
-                            });
-                            observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class', 'style'], childList: true });
-                        }
-                    } catch (err) {}
+                    this._preventTouch = this._preventTouch.bind(this);
                 }
             };
             window.ModalScrollLock.init();
@@ -2894,20 +2868,8 @@
                         isKeyboardActive = false;
                         document.body.classList.remove('keyboard-open');
                         if (bNav) bNav.classList.remove('hidden-keyboard');
-
-                        // Smoothly glide window back to natural top position if slightly scrolled during typing
-                        if (!document.body.classList.contains('modal-scroll-locked')) {
-                            var y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-                            if (y > 0 && y < 350) {
-                                try {
-                                    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-                                } catch (e) {
-                                    window.scrollTo(0, 0);
-                                }
-                            }
-                        }
                     }
-                }, 180);
+                }, 140);
             }
 
             document.addEventListener('focusin', function (e) {

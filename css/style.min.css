@@ -108,11 +108,12 @@ body.loyalty-system-disabled [data-loyalty-element] {
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -127,7 +128,8 @@ body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
-  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   padding-top: env(safe-area-inset-top, 0px);
   padding-right: env(safe-area-inset-right, 0px);
   padding-left: env(safe-area-inset-left, 0px);
@@ -235,6 +237,9 @@ svg.svg-inline,
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  contain: strict;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
   background: radial-gradient(circle at 18% 15%, rgba(20, 184, 166, 0.35), transparent 55%),
               radial-gradient(circle at 85% 25%, rgba(13, 148, 136, 0.40), transparent 50%),
               radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.28), transparent 60%),
@@ -291,13 +296,13 @@ svg.svg-inline,
 
 @keyframes floatOrb {
   0% {
-    transform: translate(0, 0) scale(1) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate(40px, -50px) scale(1.15) rotate(180deg);
+    transform: translate3d(35px, -45px, 0) scale(1.1);
   }
   100% {
-    transform: translate(-30px, 30px) scale(0.9) rotate(360deg);
+    transform: translate3d(-25px, 25px, 0) scale(0.92);
   }
 }
 
@@ -317,6 +322,9 @@ svg.svg-inline,
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  touch-action: pan-y;
 }
 
 .screen {
@@ -2546,7 +2554,8 @@ tbody td:last-child {
 
 #status.active {
   display: block !important;
-  animation: fadeInStatusPage 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  animation: none !important;
+  opacity: 1 !important;
   overflow-y: visible !important;
   touch-action: pan-y !important;
 }
@@ -2554,11 +2563,9 @@ tbody td:last-child {
 @keyframes fadeInStatusPage {
   from {
     opacity: 0;
-    transform: translateY(12px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -2575,6 +2582,22 @@ tbody td:last-child {
   box-shadow: var(--shadow-lg), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
   animation: none !important;
   margin: 0 0 16px 0 !important;
+}
+
+/* Eliminate recursive nested backdrop-filters inside #status so scrolling speed matches #login 100% */
+#status .status-header-card,
+#status .status-badge-live,
+#status .metric-card-glass,
+#status .statusdiv,
+#status .loyalty-user-card,
+#status .points-notice-alert,
+#status .status-actions-row,
+#status .stream-card-link,
+#status .status-select-trigger,
+#status .loyalty-points-display-banner,
+#status .loyalty-action-card-btn {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* When #status (Status dashboard screen) is active, ensure #login is hidden */
@@ -3132,6 +3155,9 @@ body:has(#status.active) #login {
     margin: 0;
     padding: 0;
     pointer-events: none; /* لكي لا تعيق النقر واللمس */
+    contain: strict;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 /* إعدادات الأيقونات العائمة (لون أبيض نقي شفاف بدون توهج) */
@@ -3201,7 +3227,7 @@ body:has(#status.active) #login {
 /* هندسة الحركة المتواصلة من أسفل الشاشة وحتى القمة بنعومة وشفافية متقنة */
 @keyframes floatUp {
     0% {
-        transform: translateY(0) rotate(0deg) scale(0.9);
+        transform: translate3d(0, 0, 0) scale(0.9);
         opacity: 0;
     }
     15% {
@@ -3211,7 +3237,7 @@ body:has(#status.active) #login {
         opacity: 0.35;
     }
     100% {
-        transform: translateY(-120vh) rotate(360deg) scale(1.1);
+        transform: translate3d(0, -120vh, 0) scale(1.05);
         opacity: 0;
     }
 }
