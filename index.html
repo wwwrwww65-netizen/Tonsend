@@ -139,25 +139,52 @@
 
         html.initial-status-view #login {
             display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
         html.initial-status-view #status {
             display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
             animation: none !important;
         }
     </style>
     <script>
-        try {
-            localStorage.removeItem('hotspot_is_logged_in');
-            var search = window.location.search || '';
-            if (search.indexOf('logged=yes') !== -1 || sessionStorage.getItem('hotspot_is_logged_in') === '1') {
-                if (search.indexOf('logged=no') === -1) {
-                    document.documentElement.classList.add('initial-status-view');
+        (function() {
+            try {
+                var search = window.location.search || '';
+                var path = window.location.pathname || '';
+                var hash = window.location.hash || '';
+                var cookies = document.cookie || '';
+
+                if (search.indexOf('logged=no') !== -1) {
+                    try {
+                        localStorage.removeItem('hotspot_is_logged_in');
+                        sessionStorage.removeItem('hotspot_is_logged_in');
+                        document.cookie = 'hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                    } catch (e) {}
+                    document.documentElement.classList.remove('initial-status-view');
+                    return;
                 }
-            } else {
-                document.documentElement.classList.remove('initial-status-view');
-            }
-        } catch (e) {}
+
+                var isLogged = (
+                    search.indexOf('logged=yes') !== -1 ||
+                    path.indexOf('status') !== -1 ||
+                    hash === '#status' ||
+                    sessionStorage.getItem('hotspot_is_logged_in') === '1' ||
+                    localStorage.getItem('hotspot_is_logged_in') === '1' ||
+                    cookies.indexOf('hotspot_is_logged_in=1') !== -1
+                );
+
+                if (isLogged) {
+                    document.documentElement.classList.add('initial-status-view');
+                } else {
+                    document.documentElement.classList.remove('initial-status-view');
+                }
+            } catch (e) {}
+        })();
 
         var hotspotConfig = window.hotspotConfig || {};
         function applyInstantConfig(cfg) {
@@ -1482,7 +1509,7 @@
                                     statusEl.style.display = 'block';
                                     statusEl.classList.add('active');
                                 }
-                                var rawCache = sessionStorage.getItem('hotspot_cached_status');
+                                var rawCache = sessionStorage.getItem('hotspot_cached_status') || localStorage.getItem('hotspot_cached_status');
                                 if (rawCache) {
                                     var cached = JSON.parse(rawCache);
                                     var ids = ['bytes_out', 'bytes_in', 'remain_bytes_total', 'uptime', 'session_time_left', 'sspeed', 'status-title'];

@@ -147,12 +147,14 @@ app.get(['/status', '/status.html'], (req, res) => {
   }
 
   // Direct page request
+  res.cookie('hotspot_is_logged_in', sessionState.isLoggedIn ? '1' : '0', { path: '/' });
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // MikroTik Hotspot /logout endpoint
 app.get(['/logout', '/logout.html'], (req, res) => {
   sessionState.isLoggedIn = false;
+  res.cookie('hotspot_is_logged_in', '0', { path: '/' });
   const isCallBack = req.query.var === 'callBack';
 
   if (isCallBack) {
