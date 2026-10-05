@@ -26,18 +26,18 @@
         return;
     }
 
-    let isSystemLoaded = false;
-    let loadingPromise = null;
+    var isSystemLoaded = false;
+    var loadingPromise = null;
 
-    async function loadLoyaltySystem() {
+    function loadLoyaltySystem() {
         if (!isLoyaltyEnabled()) return false;
         if (isSystemLoaded) return true;
         if (loadingPromise) return loadingPromise;
 
-        loadingPromise = (async () => {
+        loadingPromise = (function() {
             try {
                 console.log("[LoyaltyIntegration] Loading system scripts...");
-                const scripts = [
+                var scripts = [
                     "js/loyalty-system/loyalty-config.js",
                     "js/loyalty-system/loyalty-storage.js",
                     "js/loyalty-system/loyalty-api.js",
@@ -46,12 +46,12 @@
                     "js/loyalty-system/loyalty-modal.js"
                 ];
 
-                for (const scriptUrl of scripts) {
-                    await loadScript(scriptUrl);
+                for (var scriptUrl of scripts) {
+                    loadScript(scriptUrl);
                 }
 
                 if (window.LoyaltyManager && typeof window.LoyaltyManager.init === 'function') {
-                    await window.LoyaltyManager.init();
+                    window.LoyaltyManager.init();
                 }
 
                 isSystemLoaded = true;
@@ -70,11 +70,11 @@
     function loadScript(src) {
         return new Promise((resolve, reject) => {
             // Check if already in DOM
-            const existing = document.querySelector(`script[src="${src}"]`);
+            var existing = document.querySelector(`script[src="${src}"]`);
             if (existing) {
                 return resolve();
             }
-            const script = document.createElement("script");
+            var script = document.createElement("script");
             script.src = src;
             script.onload = () => {
                 console.log(`[LoyaltyIntegration] Loaded: ${src}`);
@@ -89,9 +89,9 @@
     }
 
     function setupLoginPointsHook() {
-        const origUserLogin = window.userLogin;
+        var origUserLogin = window.userLogin;
         window.userLogin = async function (arg) {
-            let cardValue = "";
+            var cardValue = "";
             if (document.login && document.login.username) {
                 cardValue = document.login.username.value;
             }
@@ -109,7 +109,7 @@
                     window.LoyaltyManager.updateUI();
                     if (cardValue) {
                         try {
-                            const res = await window.LoyaltyManager.addPointsForCard(cardValue);
+                            var res = await window.LoyaltyManager.addPointsForCard(cardValue);
                             if (res && res.success && typeof Banner !== 'undefined' && Banner.show) {
                                 Banner.show(res.message, "success");
                             }
@@ -123,12 +123,12 @@
     }
 
     function updateInlinePointsElements() {
-        const isLogged = window.LoyaltyManager && typeof window.LoyaltyManager.isLoggedIn === 'function' && window.LoyaltyManager.isLoggedIn();
+        var isLogged = window.LoyaltyManager && typeof window.LoyaltyManager.isLoggedIn === 'function' && window.LoyaltyManager.isLoggedIn();
         
-        const regSec = document.getElementById("loyalty-registered-section");
-        const unregSec = document.getElementById("loyalty-unregistered-section");
-        const regStatusSec = document.getElementById("loyalty-registered-section-status");
-        const unregStatusSec = document.getElementById("loyalty-unregistered-section-status");
+        var regSec = document.getElementById("loyalty-registered-section");
+        var unregSec = document.getElementById("loyalty-unregistered-section");
+        var regStatusSec = document.getElementById("loyalty-registered-section-status");
+        var unregStatusSec = document.getElementById("loyalty-unregistered-section-status");
 
         if (isLogged) {
             if (regSec) regSec.style.display = "block";
@@ -136,9 +136,9 @@
             if (regStatusSec) regStatusSec.style.display = "block";
             if (unregStatusSec) unregStatusSec.style.display = "none";
 
-            const currentUser = window.LoyaltyManager.getCurrentUser();
-            const phone = currentUser ? currentUser.phone : (localStorage.getItem('points_user_phone') || '');
-            const points = window.LoyaltyManager.getPoints();
+            var currentUser = window.LoyaltyManager.getCurrentUser();
+            var phone = currentUser ? currentUser.phone : (localStorage.getItem('points_user_phone') || '');
+            var points = window.LoyaltyManager.getPoints();
 
             document.querySelectorAll("#loyalty-user-phone, #loyalty-user-phone-status, .loyalty-user-phone, .loyalty-user-phone-display").forEach(el => {
                 if (el) el.textContent = phone;
@@ -161,7 +161,7 @@
             window._loyaltyDelegatedBound = true;
             document.addEventListener("click", function (e) {
                 // Loan buttons
-                const loanBtn = e.target.closest("#loyalty-loan-btn, #loyalty-loan-btn-status, [data-loyalty-loan]");
+                var loanBtn = e.target.closest("#loyalty-loan-btn, #loyalty-loan-btn-status, [data-loyalty-loan]");
                 if (loanBtn) {
                     e.preventDefault();
                     if (window.LoyaltyManager && window.LoyaltyManager.isLoggedIn()) {
@@ -173,7 +173,7 @@
                 }
 
                 // Buy card / exchange points buttons
-                const buyBtn = e.target.closest("#loyalty-buy-card-btn, #loyalty-buy-card-btn-status, [data-loyalty-buy]");
+                var buyBtn = e.target.closest("#loyalty-buy-card-btn, #loyalty-buy-card-btn-status, [data-loyalty-buy]");
                 if (buyBtn) {
                     e.preventDefault();
                     if (window.LoyaltyManager && window.LoyaltyManager.isLoggedIn()) {
@@ -185,7 +185,7 @@
                 }
 
                 // Saved cards buttons
-                const savedBtn = e.target.closest("#loyalty-saved-cards-btn, #loyalty-saved-cards-btn-status, [data-loyalty-saved]");
+                var savedBtn = e.target.closest("#loyalty-saved-cards-btn, #loyalty-saved-cards-btn-status, [data-loyalty-saved]");
                 if (savedBtn) {
                     e.preventDefault();
                     if (window.LoyaltyModal && typeof window.LoyaltyModal.showSavedCards === "function") {
@@ -197,7 +197,7 @@
                 }
 
                 // Points account / portal page buttons
-                const accountBtn = e.target.closest("#loyalty-account-btn, #loyalty-account-btn-status, [data-loyalty-account]");
+                var accountBtn = e.target.closest("#loyalty-account-btn, #loyalty-account-btn-status, [data-loyalty-account]");
                 if (accountBtn) {
                     e.preventDefault();
                     if (window.LoyaltyManager && window.LoyaltyManager.isLoggedIn()) {
@@ -209,7 +209,7 @@
                 }
 
                 // Logout buttons
-                const logoutBtn = e.target.closest("#loyalty-logout-btn, #loyalty-logout-btn-status, .loyalty-logout-pill-btn, [data-loyalty-logout]");
+                var logoutBtn = e.target.closest("#loyalty-logout-btn, #loyalty-logout-btn-status, .loyalty-logout-pill-btn, [data-loyalty-logout]");
                 if (logoutBtn) {
                     e.preventDefault();
                     if (window.LoyaltyManager) {
@@ -220,7 +220,7 @@
                 }
 
                 // Registration trigger buttons
-                const regBtn = e.target.closest("#openPointsRegisterBtn, #openPointsRegisterBtnStatus, .points-register-btn, .loyalty-register-btn, [data-loyalty-register]");
+                var regBtn = e.target.closest("#openPointsRegisterBtn, #openPointsRegisterBtnStatus, .points-register-btn, .loyalty-register-btn, [data-loyalty-register]");
                 if (regBtn) {
                     e.preventDefault();
                     if (window.LoyaltyManager) {
@@ -242,10 +242,10 @@
         window.hotspotData = window.hotspotData || { ip: "", mac: "", identity: "" };
         try {
             document.querySelectorAll("script").forEach((s) => {
-                const text = s.textContent;
-                const ipMatch = text.match(/"ip"\s*:\s*"([^"]+)"/);
+                var text = s.textContent;
+                var ipMatch = text.match(/"ip"\s*:\s*"([^"]+)"/);
                 if (ipMatch) window.hotspotData.ip = ipMatch[1];
-                const macMatch = text.match(/"mac"\s*:\s*"([^"]+)"/);
+                var macMatch = text.match(/"mac"\s*:\s*"([^"]+)"/);
                 if (macMatch) window.hotspotData.mac = macMatch[1];
             });
         } catch (e) {}

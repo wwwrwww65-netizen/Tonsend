@@ -22,14 +22,14 @@
         return;
     }
 
-    let systemLoaded = false;
-    let loadingPromise = null;
+    var systemLoaded = false;
+    var loadingPromise = null;
 
     /**
      * Load notifications system
      * @returns {Promise<boolean>}
      */
-    async function loadNotificationsSystem() {
+    function loadNotificationsSystem() {
         if (!isLoyaltyEnabled()) {
             return false;
         }
@@ -41,12 +41,12 @@
             return loadingPromise;
         }
 
-        loadingPromise = (async () => {
+        loadingPromise = (function() {
             try {
                 if (!isLoyaltyEnabled()) return false;
                 console.log('[NotificationsIntegration] Loading system...');
 
-                const scripts = [
+                var scripts = [
                     'js/notifications-system/notifications-config.js',
                     'js/notifications-system/notifications-storage.js',
                     'js/notifications-system/notifications-api.js',
@@ -55,12 +55,12 @@
                 ];
 
                 // Load scripts in order
-                for (const src of scripts) {
-                    await loadScript(src);
+                for (var src of scripts) {
+                    loadScript(src);
                 }
 
                 // Initialize manager
-                await window.NotificationsManager.init();
+                window.NotificationsManager.init();
 
                 systemLoaded = true;
                 console.log('[NotificationsIntegration] System loaded successfully');
@@ -83,7 +83,7 @@
      */
     function loadScript(src) {
         return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
+            var script = document.createElement('script');
             script.src = src;
             script.onload = () => {
                 console.log(`[NotificationsIntegration] Loaded: ${src}`);
@@ -103,7 +103,7 @@
         console.log('[NotificationsIntegration] Initializing...');
 
         // Load system after delay (after loyalty system)
-        const delay = 1500; // 1.5 seconds after page load
+        var delay = 1500; // 1.5 seconds after page load
         setTimeout(async () => {
             await loadNotificationsSystem();
         }, delay);

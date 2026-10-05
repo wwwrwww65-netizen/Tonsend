@@ -15,7 +15,61 @@
     <meta name="HandheldFriendly" content="true">
     <meta name="MobileOptimized" content="width">
     <meta name="theme-color" content="#041f22">
+        <!-- Ultra-Fast Compatibility & Polyfill Engine for Legacy WebViews (Android 4+, iOS 7+) -->
+    <script>
+        (function() {
+            if (!Array.prototype.indexOf) {
+                Array.prototype.indexOf = function(val, fromIndex) {
+                    var i = fromIndex || 0;
+                    for (; i < this.length; i++) { if (this[i] === val) return i; }
+                    return -1;
+                };
+            }
+            if (!Array.prototype.includes) {
+                Array.prototype.includes = function(searchElement, fromIndex) {
+                    return this.indexOf(searchElement, fromIndex) !== -1;
+                };
+            }
+            if (!String.prototype.includes) {
+                String.prototype.includes = function(search, start) {
+                    return this.indexOf(search, start) !== -1;
+                };
+            }
+            if (!String.prototype.startsWith) {
+                String.prototype.startsWith = function(search, pos) {
+                    return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+                };
+            }
+            if (!String.prototype.endsWith) {
+                String.prototype.endsWith = function(search, this_len) {
+                    if (this_len === undefined || this_len > this.length) { this_len = this.length; }
+                    return this.substring(this_len - search.length, this_len) === search;
+                };
+            }
+            if (!Array.from) {
+                Array.from = function(object) {
+                    return Array.prototype.slice.call(object);
+                };
+            }
+            if (!Array.prototype.find) {
+                Array.prototype.find = function(predicate) {
+                    if (this == null) throw new TypeError("Array.prototype.find called on null or undefined");
+                    if (typeof predicate !== "function") throw new TypeError("predicate must be a function");
+                    var list = Object(this);
+                    var length = list.length >>> 0;
+                    var thisArg = arguments[1];
+                    for (var i = 0; i < length; i++) {
+                        var value = list[i];
+                        if (predicate.call(thisArg, value, i, list)) return value;
+                    }
+                    return undefined;
+                };
+            }
+        })();
+    </script>
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="preload" href="fonts/almarai-700-ar.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/almarai-400-ar.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="fonts/Almarai.css">
     <link rel="stylesheet" href="css/fontello.min.css">
     <link rel="stylesheet" href="css/style.min.css">
@@ -1561,19 +1615,19 @@
 
             // 1. DYNAMIC CAROUSEL CONTROLLER WITH AUTO-DISCOVERY & SEAMLESS LOOP
             function initDynamicAdCarousel() {
-                const wrapper = document.getElementById('adsCarouselWrapper');
-                const track = document.getElementById('carouselTrack');
-                const dotsContainer = document.getElementById('carouselDots');
-                const prevBtn = document.getElementById('carouselPrev');
-                const nextBtn = document.getElementById('carouselNext');
-                const carouselContainer = document.getElementById('adCarousel');
-                const legacyBox = document.getElementById('legacyAdsBox');
+                var wrapper = document.getElementById('adsCarouselWrapper');
+                var track = document.getElementById('carouselTrack');
+                var dotsContainer = document.getElementById('carouselDots');
+                var prevBtn = document.getElementById('carouselPrev');
+                var nextBtn = document.getElementById('carouselNext');
+                var carouselContainer = document.getElementById('adCarousel');
+                var legacyBox = document.getElementById('legacyAdsBox');
 
                 if (!track || !carouselContainer) return;
 
-                let autoplayInterval = null;
-                let transitionSafetyTimeout = null;
-                let currentRenderedImagesKey = '';
+                var autoplayInterval = null;
+                var transitionSafetyTimeout = null;
+                var currentRenderedImagesKey = '';
 
                 function renderCarousel(images) {
                     if (!images || images.length === 0) {
@@ -1581,7 +1635,7 @@
                         return;
                     }
 
-                    const imagesKey = images.join(',');
+                    var imagesKey = images.join(',');
                     if (imagesKey === currentRenderedImagesKey && track.children.length > 0) {
                         return; // Already cleanly rendered, avoid layout jump
                     }
@@ -1593,24 +1647,30 @@
                     if (wrapper) wrapper.style.display = 'block';
 
                     if (legacyBox) {
-                        legacyBox.innerHTML = images.map((img, idx) => `<span style="--i:${idx + 1}"><img class="im${idx + 1}" src="./adimg/${img}"></span>`).join('');
+                        var legacyHtml = '';
+                        for (var li = 0; li < images.length; li++) {
+                            legacyHtml += '<span style="--i:' + (li + 1) + '"><img class="im' + (li + 1) + '" src="./adimg/' + images[li] + '"></span>';
+                        }
+                        legacyBox.innerHTML = legacyHtml;
                     }
 
-                    track.innerHTML = images.map((img, idx) => `
-                        <div class="carousel-slide">
-                            <img class="im${idx + 1}" src="./adimg/${img}" alt="إعلان ${idx + 1}" fetchpriority="high" decoding="sync">
-                        </div>
-                    `).join('');
+                    var trackHtml = '';
+                    for (var ti = 0; ti < images.length; ti++) {
+                        trackHtml += '<div class="carousel-slide"><img class="im' + (ti + 1) + '" src="./adimg/' + images[ti] + '" alt="إعلان ' + (ti + 1) + '" fetchpriority="high" decoding="sync"></div>';
+                    }
+                    track.innerHTML = trackHtml;
 
                     if (dotsContainer) {
-                        dotsContainer.innerHTML = images.map((_, idx) => `
-                            <span class="carousel-dot ${idx === 0 ? 'active' : ''}"></span>
-                        `).join('');
+                        var dotsHtml = '';
+                        for (var di = 0; di < images.length; di++) {
+                            dotsHtml += '<span class="carousel-dot ' + (di === 0 ? 'active' : '') + '"></span>';
+                        }
+                        dotsContainer.innerHTML = dotsHtml;
                     }
 
-                    const originalSlides = Array.from(track.querySelectorAll('.carousel-slide'));
-                    const totalSlides = originalSlides.length;
-                    const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll('.carousel-dot')) : [];
+                    var originalSlides = Array.prototype.slice.call(track.querySelectorAll('.carousel-slide'));
+                    var totalSlides = originalSlides.length;
+                    var dots = dotsContainer ? Array.prototype.slice.call(dotsContainer.querySelectorAll('.carousel-dot')) : [];
 
                     if (totalSlides <= 1) {
                         if (prevBtn) prevBtn.style.display = 'none';
@@ -1625,37 +1685,42 @@
                     if (nextBtn) nextBtn.style.display = 'flex';
                     if (dotsContainer) dotsContainer.style.display = 'flex';
 
-                    const firstClone = originalSlides[0].cloneNode(true);
-                    const lastClone = originalSlides[totalSlides - 1].cloneNode(true);
+                    var firstClone = originalSlides[0].cloneNode(true);
+                    var lastClone = originalSlides[totalSlides - 1].cloneNode(true);
                     firstClone.classList.add('carousel-clone');
                     lastClone.classList.add('carousel-clone');
 
                     track.insertBefore(lastClone, track.firstElementChild);
                     track.appendChild(firstClone);
 
-                    let currentIndex = 1;
-                    let isTransitioning = false;
+                    var currentIndex = 1;
+                    var isTransitioning = false;
 
                     track.style.transition = 'none';
-                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
                     track.offsetHeight;
                     track.style.transition = 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
 
                     function updateDots() {
-                        const realIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-                        dots.forEach((dot, idx) => {
-                            dot.classList.toggle('active', idx === realIndex);
-                        });
+                        var realIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                        for (var i = 0; i < dots.length; i++) {
+                            if (i === realIndex) {
+                                dots[i].classList.add('active');
+                            } else {
+                                dots[i].classList.remove('active');
+                            }
+                        }
                     }
 
-                    function goToSlide(index, animated = true) {
+                    function goToSlide(index, animated) {
+                        if (animated === undefined) animated = true;
                         currentIndex = index;
                         if (animated) {
                             track.style.transition = 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
                         } else {
                             track.style.transition = 'none';
                         }
-                        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                        track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
                         updateDots();
 
                         clearTimeout(transitionSafetyTimeout);
@@ -1672,12 +1737,12 @@
                         if (currentIndex === totalSlides + 1) {
                             track.style.transition = 'none';
                             currentIndex = 1;
-                            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                            track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
                             track.offsetHeight;
                         } else if (currentIndex === 0) {
                             track.style.transition = 'none';
                             currentIndex = totalSlides;
-                            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                            track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
                             track.offsetHeight;
                         }
                         isTransitioning = false;
@@ -1717,30 +1782,36 @@
                         nextBtn.onclick = function () { nextSlide(); startAutoplay(); };
                     }
 
-                    dots.forEach(function (dot, idx) {
-                        dot.onclick = function () {
-                            if (isTransitioning) return;
-                            goToSlide(idx + 1);
-                            startAutoplay();
-                        };
-                    });
+                    for (var dotIdx = 0; dotIdx < dots.length; dotIdx++) {
+                        (function(idx) {
+                            dots[idx].onclick = function () {
+                                if (isTransitioning) return;
+                                goToSlide(idx + 1);
+                                startAutoplay();
+                            };
+                        })(dotIdx);
+                    }
 
-                    let touchStartX = 0;
-                    let touchEndX = 0;
+                    var touchStartX = 0;
+                    var touchEndX = 0;
 
                     carouselContainer.ontouchstart = function (e) {
-                        touchStartX = e.changedTouches[0].screenX;
+                        if (e.changedTouches && e.changedTouches[0]) {
+                            touchStartX = e.changedTouches[0].screenX;
+                        }
                         stopAutoplay();
                     };
 
                     carouselContainer.ontouchend = function (e) {
-                        touchEndX = e.changedTouches[0].screenX;
-                        var diff = touchEndX - touchStartX;
-                        if (Math.abs(diff) > 40) {
-                            if (diff > 0) {
-                                prevSlide();
-                            } else {
-                                nextSlide();
+                        if (e.changedTouches && e.changedTouches[0]) {
+                            touchEndX = e.changedTouches[0].screenX;
+                            var diff = touchEndX - touchStartX;
+                            if (Math.abs(diff) > 40) {
+                                if (diff > 0) {
+                                    prevSlide();
+                                } else {
+                                    nextSlide();
+                                }
                             }
                         }
                         startAutoplay();
@@ -1756,17 +1827,17 @@
                 renderCarousel(initialConfigImgs);
 
                 // 2. Dynamic Discovery from adimg/ folder
-                if (window.location.port === '3000') {
+                if (window.location.port === '3000' && typeof fetch === 'function') {
                     fetch('/api/v1/ad-images')
-                        .then(res => res.json())
-                        .then(data => {
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) {
                             if (data && data.success && Array.isArray(data.images) && data.images.length > 0) {
                                 renderCarousel(data.images);
                             } else {
                                 runStaticProbeDiscovery();
                             }
                         })
-                        .catch(() => {
+                        .catch(function() {
                             runStaticProbeDiscovery();
                         });
                 } else {
@@ -1775,33 +1846,35 @@
 
                 // 3. Smart Static Auto-Probing for Pure MikroTik RouterOS (7 requests: 1.jpg to 7.jpg)
                 function runStaticProbeDiscovery() {
-                    const candidateNames = [];
-                    for (let i = 1; i <= 7; i++) {
+                    var candidateNames = [];
+                    for (var i = 1; i <= 7; i++) {
                         candidateNames.push(i + '.jpg');
                     }
 
-                    const foundImages = [];
-                    let finished = 0;
+                    var foundImages = [];
+                    var finished = 0;
 
-                    candidateNames.forEach(function (fileName) {
-                        const testImg = new Image();
-                        testImg.onload = function () {
-                            foundImages.push(fileName);
-                            finished++;
-                            if (finished === candidateNames.length && foundImages.length > 0) {
-                                foundImages.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-                                renderCarousel(foundImages);
-                            }
-                        };
-                        testImg.onerror = function () {
-                            finished++;
-                            if (finished === candidateNames.length && foundImages.length > 0) {
-                                foundImages.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-                                renderCarousel(foundImages);
-                            }
-                        };
-                        testImg.src = './adimg/' + fileName;
-                    });
+                    for (var c = 0; c < candidateNames.length; c++) {
+                        (function(fileName) {
+                            var testImg = new Image();
+                            testImg.onload = function () {
+                                foundImages.push(fileName);
+                                finished++;
+                                if (finished === candidateNames.length && foundImages.length > 0) {
+                                    foundImages.sort(function(a, b) { return parseInt(a, 10) - parseInt(b, 10); });
+                                    renderCarousel(foundImages);
+                                }
+                            };
+                            testImg.onerror = function () {
+                                finished++;
+                                if (finished === candidateNames.length && foundImages.length > 0) {
+                                    foundImages.sort(function(a, b) { return parseInt(a, 10) - parseInt(b, 10); });
+                                    renderCarousel(foundImages);
+                                }
+                            };
+                            testImg.src = './adimg/' + fileName;
+                        })(candidateNames[c]);
+                    }
                 }
             }
 
@@ -1855,37 +1928,34 @@
 
                 init: function () {
                     var self = this;
-                    // Prevent background scrolling on touch gestures outside scrollable modal containers
                     document.addEventListener('touchmove', function (e) {
                         if (document.body.classList.contains('modal-scroll-locked')) {
-                            var scrollable = e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body');
+                            var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
                             if (!scrollable) {
                                 e.preventDefault();
                             }
                         }
                     }, { passive: false });
 
-                    // Prevent wheel scroll bleed-through to underlying background
                     document.addEventListener('wheel', function (e) {
                         if (document.body.classList.contains('modal-scroll-locked')) {
-                            var scrollable = e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body');
+                            var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
                             if (!scrollable) {
                                 e.preventDefault();
                             }
                         }
                     }, { passive: false });
 
-                    // Auto-sync observer to maintain accurate state
                     try {
-                        var observer = new MutationObserver(function () {
-                            var anyOpen = self.isAnyModalOpen();
-                            if (anyOpen && !document.body.classList.contains('modal-scroll-locked')) {
-                                self.lock();
-                            } else if (!anyOpen && document.body.classList.contains('modal-scroll-locked')) {
-                                self.unlock(true);
-                            }
-                        });
-                        if (document.body) {
+                        if (typeof MutationObserver !== 'undefined' && document.body) {
+                            var observer = new MutationObserver(function () {
+                                var anyOpen = self.isAnyModalOpen();
+                                if (anyOpen && !document.body.classList.contains('modal-scroll-locked')) {
+                                    self.lock();
+                                } else if (!anyOpen && document.body.classList.contains('modal-scroll-locked')) {
+                                    self.unlock(true);
+                                }
+                            });
                             observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class', 'style'], childList: true });
                         }
                     } catch (err) {}
@@ -1895,29 +1965,29 @@
 
             function openAppModal(modalId) {
                 window.animating = false;
-                const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+                var modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
                 if (!modal) return;
 
-                // Close any other open modals
-                document.querySelectorAll('.app.active').forEach(function(m) {
+                var openModals = document.querySelectorAll('.app.active');
+                for (var i = 0; i < openModals.length; i++) {
+                    var m = openModals[i];
                     if (m !== modal && m.id !== 'status') {
                         m.classList.remove('active');
                         m.style.display = 'none';
                     }
-                });
+                }
 
-                const isStatusActive = document.getElementById('status')?.classList.contains('active');
-                const loginEl = document.getElementById('login');
+                var statusEl = document.getElementById('status');
+                var isStatusActive = statusEl && statusEl.classList && statusEl.classList.contains('active');
+                var loginEl = document.getElementById('login');
                 if (!isStatusActive && loginEl) {
                     loginEl.classList.add('inactive');
                 }
 
                 modal.style.display = 'block';
-                // Trigger reflow for CSS transition
                 void modal.offsetWidth;
                 modal.classList.add('active');
 
-                // Lock background scroll
                 if (window.ModalScrollLock) {
                     window.ModalScrollLock.lock();
                 } else {
@@ -1927,7 +1997,7 @@
 
             function closeAppModal(modalOrId) {
                 window.animating = false;
-                let target = null;
+                var target = null;
                 if (typeof modalOrId === 'string') {
                     target = document.getElementById(modalOrId);
                 } else if (modalOrId instanceof HTMLElement) {
@@ -1936,33 +2006,36 @@
 
                 if (target) {
                     target.classList.remove('active');
-                    setTimeout(() => {
+                    setTimeout(function () {
                         if (!target.classList.contains('active')) {
                             target.style.display = 'none';
                         }
                     }, 180);
                 } else {
-                    document.querySelectorAll('.app.active').forEach(m => {
-                        if (m.id !== 'status') {
-                            m.classList.remove('active');
-                            setTimeout(() => {
-                                if (!m.classList.contains('active')) {
-                                    m.style.display = 'none';
-                                }
-                            }, 180);
-                        }
-                    });
+                    var activeApps = document.querySelectorAll('.app.active');
+                    for (var j = 0; j < activeApps.length; j++) {
+                        (function(m) {
+                            if (m.id !== 'status') {
+                                m.classList.remove('active');
+                                setTimeout(function () {
+                                    if (!m.classList.contains('active')) {
+                                        m.style.display = 'none';
+                                    }
+                                }, 180);
+                            }
+                        })(activeApps[j]);
+                    }
                 }
 
-                const isStatusActive = document.getElementById('status')?.classList.contains('active');
-                const loginEl = document.getElementById('login');
+                var statusEl = document.getElementById('status');
+                var isStatusActive = statusEl && statusEl.classList && statusEl.classList.contains('active');
+                var loginEl = document.getElementById('login');
                 if (!isStatusActive && loginEl) {
                     loginEl.style.display = 'block';
                     loginEl.style.visibility = 'visible';
                     loginEl.classList.remove('inactive');
                 }
 
-                // Unlock background scroll
                 if (window.ModalScrollLock) {
                     window.ModalScrollLock.unlock();
                 } else {
@@ -1970,15 +2043,13 @@
                 }
             }
 
-            // Expose globally for legacy/inline scripts
             window.openAppModal = openAppModal;
             window.closeAppModal = closeAppModal;
 
-            // Universal Click Handler for All Modal Close & Cancel Buttons
             document.addEventListener('click', function (e) {
-                const closeTrigger = e.target.closest('.modal-close-btn, .modal-cancel-btn, .back, button[data-modal-close]');
+                var closeTrigger = e.target.closest ? e.target.closest('.modal-close-btn, .modal-cancel-btn, .back, button[data-modal-close]') : null;
                 if (closeTrigger) {
-                    const parentApp = closeTrigger.closest('.app');
+                    var parentApp = closeTrigger.closest ? closeTrigger.closest('.app') : null;
                     if (parentApp && parentApp.id !== 'status') {
                         e.preventDefault();
                         e.stopPropagation();
@@ -1987,35 +2058,34 @@
                     }
                 }
 
-                // Clicking on dark backdrop outside modal card
                 if (e.target.classList && e.target.classList.contains('app') && e.target.classList.contains('active') && e.target.id !== 'status') {
                     e.preventDefault();
                     closeAppModal(e.target);
                 }
             }, true);
 
-            // Modal Trigger Buttons (parent-id and dedicated IDs)
-            document.querySelectorAll('button[parent-id], [data-open-modal]').forEach(btn => {
-                btn.addEventListener('click', function (e) {
-                    const parentId = this.getAttribute('parent-id') || this.getAttribute('data-open-modal');
+            var modalTriggers = document.querySelectorAll('button[parent-id], [data-open-modal]');
+            for (var t = 0; t < modalTriggers.length; t++) {
+                modalTriggers[t].addEventListener('click', function (e) {
+                    var parentId = this.getAttribute('parent-id') || this.getAttribute('data-open-modal');
                     if (parentId && parentId !== 'status') {
                         e.preventDefault();
                         e.stopPropagation();
                         openAppModal(parentId);
                     }
                 }, true);
-            });
+            }
 
-            // 3. SPEED SELECTOR & MODAL POPUP DYNAMIC SYNC (LOGIN & STATUS SCREENS)
-            const speedSelect = document.getElementById('speed');
-            const speedModalList = document.getElementById('speedModalList');
-            const statusSpeedModalList = document.getElementById('statusSpeedModalList');
-            const selectedSpeedDisplay = document.getElementById('selectedSpeedDisplay');
-            const statusSpeedTriggerText = document.getElementById('statusSpeedTriggerText');
-            const sspeedSpan = document.getElementById('sspeed');
-            const speedchange = document.getElementById('speedchange');
+            // 3. SPEED SELECTOR & MODAL POPUP DYNAMIC SYNC
+            var speedSelect = document.getElementById('speed');
+            var speedModalList = document.getElementById('speedModalList');
+            var statusSpeedModalList = document.getElementById('statusSpeedModalList');
+            var selectedSpeedDisplay = document.getElementById('selectedSpeedDisplay');
+            var statusSpeedTriggerText = document.getElementById('statusSpeedTriggerText');
+            var sspeedSpan = document.getElementById('sspeed');
+            var speedchange = document.getElementById('speedchange');
 
-            let speedLabelMap = {
+            var speedLabelMap = {
                 '@512K': 'سرعة 512 كيلو',
                 '@1M': 'سرعة 1 ميجا',
                 '@2M': 'سرعة 2 ميجا',
@@ -2026,141 +2096,188 @@
             };
 
             function updateSpeedSelection(val, title, clickedCard) {
-                if (speedSelect) {
-                    // Find matching option by value and text if possible
-                    let matchedOpt = null;
-                    if (title) {
-                        matchedOpt = Array.from(speedSelect.options).find(o => !o.disabled && o.value === val && o.text.trim() === title.trim());
+                if (speedSelect && speedSelect.options) {
+                    var matchedOpt = null;
+                    for (var oi = 0; oi < speedSelect.options.length; oi++) {
+                        var opt = speedSelect.options[oi];
+                        if (!opt.disabled && opt.value === val && (!title || opt.text.trim() === title.trim())) {
+                            matchedOpt = opt;
+                            break;
+                        }
                     }
                     if (!matchedOpt) {
-                        matchedOpt = Array.from(speedSelect.options).find(o => !o.disabled && o.value === val);
+                        for (var oj = 0; oj < speedSelect.options.length; oj++) {
+                            var opt2 = speedSelect.options[oj];
+                            if (!opt2.disabled && opt2.value === val) {
+                                matchedOpt = opt2;
+                                break;
+                            }
+                        }
                     }
                     if (matchedOpt) {
                         speedSelect.selectedIndex = matchedOpt.index;
                     } else {
                         speedSelect.value = val;
                     }
-                    const event = new Event('change', { bubbles: true });
+                    var event = new Event('change', { bubbles: true });
                     speedSelect.dispatchEvent(event);
                 }
-                const speedTitle = title || speedLabelMap[val] || val;
+                var speedTitle = title || speedLabelMap[val] || val;
                 if (selectedSpeedDisplay && speedTitle) {
                     selectedSpeedDisplay.textContent = speedTitle;
                 }
-                const cards = document.querySelectorAll('#speed-modal .speed-card-option');
-                cards.forEach(card => {
+                var cards = document.querySelectorAll('#speed-modal .speed-card-option');
+                for (var ci = 0; ci < cards.length; ci++) {
+                    var card = cards[ci];
                     if (clickedCard) {
-                        card.classList.toggle('active', card === clickedCard);
+                        if (card === clickedCard) card.classList.add('active');
+                        else card.classList.remove('active');
                     } else if (title) {
-                        card.classList.toggle('active', card.getAttribute('data-speed-title') === title && card.getAttribute('data-speed') === val);
+                        if (card.getAttribute('data-speed-title') === title && card.getAttribute('data-speed') === val) {
+                            card.classList.add('active');
+                        } else {
+                            card.classList.remove('active');
+                        }
                     } else {
-                        card.classList.toggle('active', card.getAttribute('data-speed') === val);
+                        if (card.getAttribute('data-speed') === val) {
+                            card.classList.add('active');
+                        } else {
+                            card.classList.remove('active');
+                        }
                     }
-                });
+                }
             }
 
             function bindLoginSpeedCards() {
-                const cards = document.querySelectorAll('#speed-modal .speed-card-option');
-                cards.forEach(card => {
-                    card.onclick = function (e) {
+                var cards = document.querySelectorAll('#speed-modal .speed-card-option');
+                for (var i = 0; i < cards.length; i++) {
+                    cards[i].onclick = function (e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        const val = this.getAttribute('data-speed');
-                        const speedTitle = this.getAttribute('data-speed-title') || speedLabelMap[val] || val;
+                        var val = this.getAttribute('data-speed');
+                        var speedTitle = this.getAttribute('data-speed-title') || speedLabelMap[val] || val;
 
                         updateSpeedSelection(val, speedTitle, this);
 
-                        setTimeout(() => {
+                        setTimeout(function () {
                             closeAppModal('speed-modal');
                         }, 180);
                     };
-                });
+                }
             }
 
             function bindStatusSpeedCards() {
-                const statusCards = document.querySelectorAll('#status-speed-modal .speed-card-option');
-                statusCards.forEach(card => {
-                    card.onclick = function (e) {
+                var statusCards = document.querySelectorAll('#status-speed-modal .speed-card-option');
+                for (var i = 0; i < statusCards.length; i++) {
+                    statusCards[i].onclick = function (e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        const val = this.getAttribute('data-status-speed');
-                        const speedTitle = this.getAttribute('data-speed-title') || speedLabelMap[val] || val;
+                        var val = this.getAttribute('data-status-speed');
+                        var speedTitle = this.getAttribute('data-speed-title') || speedLabelMap[val] || val;
 
-                        statusCards.forEach(c => c.classList.toggle('active', c === this));
+                        for (var j = 0; j < statusCards.length; j++) {
+                            if (statusCards[j] === this) {
+                                statusCards[j].classList.add('active');
+                            } else {
+                                statusCards[j].classList.remove('active');
+                            }
+                        }
 
                         if (statusSpeedTriggerText && speedTitle) {
                             statusSpeedTriggerText.textContent = speedTitle;
                         }
-                        if (speedchange) {
-                            let matchedOpt = Array.from(speedchange.options).find(o => !o.disabled && o.value === val);
+                        if (speedchange && speedchange.options) {
+                            var matchedOpt = null;
+                            for (var k = 0; k < speedchange.options.length; k++) {
+                                var opt = speedchange.options[k];
+                                if (!opt.disabled && opt.value === val) {
+                                    matchedOpt = opt;
+                                    break;
+                                }
+                            }
                             if (matchedOpt) {
                                 speedchange.selectedIndex = matchedOpt.index;
                             } else {
                                 speedchange.value = val;
                             }
-                            const ev = new Event('change', { bubbles: true });
+                            var ev = new Event('change', { bubbles: true });
                             speedchange.dispatchEvent(ev);
                         }
 
-                        setTimeout(() => {
+                        setTimeout(function () {
                             closeAppModal('status-speed-modal');
                         }, 180);
                     };
-                });
+                }
             }
 
-            function applyDynamicSpeeds(speedsArray, enableUltra = true) {
+            function applyDynamicSpeeds(speedsArray, enableUltra) {
+                if (enableUltra === undefined) enableUltra = true;
                 if (!Array.isArray(speedsArray) || speedsArray.length === 0) return;
 
                 speedLabelMap = {};
-                speedsArray.forEach(s => {
+                for (var i = 0; i < speedsArray.length; i++) {
+                    var s = speedsArray[i];
                     if (s.value !== undefined && s.name) {
                         speedLabelMap[s.value] = s.name;
                     }
-                });
+                }
 
-                const activeSpeeds = speedsArray.filter(s => {
-                    if (s.value === '1M/8M' && enableUltra === false) return false;
-                    return true;
-                });
+                var activeSpeeds = [];
+                for (var j = 0; j < speedsArray.length; j++) {
+                    var item = speedsArray[j];
+                    if (item.value === '1M/8M' && enableUltra === false) continue;
+                    activeSpeeds.push(item);
+                }
 
-                let defaultSpeed = activeSpeeds.find(s => s.default === true) || activeSpeeds[0];
+                var defaultSpeed = null;
+                for (var d = 0; d < activeSpeeds.length; d++) {
+                    if (activeSpeeds[d].default === true) {
+                        defaultSpeed = activeSpeeds[d];
+                        break;
+                    }
+                }
+                if (!defaultSpeed) defaultSpeed = activeSpeeds[0];
 
                 if (speedSelect) {
-                    speedSelect.innerHTML = `<option value="" disabled hidden>أختيار سرعة الإنترنت</option>` +
-                        activeSpeeds.map(s => `<option value="${s.value}" ${s.value === defaultSpeed.value ? 'selected' : ''}>${s.name}</option>`).join('');
+                    var selectHtml = '<option value="" disabled hidden>أختيار سرعة الإنترنت</option>';
+                    for (var k = 0; k < activeSpeeds.length; k++) {
+                        var sp = activeSpeeds[k];
+                        selectHtml += '<option value="' + sp.value + '" ' + (sp.value === defaultSpeed.value ? 'selected' : '') + '>' + sp.name + '</option>';
+                    }
+                    speedSelect.innerHTML = selectHtml;
                 }
 
                 if (speedchange) {
-                    speedchange.innerHTML = `<option value="cancel" hidden selected disabled>تغيير السرعة</option>` +
-                        activeSpeeds.map(s => `<option value="${s.value}">${s.name}</option>`).join('');
+                    var changeHtml = '<option value="cancel" hidden selected disabled>تغيير السرعة</option>';
+                    for (var l = 0; l < activeSpeeds.length; l++) {
+                        var sc = activeSpeeds[l];
+                        changeHtml += '<option value="' + sc.value + '">' + sc.name + '</option>';
+                    }
+                    speedchange.innerHTML = changeHtml;
                 }
 
                 if (speedModalList) {
-                    speedModalList.innerHTML = activeSpeeds.map((s) => `
-                        <div class="speed-card-option ${s.value === defaultSpeed.value ? 'active' : ''}" data-speed="${s.value}" data-speed-title="${s.name}">
-                            <div class="speed-card-indicator">
-                                <div class="speed-radio-dot"></div>
-                            </div>
-                            <div class="speed-card-info">
-                                <span class="speed-card-name">${s.name} ${s.recommended ? '<span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : ''}</span>
-                            </div>
-                        </div>
-                    `).join('');
+                    var modalHtml = '';
+                    for (var m = 0; m < activeSpeeds.length; m++) {
+                        var sm = activeSpeeds[m];
+                        var isAct = sm.value === defaultSpeed.value ? 'active' : '';
+                        var recBadge = sm.recommended ? '<span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : '';
+                        modalHtml += '<div class="speed-card-option ' + isAct + '" data-speed="' + sm.value + '" data-speed-title="' + sm.name + '"><div class="speed-card-indicator"><div class="speed-radio-dot"></div></div><div class="speed-card-info"><span class="speed-card-name">' + sm.name + ' ' + recBadge + '</span></div></div>';
+                    }
+                    speedModalList.innerHTML = modalHtml;
                     bindLoginSpeedCards();
                 }
 
                 if (statusSpeedModalList) {
-                    statusSpeedModalList.innerHTML = activeSpeeds.map((s) => `
-                        <div class="speed-card-option ${s.value === defaultSpeed.value ? 'active' : ''}" data-status-speed="${s.value}" data-speed-title="${s.name}">
-                            <div class="speed-card-indicator">
-                                <div class="speed-radio-dot"></div>
-                            </div>
-                            <div class="speed-card-info">
-                                <span class="speed-card-name">${s.name} ${s.recommended ? '<span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : ''}</span>
-                            </div>
-                        </div>
-                    `).join('');
+                    var statusModalHtml = '';
+                    for (var n = 0; n < activeSpeeds.length; n++) {
+                        var sn = activeSpeeds[n];
+                        var isAct2 = sn.value === defaultSpeed.value ? 'active' : '';
+                        var recBadge2 = sn.recommended ? '<span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : '';
+                        statusModalHtml += '<div class="speed-card-option ' + isAct2 + '" data-status-speed="' + sn.value + '" data-speed-title="' + sn.name + '"><div class="speed-card-indicator"><div class="speed-radio-dot"></div></div><div class="speed-card-info"><span class="speed-card-name">' + sn.name + ' ' + recBadge2 + '</span></div></div>';
+                    }
+                    statusSpeedModalList.innerHTML = statusModalHtml;
                     bindStatusSpeedCards();
                 }
 
@@ -2169,93 +2286,50 @@
                 }
             }
 
-            // Apply configuration dynamically from config.js
             try {
                 var applyConfigOptions = function(configObj) {
                     if (configObj.speeds && Array.isArray(configObj.speeds)) {
                         applyDynamicSpeeds(configObj.speeds, configObj['enable-ultra-speed'] !== false);
-                    } else {
-                        var optUltra = document.getElementById('opt-speed-ultra');
-                        var cardUltra = document.getElementById('card-speed-ultra');
-                        var cardStatusUltra = document.getElementById('card-status-speed-ultra');
-                        
-                        if (configObj['enable-ultra-speed']) {
-                            if (optUltra) { optUltra.style.display = ''; optUltra.removeAttribute('disabled'); }
-                            if (cardUltra) cardUltra.style.display = '';
-                            if (cardStatusUltra) cardStatusUltra.style.display = '';
-                        } else {
-                            if (optUltra) { optUltra.style.display = 'none'; optUltra.setAttribute('disabled', 'disabled'); }
-                            if (cardUltra) cardUltra.style.display = 'none';
-                            if (cardStatusUltra) cardStatusUltra.style.display = 'none';
-                        }
                     }
 
-                    // Apply Loyalty / Points system toggle dynamically from config.js
                     if (configObj['enable-loyalty-system'] === false) {
                         document.documentElement.classList.add('loyalty-system-disabled');
                         if (document.body) document.body.classList.add('loyalty-system-disabled');
-                        const loyaltyElements = [
+                        var loyaltyElements = [
                             document.getElementById('loyalty-unregistered-section'),
                             document.getElementById('loyalty-registered-section'),
                             document.getElementById('loyalty-unregistered-section-status'),
                             document.getElementById('loyalty-registered-section-status'),
                             document.getElementById('points-register-modal')
                         ];
-                        loyaltyElements.forEach(el => {
-                            if (el) el.style.setProperty('display', 'none', 'important');
-                        });
-                        document.querySelectorAll('.points-notice-alert, .loyalty-register-btn, .points-register-btn, .loyalty-user-card, .loyalty-modal').forEach(el => {
-                            if (el) el.style.setProperty('display', 'none', 'important');
-                        });
-                    } else {
-                        document.documentElement.classList.remove('loyalty-system-disabled');
-                        if (document.body) document.body.classList.remove('loyalty-system-disabled');
-                        if (typeof window.updateInlinePointsElements === 'function') {
-                            window.updateInlinePointsElements();
-                        } else {
-                            const isLogged = localStorage.getItem('points_user_logged_in') === 'true';
-                            const regSec = document.getElementById('loyalty-registered-section');
-                            const unregSec = document.getElementById('loyalty-unregistered-section');
-                            const regStatusSec = document.getElementById('loyalty-registered-section-status');
-                            const unregStatusSec = document.getElementById('loyalty-unregistered-section-status');
-                            if (isLogged) {
-                                if (regSec) regSec.style.display = 'block';
-                                if (regStatusSec) regStatusSec.style.display = 'block';
-                                if (unregSec) unregSec.style.display = 'none';
-                                if (unregStatusSec) unregStatusSec.style.display = 'none';
-                            } else {
-                                if (unregSec) unregSec.style.display = 'block';
-                                if (unregStatusSec) unregStatusSec.style.display = 'block';
-                                if (regSec) regSec.style.display = 'none';
-                                if (regStatusSec) regStatusSec.style.display = 'none';
-                            }
+                        for (var li = 0; li < loyaltyElements.length; li++) {
+                            if (loyaltyElements[li]) loyaltyElements[li].style.setProperty('display', 'none', 'important');
                         }
                     }
 
-                    // Apply News and Offers configuration dynamically
                     if (configObj['news-title']) {
-                        const el = document.getElementById('loan-news-title');
-                        if (el) el.textContent = configObj['news-title'];
+                        var el1 = document.getElementById('loan-news-title');
+                        if (el1) el1.textContent = configObj['news-title'];
                     }
                     if (configObj['news-content']) {
-                        const el = document.getElementById('loan-news-content');
-                        if (el) el.innerHTML = configObj['news-content'];
+                        var el2 = document.getElementById('loan-news-content');
+                        if (el2) el2.innerHTML = configObj['news-content'];
                     }
                     if (configObj['news-code']) {
-                        const el = document.getElementById('loan-news-code');
-                        if (el) el.textContent = configObj['news-code'];
+                        var el3 = document.getElementById('loan-news-code');
+                        if (el3) el3.textContent = configObj['news-code'];
                     }
                     if (configObj['news-extra-title']) {
-                        const el = document.getElementById('loan-news-extra-title');
-                        if (el) el.textContent = configObj['news-extra-title'];
+                        var el4 = document.getElementById('loan-news-extra-title');
+                        if (el4) el4.textContent = configObj['news-extra-title'];
                     }
                     if (configObj['news-extra-content']) {
-                        const el = document.getElementById('loan-news-extra-content');
-                        if (el) el.textContent = configObj['news-extra-content'];
+                        var el5 = document.getElementById('loan-news-extra-content');
+                        if (el5) el5.textContent = configObj['news-extra-content'];
                     }
                     if (configObj['news-extra-badge']) {
-                        const el = document.getElementById('loan-news-extra-badge');
-                        if (el) el.textContent = configObj['news-extra-badge'];
+                        var el6 = document.getElementById('loan-news-extra-badge');
+                        if (el6) el6.textContent = configObj['news-extra-badge'];
                     }
                 };
 
@@ -2275,145 +2349,123 @@
                 console.error(err);
             }
 
-            // Initial binding of static cards if already rendered
             bindLoginSpeedCards();
             bindStatusSpeedCards();
 
             if (speedSelect) {
                 speedSelect.addEventListener('change', function () {
-                    const val = speedSelect.value;
+                    var val = speedSelect.value;
                     if (selectedSpeedDisplay && speedLabelMap[val]) {
                         selectedSpeedDisplay.textContent = speedLabelMap[val];
                     }
-                    const cards = document.querySelectorAll('#speed-modal .speed-card-option');
-                    cards.forEach(card => {
-                        card.classList.toggle('active', card.getAttribute('data-speed') === val);
-                    });
+                    var cards = document.querySelectorAll('#speed-modal .speed-card-option');
+                    for (var i = 0; i < cards.length; i++) {
+                        if (cards[i].getAttribute('data-speed') === val) {
+                            cards[i].classList.add('active');
+                        } else {
+                            cards[i].classList.remove('active');
+                        }
+                    }
                 });
             }
 
             // 5. STATUS SCREEN: SYNCHRONIZE LIVE SPEED FROM MIKROTIK
             if (sspeedSpan) {
-                const normalizeAr = s => (s || '').replace(/[أإآ]/g, 'ا').trim();
-                const syncSpeedFromMikrotik = () => {
-                    const txt = (sspeedSpan.innerText || sspeedSpan.textContent || '').trim();
+                function normalizeAr(s) {
+                    return (s || '').replace(/[أإآ]/g, 'ا').trim();
+                }
+                function syncSpeedFromMikrotik() {
+                    var txt = (sspeedSpan.innerText || sspeedSpan.textContent || '').trim();
                     if (txt && txt !== 'سرعة الكرت') {
-                        const customTitle = speedLabelMap[txt] || txt;
+                        var customTitle = speedLabelMap[txt] || txt;
                         if (statusSpeedTriggerText) {
                             statusSpeedTriggerText.textContent = customTitle;
                         }
-                        const cleanTxt = normalizeAr(customTitle);
-                        const currentStatusSpeedCards = document.querySelectorAll('#status-speed-modal .speed-card-option');
-                        let matchedCard = null;
-                        currentStatusSpeedCards.forEach(card => {
-                            const cardTitle = normalizeAr(card.getAttribute('data-speed-title'));
-                            const speedVal = (card.getAttribute('data-status-speed') || '').trim();
+                        var cleanTxt = normalizeAr(customTitle);
+                        var currentStatusSpeedCards = document.querySelectorAll('#status-speed-modal .speed-card-option');
+                        var matchedCard = null;
+                        for (var i = 0; i < currentStatusSpeedCards.length; i++) {
+                            var card = currentStatusSpeedCards[i];
+                            var cardTitle = normalizeAr(card.getAttribute('data-speed-title'));
+                            var speedVal = (card.getAttribute('data-status-speed') || '').trim();
                             if (cardTitle && (cardTitle === cleanTxt || speedVal === txt || speedVal === cleanTxt)) {
                                 matchedCard = card;
+                                break;
                             }
-                        });
-                        if (!matchedCard) {
-                            let longestMatchLen = 0;
-                            currentStatusSpeedCards.forEach(card => {
-                                const cardTitle = normalizeAr(card.getAttribute('data-speed-title'));
-                                if (cardTitle && cleanTxt.includes(cardTitle) && cardTitle.length > longestMatchLen) {
-                                    longestMatchLen = cardTitle.length;
-                                    matchedCard = card;
-                                }
-                            });
                         }
-                        currentStatusSpeedCards.forEach(card => {
-                            card.classList.toggle('active', card === matchedCard);
-                        });
+                        if (!matchedCard) {
+                            var longestMatchLen = 0;
+                            for (var j = 0; j < currentStatusSpeedCards.length; j++) {
+                                var c2 = currentStatusSpeedCards[j];
+                                var cTitle = normalizeAr(c2.getAttribute('data-speed-title'));
+                                if (cTitle && cleanTxt.indexOf(cTitle) !== -1 && cTitle.length > longestMatchLen) {
+                                    longestMatchLen = cTitle.length;
+                                    matchedCard = c2;
+                                }
+                            }
+                        }
+                        for (var k = 0; k < currentStatusSpeedCards.length; k++) {
+                            if (currentStatusSpeedCards[k] === matchedCard) {
+                                currentStatusSpeedCards[k].classList.add('active');
+                            } else {
+                                currentStatusSpeedCards[k].classList.remove('active');
+                            }
+                        }
                     }
-                };
-                const speedObserver = new MutationObserver(syncSpeedFromMikrotik);
-                speedObserver.observe(sspeedSpan, { childList: true, characterData: true, subtree: true });
+                }
+                try {
+                    if (typeof MutationObserver !== 'undefined') {
+                        var speedObserver = new MutationObserver(syncSpeedFromMikrotik);
+                        speedObserver.observe(sspeedSpan, { childList: true, characterData: true, subtree: true });
+                    }
+                } catch(e) {}
                 syncSpeedFromMikrotik();
             }
 
             // 6. POINTS SYSTEM AUTH & REGISTRATION HANDLER
-            const pointsModal = document.getElementById('points-register-modal');
-            const openPointsRegisterBtn = document.getElementById('openPointsRegisterBtn');
-            const pointsLoginFormView = document.getElementById('pointsLoginFormView');
-            const goToSignupTabBtn = document.getElementById('goToSignupTabBtn');
+            var pointsModal = document.getElementById('points-register-modal');
+            var openPointsRegisterBtn = document.getElementById('openPointsRegisterBtn');
+            var goToSignupTabBtn = document.getElementById('goToSignupTabBtn');
 
-            const pointsLoginPhone = document.getElementById('pointsLoginPhone');
-            const pointsLoginPassword = document.getElementById('pointsLoginPassword');
-            const togglePointsLoginPw = document.getElementById('togglePointsLoginPw');
-            const submitPointsLoginBtn = document.getElementById('submitPointsLoginBtn');
-            const pointsLoginAlert = document.getElementById('pointsLoginAlert');
-            const pointsLoginMsg = document.getElementById('pointsLoginMsg');
+            var pointsLoginPhone = document.getElementById('pointsLoginPhone');
+            var pointsLoginPassword = document.getElementById('pointsLoginPassword');
+            var togglePointsLoginPw = document.getElementById('togglePointsLoginPw');
+            var submitPointsLoginBtn = document.getElementById('submitPointsLoginBtn');
+            var pointsLoginAlert = document.getElementById('pointsLoginAlert');
+            var pointsLoginMsg = document.getElementById('pointsLoginMsg');
 
-            // Global modern redirect loader function
-            window.showRedirectLoader = function (options = {}) {
-                const url = options.url || 'https://tunisnet.shabakaty.site/auth/register';
-                const title = options.title || 'جاري الانتقال لصفحة إنشاء الحساب...';
-                const subtitle = options.subtitle || 'يتم تحويلك إلى بوابة التسجيل في شبكتي لنظام النقاط والمكافآت';
-                const delay = options.delay || 950;
+            window.showRedirectLoader = function (options) {
+                options = options || {};
+                var url = options.url || 'https://tunisnet.shabakaty.site/auth/register';
+                var title = options.title || 'جاري الانتقال لصفحة إنشاء الحساب...';
+                var subtitle = options.subtitle || 'يتم تحويلك إلى بوابة التسجيل في شبكتي لنظام النقاط والمكافآت';
+                var delay = options.delay || 950;
 
-                let overlay = document.getElementById('redirectLoadingOverlay');
+                var overlay = document.getElementById('redirectLoadingOverlay');
                 if (!overlay) {
                     overlay = document.createElement('div');
                     overlay.id = 'redirectLoadingOverlay';
                     overlay.className = 'redirect-loading-overlay';
-                    overlay.innerHTML = `
-                        <div class="redirect-ambient-glow-burgundy"></div>
-                        <div class="redirect-ambient-glow-cyan"></div>
-                        <div class="redirect-loading-card">
-                            <div class="redirect-brand-connector">
-                                <span class="redirect-brand-tag burgundy">${(window.hotspotConfig && window.hotspotConfig['network-name'] ? ('' + window.hotspotConfig['network-name']).trim() : 'الخالد نت')}</span>
-                                <div class="redirect-connector-line">
-                                    <div class="redirect-connector-dot"></div>
-                                    <div class="redirect-connector-dot"></div>
-                                    <div class="redirect-connector-dot"></div>
-                                </div>
-                                <span class="redirect-brand-tag cyan">بوابة شبكتي</span>
-                            </div>
-                            <div class="redirect-icon-container">
-                                <div class="redirect-pulse-ring"></div>
-                                <div class="redirect-spinner-outer"></div>
-                                <div class="redirect-spinner-inner"></div>
-                                <div class="redirect-center-icon">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="redirect-loading-title" id="redirectLoadingTitle"></div>
-                            <div class="redirect-loading-subtitle" id="redirectLoadingSubtitle"></div>
-                            <div class="redirect-progress-track">
-                                <div class="redirect-progress-bar" id="redirectProgressBar"></div>
-                            </div>
-                            <div class="redirect-loading-footer">
-                                <span class="redirect-badge-secure">
-                                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                                    بوابة رسمية موثقة وآمنة
-                                </span>
-                            </div>
-                        </div>
-                    `;
+                    var netName = (window.hotspotConfig && window.hotspotConfig['network-name'] ? ('' + window.hotspotConfig['network-name']).trim() : 'الخالد نت');
+                    overlay.innerHTML = '<div class="redirect-ambient-glow-burgundy"></div><div class="redirect-ambient-glow-cyan"></div><div class="redirect-loading-card"><div class="redirect-brand-connector"><span class="redirect-brand-tag burgundy">' + netName + '</span><div class="redirect-connector-line"><div class="redirect-connector-dot"></div><div class="redirect-connector-dot"></div><div class="redirect-connector-dot"></div></div><span class="redirect-brand-tag cyan">بوابة شبكتي</span></div><div class="redirect-icon-container"><div class="redirect-pulse-ring"></div><div class="redirect-spinner-outer"></div><div class="redirect-spinner-inner"></div><div class="redirect-center-icon"><svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div></div><div class="redirect-loading-title" id="redirectLoadingTitle"></div><div class="redirect-loading-subtitle" id="redirectLoadingSubtitle"></div><div class="redirect-progress-track"><div class="redirect-progress-bar" id="redirectProgressBar"></div></div><div class="redirect-loading-footer"><span class="redirect-badge-secure"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg> بوابة رسمية موثقة وآمنة</span></div></div>';
                     document.body.appendChild(overlay);
                 }
 
-                const titleEl = document.getElementById('redirectLoadingTitle');
-                const subtitleEl = document.getElementById('redirectLoadingSubtitle');
-                const barEl = document.getElementById('redirectProgressBar');
+                var titleEl = document.getElementById('redirectLoadingTitle');
+                var subtitleEl = document.getElementById('redirectLoadingSubtitle');
+                var barEl = document.getElementById('redirectProgressBar');
 
                 if (titleEl) titleEl.innerText = title;
                 if (subtitleEl) subtitleEl.innerText = subtitle;
                 if (barEl) barEl.style.width = '0%';
 
-                // Activate overlay
                 overlay.classList.add('active');
 
-                // Trigger smooth progress bar animation
-                setTimeout(() => {
+                setTimeout(function () {
                     if (barEl) barEl.style.width = '100%';
                 }, 60);
 
-                // Execute navigation after satisfying smooth animation
-                setTimeout(() => {
+                setTimeout(function () {
                     window.location.href = url;
                 }, delay);
             };
@@ -2422,12 +2474,7 @@
                 goToSignupTabBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     goToSignupTabBtn.style.opacity = '0.75';
-                    goToSignupTabBtn.innerHTML = `
-                        <span style="display:inline-flex;align-items:center;gap:7px;">
-                            <span style="width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffd700;border-radius:50%;animation:redirectSpin 0.6s linear infinite;display:inline-block;"></span>
-                            <span>جاري التوجيه...</span>
-                        </span>
-                    `;
+                    goToSignupTabBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffd700;border-radius:50%;animation:redirectSpin 0.6s linear infinite;display:inline-block;"></span><span>جاري التوجيه...</span></span>';
                     window.showRedirectLoader({
                         url: 'https://tunisnet.shabakaty.site/auth/register',
                         title: 'جاري الانتقال لصفحة إنشاء الحساب...',
@@ -2437,62 +2484,60 @@
                 });
             }
 
-            // Password Visibility Toggles
             function setupPasswordToggle(toggleBtn, inputField) {
                 if (!toggleBtn || !inputField) return;
                 toggleBtn.addEventListener('click', function (e) {
                     e.preventDefault();
-                    const isPass = inputField.type === 'password';
+                    var isPass = inputField.type === 'password';
                     inputField.type = isPass ? 'text' : 'password';
-                    toggleBtn.classList.toggle('active', isPass);
-                    toggleBtn.innerHTML = isPass
-                        ? `<svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>`
-                        : `<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
+                    if (isPass) {
+                        toggleBtn.classList.add('active');
+                        toggleBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>';
+                    } else {
+                        toggleBtn.classList.remove('active');
+                        toggleBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+                    }
                 });
             }
 
             setupPasswordToggle(togglePointsLoginPw, pointsLoginPassword);
 
-            // Load saved user phone if exists
             try {
-                const savedPhone = localStorage.getItem('points_user_phone');
-                if (savedPhone) {
-                    if (pointsLoginPhone) pointsLoginPhone.value = savedPhone;
+                var savedPhone = localStorage.getItem('points_user_phone');
+                if (savedPhone && pointsLoginPhone) {
+                    pointsLoginPhone.value = savedPhone;
                 }
             } catch (e) { }
 
-            // Open Points Modal Handler
             if (openPointsRegisterBtn && pointsModal) {
                 openPointsRegisterBtn.addEventListener('click', function () {
                     pointsModal.classList.add('active');
                     pointsModal.style.display = 'block';
-                    const loginEl = document.getElementById('login');
+                    var loginEl = document.getElementById('login');
                     if (loginEl) loginEl.classList.add('inactive');
                     if (pointsLoginAlert) pointsLoginAlert.style.display = 'none';
                 });
             }
 
-            // Close Points Modal Handler
             if (pointsModal) {
-                const closeBtns = pointsModal.querySelectorAll('.app-logout, .modal-close-btn, .modal-cancel-btn');
-                closeBtns.forEach(btn => {
-                    btn.addEventListener('click', function (e) {
+                var closeBtns = pointsModal.querySelectorAll('.app-logout, .modal-close-btn, .modal-cancel-btn');
+                for (var ci = 0; ci < closeBtns.length; ci++) {
+                    closeBtns[ci].addEventListener('click', function (e) {
                         pointsModal.classList.remove('active');
                         pointsModal.style.display = 'none';
-                        const loginEl = document.getElementById('login');
+                        var loginEl = document.getElementById('login');
                         if (loginEl && !document.querySelector('.app.active')) {
                             loginEl.classList.remove('inactive');
                         }
                     });
-                });
+                }
             }
 
-            // Handle Login Form Submission
             if (submitPointsLoginBtn) {
-                submitPointsLoginBtn.addEventListener('click', async function () {
-                    const phone = pointsLoginPhone ? pointsLoginPhone.value.trim() : '';
-                    const password = pointsLoginPassword ? pointsLoginPassword.value.trim() : '';
-                    const errElem = document.getElementById('error');
+                submitPointsLoginBtn.addEventListener('click', function () {
+                    var phone = pointsLoginPhone ? pointsLoginPhone.value.trim() : '';
+                    var password = pointsLoginPassword ? pointsLoginPassword.value.trim() : '';
+                    var errElem = document.getElementById('error');
 
                     if (!phone || phone.length < 6) {
                         if (errElem) {
@@ -2510,162 +2555,168 @@
                         return;
                     }
 
-                    const originalBtnText = submitPointsLoginBtn.innerHTML;
+                    var originalBtnText = submitPointsLoginBtn.innerHTML;
                     submitPointsLoginBtn.innerHTML = '<span>جاري التحقق...</span>';
                     submitPointsLoginBtn.disabled = true;
 
-                    let loginSuccess = false;
-                    let resultMsg = "";
+                    function handleLoginResult(loginSuccess, resultMsg) {
+                        if (typeof window.updateInlinePointsElements === 'function') {
+                            window.updateInlinePointsElements();
+                        }
+
+                        submitPointsLoginBtn.innerHTML = originalBtnText;
+                        submitPointsLoginBtn.disabled = false;
+
+                        if (loginSuccess) {
+                            if (pointsLoginAlert) pointsLoginAlert.style.display = 'flex';
+                            if (errElem) {
+                                errElem.innerText = resultMsg;
+                                if (typeof showErrorPopup === 'function') showErrorPopup();
+                            }
+                            setTimeout(function () {
+                                if (pointsModal) {
+                                    pointsModal.classList.remove('active');
+                                    pointsModal.style.display = 'none';
+                                    var loginEl = document.getElementById('login');
+                                    if (loginEl && !document.querySelector('.app.active')) {
+                                        loginEl.classList.remove('inactive');
+                                    }
+                                    if (pointsLoginAlert) pointsLoginAlert.style.display = 'none';
+                                }
+                                if (window.LoyaltyManager && typeof window.LoyaltyManager.updateUI === 'function') {
+                                    window.LoyaltyManager.updateUI();
+                                }
+                            }, 800);
+                        } else {
+                            if (errElem) {
+                                errElem.innerText = resultMsg;
+                                if (typeof showErrorPopup === 'function') showErrorPopup();
+                            }
+                        }
+                    }
 
                     if (window.LoyaltyManager && typeof window.LoyaltyManager.login === 'function') {
-                        const res = await window.LoyaltyManager.login(phone, password);
-                        if (res && res.success) {
-                            loginSuccess = true;
-                            resultMsg = res.message || "تم تسجيل الدخول لنظام النقاط بنجاح!";
+                        var loginPromise = window.LoyaltyManager.login(phone, password);
+                        if (loginPromise && typeof loginPromise.then === 'function') {
+                            loginPromise.then(function(res) {
+                                if (res && res.success) {
+                                    handleLoginResult(true, res.message || 'تم تسجيل الدخول لنظام النقاط بنجاح!');
+                                } else {
+                                    handleLoginResult(false, (res && (res.error || res.message)) || 'رقم الهاتف أو كلمة المرور غير صحيحة');
+                                }
+                            }).catch(function(err) {
+                                handleLoginResult(false, 'تعذر الاتصال بخادم النقاط');
+                            });
                         } else {
-                            loginSuccess = false;
-                            resultMsg = (res && (res.error || res.message)) || "رقم الهاتف أو كلمة المرور غير صحيحة";
+                            handleLoginResult(true, 'تم تسجيل الدخول بنجاح');
                         }
                     } else {
                         try {
                             localStorage.setItem('points_user_phone', phone);
                             localStorage.setItem('points_user_logged_in', 'true');
-                            loginSuccess = true;
-                            resultMsg = "تم تسجيل الدخول بنجاح";
-                        } catch (e) { }
-                    }
-
-                    if (typeof window.updateInlinePointsElements === 'function') {
-                        window.updateInlinePointsElements();
-                    }
-
-                    submitPointsLoginBtn.innerHTML = originalBtnText;
-                    submitPointsLoginBtn.disabled = false;
-
-                    if (loginSuccess) {
-                        if (pointsLoginAlert) {
-                            pointsLoginAlert.style.display = 'flex';
-                        }
-
-                        if (errElem) {
-                            errElem.innerText = resultMsg;
-                            if (typeof showErrorPopup === 'function') showErrorPopup();
-                        }
-
-                        setTimeout(() => {
-                            if (pointsModal) {
-                                pointsModal.classList.remove('active');
-                                pointsModal.style.display = 'none';
-                                const loginEl = document.getElementById('login');
-                                if (loginEl && !document.querySelector('.app.active')) {
-                                    loginEl.classList.remove('inactive');
-                                }
-                                if (pointsLoginAlert) pointsLoginAlert.style.display = 'none';
-                            }
-                            if (window.LoyaltyManager && typeof window.LoyaltyManager.updateUI === 'function') {
-                                window.LoyaltyManager.updateUI();
-                            }
-                        }, 800);
-                    } else {
-                        if (errElem) {
-                            errElem.innerText = resultMsg;
-                            if (typeof showErrorPopup === 'function') showErrorPopup();
+                            handleLoginResult(true, 'تم تسجيل الدخول بنجاح');
+                        } catch (e) {
+                            handleLoginResult(true, 'تم تسجيل الدخول بنجاح');
                         }
                     }
                 });
             }
 
             // 7. BOTTOM NAV - TAB SWITCHING & HOME BUTTON
-            const navHome = document.getElementById('navHome');
+            var navHome = document.getElementById('navHome');
             if (navHome) {
                 navHome.addEventListener('click', function (e) {
                     e.preventDefault();
-                    document.querySelectorAll('.nav-item-btn').forEach(b => b.classList.remove('active'));
+                    var navBtns = document.querySelectorAll('.nav-item-btn');
+                    for (var i = 0; i < navBtns.length; i++) {
+                        navBtns[i].classList.remove('active');
+                    }
                     navHome.classList.add('active');
                     closeAppModal();
                 });
             }
 
-            document.querySelectorAll('.nav-item-btn[parent-id]').forEach(navBtn => {
-                navBtn.addEventListener('click', function (e) {
+            var navBtnsWithParent = document.querySelectorAll('.nav-item-btn[parent-id]');
+            for (var ni = 0; ni < navBtnsWithParent.length; ni++) {
+                navBtnsWithParent[ni].addEventListener('click', function (e) {
                     e.preventDefault();
-                    document.querySelectorAll('.nav-item-btn').forEach(b => b.classList.remove('active'));
+                    var navBtns = document.querySelectorAll('.nav-item-btn');
+                    for (var j = 0; j < navBtns.length; j++) {
+                        navBtns[j].classList.remove('active');
+                    }
                     this.classList.add('active');
-                    const pid = this.getAttribute('parent-id');
+                    var pid = this.getAttribute('parent-id');
                     if (pid) {
                         openAppModal(pid);
                     }
                 });
-            });
+            }
 
             // 4. DIRECT FILL PREVIOUS CARD BUTTON (دخول بكرت سابق)
-            const prevCardBtn = document.getElementById('quickPreviousCardBtn');
-            let prevCardCycleIndex = 0;
+            var prevCardBtn = document.getElementById('quickPreviousCardBtn');
+            var prevCardCycleIndex = 0;
 
             if (prevCardBtn) {
                 prevCardBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // Collect all previous cards stored in cookies, localStorage, or memory
-                    let cardsList = [];
-
-                    const cleanCardNum = function(str) {
+                    var cardsList = [];
+                    var cleanCardNum = function(str) {
                         return (str || '').toString().trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
                     };
 
-                    // From hotCookie stored values
                     if (typeof getStoredValuesFromCookie === 'function') {
-                        const rawStored = getStoredValuesFromCookie();
+                        var rawStored = getStoredValuesFromCookie();
                         if (Array.isArray(rawStored)) {
-                            // Reverse to get most recent first
-                            rawStored.slice().reverse().forEach(function(item) {
+                            var reversed = rawStored.slice().reverse();
+                            for (var ri = 0; ri < reversed.length; ri++) {
+                                var item = reversed[ri];
                                 if (item) {
                                     var parts = item.toString().split(',');
                                     var cardNum = cleanCardNum(parts[0]);
-                                    if (cardNum && !cardsList.includes(cardNum)) {
+                                    if (cardNum && cardsList.indexOf(cardNum) === -1) {
                                         cardsList.push(cardNum);
                                     }
                                 }
-                            });
+                            }
                         }
                     }
 
-                    // From single cookie username
                     if (typeof getLoginCardCookie === 'function') {
-                        const loginCookie = getLoginCardCookie();
+                        var loginCookie = getLoginCardCookie();
                         if (loginCookie && loginCookie.username) {
-                            const u = cleanCardNum(loginCookie.username);
-                            if (u && !cardsList.includes(u)) {
+                            var u = cleanCardNum(loginCookie.username);
+                            if (u && cardsList.indexOf(u) === -1) {
                                 cardsList.push(u);
                             }
                         }
                     }
 
-                    // From localStorage backups
                     try {
-                        const rawLocal = localStorage.getItem('storedValues');
+                        var rawLocal = localStorage.getItem('storedValues');
                         if (rawLocal) {
-                            const parsed = JSON.parse(rawLocal);
+                            var parsed = JSON.parse(rawLocal);
                             if (Array.isArray(parsed)) {
-                                parsed.slice().reverse().forEach(function(item) {
-                                    var card = cleanCardNum(item.toString().split(',')[0]);
-                                    if (card && !cardsList.includes(card)) {
+                                var pReversed = parsed.slice().reverse();
+                                for (var pi = 0; pi < pReversed.length; pi++) {
+                                    var card = cleanCardNum(pReversed[pi].toString().split(',')[0]);
+                                    if (card && cardsList.indexOf(card) === -1) {
                                         cardsList.push(card);
                                     }
-                                });
+                                }
                             }
                         }
-                        const singleLocal = cleanCardNum(localStorage.getItem('last_user_card') || localStorage.getItem('username'));
-                        if (singleLocal && !cardsList.includes(singleLocal)) {
+                        var singleLocal = cleanCardNum(localStorage.getItem('last_user_card') || localStorage.getItem('username'));
+                        if (singleLocal && cardsList.indexOf(singleLocal) === -1) {
                             cardsList.push(singleLocal);
                         }
                     } catch (err) { }
 
-                    const usernameInput = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
+                    var usernameInput = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
 
                     if (cardsList.length > 0) {
-                        const selectedCard = cardsList[prevCardCycleIndex % cardsList.length];
+                        var selectedCard = cardsList[prevCardCycleIndex % cardsList.length];
                         prevCardCycleIndex++;
 
                         if (usernameInput) {
@@ -2674,7 +2725,6 @@
                             usernameInput.dispatchEvent(new Event('change', { bubbles: true }));
                         }
 
-                        // Success button feedback
                         prevCardBtn.classList.add('flash-success');
                         setTimeout(function() {
                             prevCardBtn.classList.remove('flash-success');
@@ -2684,7 +2734,7 @@
                             try { navigator.vibrate(50); } catch (err) { }
                         }
                     } else {
-                        const errEl = document.getElementById('error');
+                        var errEl = document.getElementById('error');
                         if (errEl) {
                             errEl.innerText = 'لا يوجد كرت سابق محفوظ في هذا المتصفح';
                             if (typeof showErrorPopup === 'function') {
@@ -2695,11 +2745,10 @@
                 });
             }
 
-            // Save entered username to stored history and localStorage
-            const usernameInputField = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
+            var usernameInputField = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
             if (usernameInputField) {
-                const persistCard = function () {
-                    const val = usernameInputField.value ? usernameInputField.value.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '') : '';
+                var persistCard = function () {
+                    var val = usernameInputField.value ? usernameInputField.value.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '') : '';
                     if (val.length > 1) {
                         try {
                             localStorage.setItem('last_user_card', val);
@@ -2715,10 +2764,10 @@
 
             if (document.login) {
                 document.login.addEventListener('submit', function () {
-                    const uInput = document.login.querySelector('input[username-field]') || document.querySelector('input[name="username"]');
+                    var uInput = document.login.querySelector('input[username-field]') || document.querySelector('input[name="username"]');
                     if (uInput && uInput.value && uInput.value.trim().length > 1) {
                         try {
-                            const val = uInput.value.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
+                            var val = uInput.value.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
                             localStorage.setItem('last_user_card', val);
                             if (typeof saveValueToCookie === 'function') {
                                 saveValueToCookie(val, '');
@@ -2728,45 +2777,42 @@
                 });
             }
 
-            // 6. UNIVERSAL WHATSAPP INTENT DISPATCHER (WHATSAPP & WHATSAPP BUSINESS)
-            const waButtons = document.querySelectorAll('.support-btn-whatsapp');
-
-            waButtons.forEach(function(btn) {
-                btn.addEventListener('click', function (e) {
+            // 6. UNIVERSAL WHATSAPP INTENT DISPATCHER
+            var waButtons = document.querySelectorAll('.support-btn-whatsapp');
+            for (var wi = 0; wi < waButtons.length; wi++) {
+                waButtons[wi].addEventListener('click', function (e) {
                     e.preventDefault();
 
-                    const activeCfg = window.hotspotConfig || {};
-                    const rawPhone = (activeCfg['service-number'] || '776418435').toString().replace(/\D/g, '');
-                    const waPhone = rawPhone.startsWith('967') ? rawPhone : ('967' + rawPhone);
-                    const netName = (activeCfg['network-name'] || 'الخالد نت').toString().trim();
-                    const waMsg = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + netName + ' اللاسلكية');
-                    const waSchemeUrl = `whatsapp://send?phone=${waPhone}&text=${waMsg}`;
-                    const waWebUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${waMsg}`;
+                    var activeCfg = window.hotspotConfig || {};
+                    var rawPhone = (activeCfg['service-number'] || '776418435').toString().replace(/\D/g, '');
+                    var waPhone = rawPhone.indexOf('967') === 0 ? rawPhone : ('967' + rawPhone);
+                    var netName = (activeCfg['network-name'] || 'الخالد نت').toString().trim();
+                    var waMsg = encodeURIComponent('مرحبا خدمة عملاء شبكة ' + netName + ' اللاسلكية');
+                    var waSchemeUrl = 'whatsapp://send?phone=' + waPhone + '&text=' + waMsg;
+                    var waWebUrl = 'https://api.whatsapp.com/send?phone=' + waPhone + '&text=' + waMsg;
 
-                    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                    var isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
                     if (isMobile) {
-                        // Trigger universal mobile URI scheme (Prompts Android "Complete action using" if both are installed)
-                        const start = Date.now();
+                        var start = Date.now ? Date.now() : new Date().getTime();
                         window.location.href = waSchemeUrl;
 
-                        // Fallback to web link if neither app is installed
                         setTimeout(function () {
-                            const elapsed = Date.now() - start;
+                            var now = Date.now ? Date.now() : new Date().getTime();
+                            var elapsed = now - start;
                             if (elapsed < 2000 && !document.hidden && !document.webkitHidden) {
                                 window.location.href = waWebUrl;
                             }
                         }, 1400);
                     } else {
-                        // Desktop browser -> Open WhatsApp Web directly
                         window.open(waWebUrl, '_blank', 'noopener,noreferrer');
                     }
                 });
-            });
+            }
 
             // 7. AUTO-HIDE TOAST ON POPUP
             var toastContainer = document.querySelector('.error-container');
-            if (toastContainer) {
+            if (toastContainer && typeof MutationObserver !== 'undefined') {
                 var toastObserver = new MutationObserver(function() {
                     if (toastContainer.classList.contains('active')) {
                         setTimeout(function() {
@@ -2779,18 +2825,18 @@
                 toastObserver.observe(toastContainer, { attributes: true, attributeFilter: ['class'] });
             }
 
-            // 8. MOBILE KEYBOARD DETECTION: PREVENT BOTTOM BAR FROM RISING ABOVE KEYBOARD (TEXT INPUTS ONLY)
-            const bNav = document.getElementById('bottomNav');
-            let keyboardTimer = null;
+            // 8. MOBILE KEYBOARD DETECTION
+            var bNav = document.getElementById('bottomNav');
+            var keyboardTimer = null;
 
             function isTextualKeyboardInput(el) {
                 if (!el || !el.tagName) return false;
-                const tag = el.tagName.toUpperCase();
+                var tag = el.tagName.toUpperCase();
                 if (tag === 'TEXTAREA') return true;
                 if (el.isContentEditable) return true;
                 if (tag === 'INPUT') {
-                    const type = (el.type || 'text').toLowerCase();
-                    return ['text', 'password', 'number', 'tel', 'email', 'search', 'url'].includes(type);
+                    var type = (el.type || 'text').toLowerCase();
+                    return ['text', 'password', 'number', 'tel', 'email', 'search', 'url'].indexOf(type) !== -1;
                 }
                 return false;
             }
@@ -2798,9 +2844,7 @@
             function hideBottomNavOnKeyboard() {
                 clearTimeout(keyboardTimer);
                 document.body.classList.add('keyboard-open');
-                if (bNav) {
-                    bNav.classList.add('hidden-keyboard');
-                }
+                if (bNav) bNav.classList.add('hidden-keyboard');
             }
 
             function restoreBottomNavOnBlur() {
@@ -2809,32 +2853,23 @@
                     var activeElement = document.activeElement;
                     if (!isTextualKeyboardInput(activeElement)) {
                         document.body.classList.remove('keyboard-open');
-                        if (bNav) {
-                            bNav.classList.remove('hidden-keyboard');
-                        }
+                        if (bNav) bNav.classList.remove('hidden-keyboard');
                     }
                 }, 100);
             }
 
-            // Listen to focus / blur globally only for text-entry fields (avoids hiding on checkboxes/toggles/switches)
             document.addEventListener('focusin', function (e) {
-                if (isTextualKeyboardInput(e.target)) {
-                    hideBottomNavOnKeyboard();
-                }
+                if (isTextualKeyboardInput(e.target)) hideBottomNavOnKeyboard();
             });
 
             document.addEventListener('focusout', function (e) {
-                if (isTextualKeyboardInput(e.target)) {
-                    restoreBottomNavOnBlur();
-                }
+                if (isTextualKeyboardInput(e.target)) restoreBottomNavOnBlur();
             });
 
-            // Handle visual viewport shrink (Android & iOS virtual keyboard open/close)
             if (window.visualViewport) {
-                const originalVpHeight = window.visualViewport.height;
+                var originalVpHeight = window.visualViewport.height;
                 window.visualViewport.addEventListener('resize', function () {
-                    const currentHeight = window.visualViewport.height;
-                    // If viewport height drops significantly AND active element is a text input, virtual keyboard is active
+                    var currentHeight = window.visualViewport.height;
                     if (isTextualKeyboardInput(document.activeElement) && (currentHeight < originalVpHeight - 120 || currentHeight < window.innerHeight * 0.78)) {
                         hideBottomNavOnKeyboard();
                     } else if (!isTextualKeyboardInput(document.activeElement)) {
@@ -2842,7 +2877,8 @@
                     }
                 });
             }
-            // 9. AUTOMATIC SCROLL-TO-TOP ON PAGE TRANSITIONS & SUCCESSFUL LOGIN
+
+            // 9. AUTOMATIC SCROLL-TO-TOP
             function resetWindowScrollToTop() {
                 try {
                     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -2854,17 +2890,18 @@
                 if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
 
                 var scrollNodes = document.querySelectorAll('.app, .app-container, .main, #container, .container, body, html');
-                scrollNodes.forEach(function(el) {
+                for (var si = 0; si < scrollNodes.length; si++) {
+                    var el = scrollNodes[si];
                     if (el && el.scrollTop > 0) el.scrollTop = 0;
-                });
+                }
             }
             window.resetWindowScrollToTop = resetWindowScrollToTop;
 
-            // Watch status section for activation
-            const statusSection = document.getElementById('status');
-            if (statusSection) {
+            var statusSection = document.getElementById('status');
+            if (statusSection && typeof MutationObserver !== 'undefined') {
                 var statusObserver = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(m) {
+                    for (var mi = 0; mi < mutations.length; mi++) {
+                        var m = mutations[mi];
                         if (m.type === 'attributes' && (m.attributeName === 'class' || m.attributeName === 'style')) {
                             if (statusSection.classList.contains('active') || statusSection.style.display === 'block') {
                                 resetWindowScrollToTop();
@@ -2873,19 +2910,18 @@
                                 setTimeout(resetWindowScrollToTop, 400);
                             }
                         }
-                    });
+                    }
                 });
                 statusObserver.observe(statusSection, { attributes: true, attributeFilter: ['class', 'style'] });
             }
 
-            // Hook on login form submission & keyboard "Go" / "Enter" key
             if (document.login) {
-                const usernameInput = document.login.querySelector("input[name='username']");
+                var usernameInput = document.login.querySelector("input[name='username']");
                 if (usernameInput) {
                     usernameInput.addEventListener('keydown', function (e) {
                         if (e.key === 'Enter' || e.keyCode === 13) {
                             e.preventDefault();
-                            const mainBtn = document.getElementById('mainLoginBtn') || document.querySelector('.login-submit');
+                            var mainBtn = document.getElementById('mainLoginBtn') || document.querySelector('.login-submit');
                             if (mainBtn) {
                                 mainBtn.click();
                             } else if (typeof onLoginSubmitted === 'function') {
@@ -2897,7 +2933,7 @@
 
                 document.login.addEventListener('submit', function (e) {
                     e.preventDefault();
-                    const mainBtn = document.getElementById('mainLoginBtn') || document.querySelector('.login-submit');
+                    var mainBtn = document.getElementById('mainLoginBtn') || document.querySelector('.login-submit');
                     if (mainBtn) {
                         mainBtn.click();
                     } else if (typeof onLoginSubmitted === 'function') {
@@ -2908,14 +2944,12 @@
                 });
             }
 
-            // Reset on page show or hashchange
             window.addEventListener('pageshow', resetWindowScrollToTop);
             window.addEventListener('hashchange', resetWindowScrollToTop);
         });
 
-        // Friday Greeting Check
         var e, m = new Date().toDateString();
-        if (m.includes('Fri')) {
+        if (m.indexOf('Fri') !== -1) {
             e = document.getElementById('error');
             if (e) {
                 e.innerText = "جمعة مباركة";
@@ -2929,59 +2963,46 @@
         // AUTOMATIC DYNAMIC MARQUEE SPEED & EXACT BOUNDARIES ENGINE (FLICKER-FREE)
         // =========================================================================
         (function initAutoDynamicMarquee() {
-            let lastAppliedKey = '';
-            let isCalculating = false;
+            var lastAppliedKey = '';
+            var isCalculating = false;
 
             function setupMarquee() {
                 if (isCalculating) return;
-                const track = document.querySelector('.ticker-content-track');
-                const marquee = document.querySelector('.marquee');
+                var track = document.querySelector('.ticker-content-track');
+                var marquee = document.querySelector('.marquee');
                 if (!track || !marquee) return;
 
-                const text = (marquee.textContent || marquee.innerText || '').trim();
-                if (!text || text.includes('{{news-line}}')) return;
+                var text = (marquee.textContent || marquee.innerText || '').trim();
+                if (!text || text.indexOf('{{news-line}}') !== -1) return;
 
                 isCalculating = true;
 
-                // Measure track and text width without resetting animation
-                const trackWidth = track.clientWidth || track.offsetWidth || 380;
-                const textWidth = marquee.scrollWidth || marquee.offsetWidth || 1000;
+                var trackWidth = track.clientWidth || track.offsetWidth || 380;
+                var textWidth = marquee.scrollWidth || marquee.offsetWidth || 1000;
 
-                // Exact pixel coordinates:
-                // Start: Right edge aligns with track left boundary (first letter enters immediately)
-                const startX = -(trackWidth + 6);
-                // End: Left edge fully clears track right boundary (last letter exits completely)
-                const endX = textWidth + 16;
-                const totalDistance = endX - startX;
+                var startX = -(trackWidth + 6);
+                var endX = textWidth + 16;
+                var totalDistance = endX - startX;
 
-                // Constant readable velocity (52px per second regardless of text length)
-                const PIXELS_PER_SECOND = 52;
-                const duration = Math.max(6, (totalDistance / PIXELS_PER_SECOND)).toFixed(2);
+                var PIXELS_PER_SECOND = 52;
+                var duration = Math.max(6, (totalDistance / PIXELS_PER_SECOND)).toFixed(2);
 
-                const cacheKey = `${startX}_${endX}_${duration}_${text.length}`;
+                var cacheKey = startX + '_' + endX + '_' + duration + '_' + text.length;
                 if (lastAppliedKey === cacheKey) {
                     isCalculating = false;
-                    return; // No layout change -> Do NOT disturb running animation
+                    return;
                 }
 
                 lastAppliedKey = cacheKey;
 
-                let dynamicStyle = document.getElementById('dynamic-marquee-engine-style');
+                var dynamicStyle = document.getElementById('dynamic-marquee-engine-style');
                 if (!dynamicStyle) {
                     dynamicStyle = document.createElement('style');
                     dynamicStyle.id = 'dynamic-marquee-engine-style';
                     document.head.appendChild(dynamicStyle);
                 }
 
-                dynamicStyle.textContent = `
-                    @keyframes marqueeDynamic {
-                        0% { transform: translate3d(${startX}px, 0, 0); }
-                        100% { transform: translate3d(${endX}px, 0, 0); }
-                    }
-                    .marquee {
-                        animation: marqueeDynamic ${duration}s linear infinite !important;
-                    }
-                `;
+                dynamicStyle.textContent = "@keyframes marqueeDynamic { 0% { transform: translate3d(" + startX + "px, 0, 0); } 100% { transform: translate3d(" + endX + "px, 0, 0); } } .marquee { animation: marqueeDynamic " + duration + "s linear infinite !important; }";
 
                 isCalculating = false;
             }
@@ -2994,7 +3015,7 @@
 
             window.addEventListener('load', setupMarquee, { passive: true });
 
-            let resizeDebounce = null;
+            var resizeDebounce = null;
             window.addEventListener('resize', function () {
                 clearTimeout(resizeDebounce);
                 resizeDebounce = setTimeout(setupMarquee, 150);
@@ -3004,10 +3025,10 @@
                 document.fonts.ready.then(setupMarquee);
             }
 
-            const marqueeEl = document.querySelector('.marquee');
-            if (marqueeEl) {
-                let mutationDebounce = null;
-                const observer = new MutationObserver(function () {
+            var marqueeEl = document.querySelector('.marquee');
+            if (marqueeEl && typeof MutationObserver !== 'undefined') {
+                var mutationDebounce = null;
+                var observer = new MutationObserver(function () {
                     clearTimeout(mutationDebounce);
                     mutationDebounce = setTimeout(setupMarquee, 60);
                 });
@@ -3015,9 +3036,17 @@
             }
         })();
     </script>
-    <script src="js/loyalty-system/loyalty-integration.js"></script>
-
-    <script src="js/notifications-system/notifications-integration.js"></script>
+    <script>
+        // Load loyalty & notifications system ONLY if explicitly enabled in config
+        if (window.hotspotConfig && window.hotspotConfig["enable-loyalty-system"] === true) {
+            var lScript = document.createElement("script");
+            lScript.src = "js/loyalty-system/loyalty-integration.js";
+            document.body.appendChild(lScript);
+            var nScript = document.createElement("script");
+            nScript.src = "js/notifications-system/notifications-integration.js";
+            document.body.appendChild(nScript);
+        }
+    </script>
 </body>
 
 </html>
