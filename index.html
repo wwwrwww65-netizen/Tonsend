@@ -68,18 +68,27 @@
         })();
     </script>
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="preload" href="fonts/almarai-800-ar.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/almarai-700-ar.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/almarai-400-ar.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        /* Instant Royal Dark Turquoise Theme Initialization (Zero White Screen Flash) */
+        html, body {
+            background-color: #041f22 !important;
+            color: #FFFFFF !important;
+            font-family: 'Almarai', 'Tajawal', 'Cairo', sans-serif !important;
+        }
+    </style>
     <link rel="stylesheet" href="fonts/Almarai.css">
     <link rel="stylesheet" href="css/fontello.min.css">
     <link rel="stylesheet" href="css/style.min.css">
     <link rel="stylesheet" href="css/loyalty-system.css">
     <link rel="stylesheet" href="css/loyalty-modal.css">
     <link rel="stylesheet" href="css/loyalty-modal-notifaction.css">
-    <script src="js/loyalty-button.js"></script>
     <link rel="stylesheet" href="css/notifications-system.css">
     <!-- Announcements System CSS -->
     <link rel="stylesheet" href="css/announcements-style.css">
+    <script src="js/loyalty-button.js" defer></script>
     <style>
         .im1::before {
             content: "سرعة في النت";
@@ -136,13 +145,42 @@
             display: block !important;
             animation: none !important;
         }
+
+        /* Ultra-Smooth Mobile Keyboard & Viewport Stability Engine */
+        html, body {
+            overscroll-behavior-y: none;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* Lock screen background firmly to prevent mobile keyboard stretch/bounce */
+        .screen-background {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            min-height: -webkit-fill-available !important;
+            pointer-events: none !important;
+        }
+
+        /* Enforce 16px minimum on mobile inputs to completely prevent iOS viewport auto-zoom */
+        .login-input, input[name="username"], input[name="password"] {
+            font-size: 16px !important;
+        }
     </style>
     <script>
         try {
-            if (sessionStorage.getItem('hotspot_is_logged_in') === '1') {
-                document.documentElement.classList.add('initial-status-view');
+            localStorage.removeItem('hotspot_is_logged_in');
+            var search = window.location.search || '';
+            if (search.indexOf('logged=yes') !== -1 || sessionStorage.getItem('hotspot_is_logged_in') === '1') {
+                if (search.indexOf('logged=no') === -1) {
+                    document.documentElement.classList.add('initial-status-view');
+                }
+            } else {
+                document.documentElement.classList.remove('initial-status-view');
             }
         } catch (e) {}
+
         var hotspotConfig = window.hotspotConfig || {};
         function applyInstantConfig(cfg) {
             if (!cfg) return;
@@ -1929,20 +1967,18 @@
                 init: function () {
                     var self = this;
                     document.addEventListener('touchmove', function (e) {
-                        if (document.body.classList.contains('modal-scroll-locked')) {
-                            var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
-                            if (!scrollable) {
-                                e.preventDefault();
-                            }
+                        if (!document.body.classList.contains('modal-scroll-locked')) return;
+                        var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
+                        if (!scrollable) {
+                            e.preventDefault();
                         }
                     }, { passive: false });
 
                     document.addEventListener('wheel', function (e) {
-                        if (document.body.classList.contains('modal-scroll-locked')) {
-                            var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
-                            if (!scrollable) {
-                                e.preventDefault();
-                            }
+                        if (!document.body.classList.contains('modal-scroll-locked')) return;
+                        var scrollable = e.target.closest ? e.target.closest('.modal-sheet-card, .loyalty-modal-content, .nt-modal, .nt-card, .price-div, .sell-point-div, .points-modal-body, .loyalty-modal-body, .loan-body') : null;
+                        if (!scrollable) {
+                            e.preventDefault();
                         }
                     }, { passive: false });
 
@@ -2825,9 +2861,10 @@
                 toastObserver.observe(toastContainer, { attributes: true, attributeFilter: ['class'] });
             }
 
-            // 8. MOBILE KEYBOARD DETECTION
+            // 8. MOBILE KEYBOARD DETECTION & ULTRA-SMOOTH DISMISSAL
             var bNav = document.getElementById('bottomNav');
             var keyboardTimer = null;
+            var isKeyboardActive = false;
 
             function isTextualKeyboardInput(el) {
                 if (!el || !el.tagName) return false;
@@ -2842,6 +2879,8 @@
             }
 
             function hideBottomNavOnKeyboard() {
+                if (isKeyboardActive) return;
+                isKeyboardActive = true;
                 clearTimeout(keyboardTimer);
                 document.body.classList.add('keyboard-open');
                 if (bNav) bNav.classList.add('hidden-keyboard');
@@ -2849,13 +2888,26 @@
 
             function restoreBottomNavOnBlur() {
                 clearTimeout(keyboardTimer);
-                keyboardTimer = setTimeout(function() {
+                keyboardTimer = setTimeout(function () {
                     var activeElement = document.activeElement;
                     if (!isTextualKeyboardInput(activeElement)) {
+                        isKeyboardActive = false;
                         document.body.classList.remove('keyboard-open');
                         if (bNav) bNav.classList.remove('hidden-keyboard');
+
+                        // Smoothly glide window back to natural top position if slightly scrolled during typing
+                        if (!document.body.classList.contains('modal-scroll-locked')) {
+                            var y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                            if (y > 0 && y < 350) {
+                                try {
+                                    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                                } catch (e) {
+                                    window.scrollTo(0, 0);
+                                }
+                            }
+                        }
                     }
-                }, 100);
+                }, 180);
             }
 
             document.addEventListener('focusin', function (e) {
@@ -2868,13 +2920,17 @@
 
             if (window.visualViewport) {
                 var originalVpHeight = window.visualViewport.height;
+                var vpDebounceTimer = null;
                 window.visualViewport.addEventListener('resize', function () {
-                    var currentHeight = window.visualViewport.height;
-                    if (isTextualKeyboardInput(document.activeElement) && (currentHeight < originalVpHeight - 120 || currentHeight < window.innerHeight * 0.78)) {
-                        hideBottomNavOnKeyboard();
-                    } else if (!isTextualKeyboardInput(document.activeElement)) {
-                        restoreBottomNavOnBlur();
-                    }
+                    clearTimeout(vpDebounceTimer);
+                    vpDebounceTimer = setTimeout(function () {
+                        var currentHeight = window.visualViewport.height;
+                        if (isTextualKeyboardInput(document.activeElement) && (currentHeight < originalVpHeight - 110)) {
+                            hideBottomNavOnKeyboard();
+                        } else if (!isTextualKeyboardInput(document.activeElement)) {
+                            restoreBottomNavOnBlur();
+                        }
+                    }, 60);
                 });
             }
 
@@ -2898,18 +2954,15 @@
             window.resetWindowScrollToTop = resetWindowScrollToTop;
 
             var statusSection = document.getElementById('status');
+            var statusWasActive = false;
             if (statusSection && typeof MutationObserver !== 'undefined') {
-                var statusObserver = new MutationObserver(function(mutations) {
-                    for (var mi = 0; mi < mutations.length; mi++) {
-                        var m = mutations[mi];
-                        if (m.type === 'attributes' && (m.attributeName === 'class' || m.attributeName === 'style')) {
-                            if (statusSection.classList.contains('active') || statusSection.style.display === 'block') {
-                                resetWindowScrollToTop();
-                                setTimeout(resetWindowScrollToTop, 50);
-                                setTimeout(resetWindowScrollToTop, 200);
-                                setTimeout(resetWindowScrollToTop, 400);
-                            }
-                        }
+                var statusObserver = new MutationObserver(function() {
+                    var isNowActive = statusSection.classList.contains('active') || statusSection.style.display === 'block';
+                    if (isNowActive && !statusWasActive) {
+                        statusWasActive = true;
+                        resetWindowScrollToTop();
+                    } else if (!isNowActive) {
+                        statusWasActive = false;
                     }
                 });
                 statusObserver.observe(statusSection, { attributes: true, attributeFilter: ['class', 'style'] });
