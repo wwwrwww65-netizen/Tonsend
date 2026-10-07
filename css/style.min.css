@@ -2230,6 +2230,13 @@ body.keyboard-open .bottom-nav-bar,
   user-select: none;
 }
 
+/* Guard: Ensure #login is never blurred when no modal or status overlay is actively open */
+body:not(:has(.app.active, .loyalty-modal.active, .nt-card-overlay.nt-card-show)) #login {
+  filter: none !important;
+  -webkit-filter: none !important;
+  pointer-events: auto !important;
+}
+
 /* ==========================================================================
    UNIVERSAL MODAL SCROLL LOCK (PREVENTS BACKGROUND SCROLLING ON MODALS)
    ========================================================================== */

@@ -175,18 +175,23 @@ if (window.location.pathname !== '/login' || window.location.search !== '') {
 window.history.replaceState(null, '', '/login');
 }
 }
+if (window.location.protocol !== 'file:' && window.location.pathname.indexOf('status') !== -1) {
+window.location.replace('/login');
+return;
+}
 } catch (eUrl) {}
 return;
 }
 var isLogged = (
 (mtState && mtState.logged_in === 'yes') ||
 search.indexOf('logged=yes') !== -1 ||
-path.indexOf('status') !== -1 ||
 hash === '#status' ||
+((!mtState || mtState.logged_in !== 'no') && (
 sessionStorage.getItem('hotspot_is_logged_in') === '1' ||
 localStorage.getItem('hotspot_is_logged_in') === '1' ||
 !!sessionStorage.getItem('hotspot_status_instant') ||
 cookies.indexOf('hotspot_is_logged_in=1') !== -1
+))
 );
 if (isLogged) {
 document.documentElement.classList.add('initial-status-view');
@@ -1437,6 +1442,17 @@ spd.innerText = spdMap[cleanSpd.toUpperCase()] || cleanSpd || 'بدون تحدي
 }
 }
 } catch (eInst) {}
+}
+} else {
+var loginEl = document.getElementById('login');
+var statusEl = document.getElementById('status');
+if (statusEl) {
+statusEl.style.display = 'none';
+statusEl.classList.remove('active');
+}
+if (loginEl) {
+loginEl.style.display = 'block';
+loginEl.classList.remove('inactive');
 }
 }
 } catch (e) {}
