@@ -68,6 +68,9 @@
         })();
     </script>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preload" href="fonts/almarai-800-ar.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/almarai-700-ar.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/almarai-400-ar.woff2" as="font" type="font/woff2" crossorigin>
     <style>
         /* Instant Royal Dark Turquoise Theme Initialization (Zero White Screen Flash) */
         html, body {
@@ -2188,6 +2191,7 @@
 
             function updateSpeedSelection(val, title, clickedCard) {
                 if (speedSelect && speedSelect.options) {
+                    speedSelect.setAttribute('data-user-selected', '1');
                     var matchedOpt = null;
                     for (var oi = 0; oi < speedSelect.options.length; oi++) {
                         var opt = speedSelect.options[oi];
@@ -2203,6 +2207,15 @@
                                 matchedOpt = opt2;
                                 break;
                             }
+                        }
+                    }
+                    for (var ok = 0; ok < speedSelect.options.length; ok++) {
+                        if (speedSelect.options[ok] === matchedOpt) {
+                            speedSelect.options[ok].selected = true;
+                            speedSelect.options[ok].setAttribute('selected', 'selected');
+                        } else {
+                            speedSelect.options[ok].selected = false;
+                            speedSelect.options[ok].removeAttribute('selected');
                         }
                     }
                     if (matchedOpt) {
@@ -2330,13 +2343,23 @@
                 }
                 if (!defaultSpeed) defaultSpeed = activeSpeeds[0];
 
+                var currentSelectedVal = (speedSelect && speedSelect.getAttribute('data-user-selected') === '1') ? speedSelect.value : defaultSpeed.value;
+                var currentSelectedObj = defaultSpeed;
+                for (var cs = 0; cs < activeSpeeds.length; cs++) {
+                    if (activeSpeeds[cs].value === currentSelectedVal) {
+                        currentSelectedObj = activeSpeeds[cs];
+                        break;
+                    }
+                }
+
                 if (speedSelect) {
                     var selectHtml = '<option value="" disabled hidden>أختيار سرعة الإنترنت</option>';
                     for (var k = 0; k < activeSpeeds.length; k++) {
                         var sp = activeSpeeds[k];
-                        selectHtml += '<option value="' + sp.value + '" ' + (sp.value === defaultSpeed.value ? 'selected' : '') + '>' + sp.name + '</option>';
+                        selectHtml += '<option value="' + sp.value + '" ' + (sp.value === currentSelectedObj.value ? 'selected' : '') + '>' + sp.name + '</option>';
                     }
                     speedSelect.innerHTML = selectHtml;
+                    speedSelect.value = currentSelectedObj.value;
                 }
 
                 if (speedchange) {
@@ -2352,7 +2375,7 @@
                     var modalHtml = '';
                     for (var m = 0; m < activeSpeeds.length; m++) {
                         var sm = activeSpeeds[m];
-                        var isAct = sm.value === defaultSpeed.value ? 'active' : '';
+                        var isAct = sm.value === currentSelectedObj.value ? 'active' : '';
                         var recBadge = sm.recommended ? '<span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : '';
                         modalHtml += '<div class="speed-card-option ' + isAct + '" data-speed="' + sm.value + '" data-speed-title="' + sm.name + '"><div class="speed-card-indicator"><div class="speed-radio-dot"></div></div><div class="speed-card-info"><span class="speed-card-name">' + sm.name + ' ' + recBadge + '</span></div></div>';
                     }
@@ -2364,7 +2387,7 @@
                     var statusModalHtml = '';
                     for (var n = 0; n < activeSpeeds.length; n++) {
                         var sn = activeSpeeds[n];
-                        var isAct2 = sn.value === defaultSpeed.value ? 'active' : '';
+                        var isAct2 = sn.value === currentSelectedObj.value ? 'active' : '';
                         var recBadge2 = sn.recommended ? '<span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : '';
                         statusModalHtml += '<div class="speed-card-option ' + isAct2 + '" data-status-speed="' + sn.value + '" data-speed-title="' + sn.name + '"><div class="speed-card-indicator"><div class="speed-radio-dot"></div></div><div class="speed-card-info"><span class="speed-card-name">' + sn.name + ' ' + recBadge2 + '</span></div></div>';
                     }
@@ -2372,8 +2395,8 @@
                     bindStatusSpeedCards();
                 }
 
-                if (defaultSpeed && selectedSpeedDisplay) {
-                    selectedSpeedDisplay.textContent = defaultSpeed.name;
+                if (currentSelectedObj && selectedSpeedDisplay) {
+                    selectedSpeedDisplay.textContent = currentSelectedObj.name;
                 }
             }
 

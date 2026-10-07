@@ -1,6 +1,9 @@
-$(if var == "")<script>
+$(if var == "")<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="theme-color" content="#041f22"><style>html,body{background-color:#041f22!important;color:#FFFFFF!important;margin:0;padding:0;}</style><script>
 (function() {
     try {
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, "", "/status");
+        }
         var sData = {
             "logged_in": "$(logged-in)",
             "mac": "$(mac-esc)",
@@ -24,6 +27,6 @@ $(if var == "")<script>
     } catch (e) {}
     window.location.replace("index.html?logged=yes");
 })();
-</script>
+</script></head><body></body></html>
 $(else) 
 { "logged_in": "$(logged-in)", "mac": "$(mac-esc)","sspeed" : "$(domain)_" ,"update" : "$(domain)_", "ip": "$(ip)", "bytes_in": "$(bytes-in)", "bytes_out": "$(bytes-out)", "remain_bytes_total": "$(remain-bytes-total)", "session_time_left":	"$(session-time-left)", "uptime": "$(uptime)", "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14", "trial": "$(trial)", "action": "onStatusQuery" } $(endif)
