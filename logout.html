@@ -1,1 +1,13 @@
-$(if var == "")<script>window.location.replace("index.html?logged=no")</script>$(else) { "logged_in": "$(logged-in)", "link_login_only": "$(link-login-only)", "link_logout": "$(link-logout)","sspeed" : "$(domain)_" ,"update" : "$(domain)_" , "username": "null", "mac": "$(mac-esc)", "ip": "$(ip)", "bytes_in": "$(bytes-in)", "bytes_in_nice": "$(bytes-in-nice)", "bytes_out": "$(bytes-out)", "bytes_out_nice": "$(bytes-out-nice)", "remain_bytes_in": "$(remain-bytes-in)", "remain_bytes_out": "$(remain-bytes-out)", "packets_out": "$(packets-out)", "packets_in": "$(packets-in)", "session_time_left":	"$(session-time-left)", "uptime": "$(uptime)", "trial": "$(trial)", "action": "onLoggedOut" } $(endif)
+$(if var == "")<script>
+(function() {
+    try {
+        sessionStorage.removeItem("hotspot_status_instant");
+        sessionStorage.removeItem("hotspot_is_logged_in");
+        sessionStorage.removeItem("hotspot_cached_status");
+        localStorage.removeItem("hotspot_is_logged_in");
+        localStorage.removeItem("hotspot_cached_status");
+        document.cookie = "hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    } catch (e) {}
+    window.location.replace("index.html?logged=no");
+})();
+</script>$(else) { "logged_in": "$(logged-in)", "link_login_only": "$(link-login-only)", "link_logout": "$(link-logout)","sspeed" : "$(domain)_" ,"update" : "$(domain)_" , "username": "null", "mac": "$(mac-esc)", "ip": "$(ip)", "bytes_in": "$(bytes-in)", "bytes_in_nice": "$(bytes-in-nice)", "bytes_out": "$(bytes-out)", "bytes_out_nice": "$(bytes-out-nice)", "remain_bytes_in": "$(remain-bytes-in)", "remain_bytes_out": "$(remain-bytes-out)", "packets_out": "$(packets-out)", "packets_in": "$(packets-in)", "session_time_left":	"$(session-time-left)", "uptime": "$(uptime)", "trial": "$(trial)", "action": "onLoggedOut" } $(endif)

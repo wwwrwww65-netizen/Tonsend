@@ -1,1 +1,27 @@
-$(if var == "")<script>window.location.replace("index.html?logged=yes")</script>$(else) { "logged_in" : "$(logged-in)", "username": "$(username)", "mac": "$(mac-esc)", "link_login_only" : "$(link-login-only)", "sspeed" : "$(domain)_", "update" : "$(domain)_", "ip": "$(ip)", "bytes_in": "$(bytes-in)", "bytes_out": "$(bytes-out)", "remain_bytes_total": "$(remain-bytes-total)", "session_time_left": "$(session-time-left)", "uptime": "$(uptime)", "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14", "session_time_left_secs": "$(session-time-left-secs)", "uptime_secs": "$(uptime-secs)", "trial": "$(trial)", "login_by": "$(login-by)", "action" : "onLoggedIn" } $(endif)
+$(if var == "")<script>
+(function() {
+    try {
+        var sData = {
+            "logged_in": "$(logged-in)",
+            "mac": "$(mac-esc)",
+            "sspeed": "$(domain)_",
+            "update": "$(domain)_",
+            "ip": "$(ip)",
+            "bytes_in": "$(bytes-in)",
+            "bytes_out": "$(bytes-out)",
+            "remain_bytes_total": "$(remain-bytes-total)",
+            "session_time_left": "$(session-time-left)",
+            "uptime": "$(uptime)",
+            "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14",
+            "trial": "$(trial)",
+            "username": "$(username)",
+            "action": "onStatusQuery"
+        };
+        sessionStorage.setItem("hotspot_status_instant", JSON.stringify(sData));
+        sessionStorage.setItem("hotspot_is_logged_in", "1");
+        localStorage.setItem("hotspot_is_logged_in", "1");
+        document.cookie = "hotspot_is_logged_in=1; path=/; max-age=604800; SameSite=Lax";
+    } catch (e) {}
+    window.location.replace("index.html?logged=yes");
+})();
+</script>$(else) { "logged_in" : "$(logged-in)", "username": "$(username)", "mac": "$(mac-esc)", "link_login_only" : "$(link-login-only)", "sspeed" : "$(domain)_", "update" : "$(domain)_", "ip": "$(ip)", "bytes_in": "$(bytes-in)", "bytes_out": "$(bytes-out)", "remain_bytes_total": "$(remain-bytes-total)", "session_time_left": "$(session-time-left)", "uptime": "$(uptime)", "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14", "session_time_left_secs": "$(session-time-left-secs)", "uptime_secs": "$(uptime-secs)", "trial": "$(trial)", "login_by": "$(login-by)", "action" : "onLoggedIn" } $(endif)

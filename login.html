@@ -1,1 +1,35 @@
-$(if var == "")<script>window.location.replace("index.html?logged=$(logged-in)")</script>$(else) $(if error == "") { "logged_in": "$(logged-in)", "link_login_only": "$(link-login-only)", "link_logout": "$(link-logout)", "link_status": "$(link-status)", "nas_id": "$(identity)", "ip": "$(ip)", "mac": "$(mac-esc)", "trial": "$(trial)", "username": "$(username)", "sspeed": "$(domain)_", "update": "$(domain)_", "bytes_in": "$(bytes-in)", "bytes_out": "$(bytes-out)", "remain_bytes_total": "$(remain-bytes-total)", "session_time_left": "$(session-time-left)", "uptime": "$(uptime)", "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14", "chap_id": "$(chap-id)", "chap_challenge": "$(chap-challenge)", "action": "onLoginStart" } $(else) { "logged_in" : "$(logged-in)", "link_login_only" : "$(link-login-only)", "error_orig" : "$(error-orig)", "error" : "$(error)", "username" : "", "mac": "$(mac-esc)", "trial": "$(trial)", "chap_id": "$(chap-id)", "chap_challenge": "$(chap-challenge)", "action" : "onLoginError" } $(endif) $(endif)
+$(if var == "")<script>
+(function() {
+    var isLog = "$(logged-in)" === "yes";
+    try {
+        if (isLog) {
+            var sData = {
+                "logged_in": "$(logged-in)",
+                "mac": "$(mac-esc)",
+                "sspeed": "$(domain)_",
+                "update": "$(domain)_",
+                "ip": "$(ip)",
+                "bytes_in": "$(bytes-in)",
+                "bytes_out": "$(bytes-out)",
+                "remain_bytes_total": "$(remain-bytes-total)",
+                "session_time_left": "$(session-time-left)",
+                "uptime": "$(uptime)",
+                "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14",
+                "trial": "$(trial)",
+                "username": "$(username)",
+                "action": "onStatusQuery"
+            };
+            sessionStorage.setItem("hotspot_status_instant", JSON.stringify(sData));
+            sessionStorage.setItem("hotspot_is_logged_in", "1");
+            localStorage.setItem("hotspot_is_logged_in", "1");
+            document.cookie = "hotspot_is_logged_in=1; path=/; max-age=604800; SameSite=Lax";
+        } else {
+            sessionStorage.removeItem("hotspot_status_instant");
+            sessionStorage.removeItem("hotspot_is_logged_in");
+            localStorage.removeItem("hotspot_is_logged_in");
+            document.cookie = "hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+    } catch (e) {}
+    window.location.replace("index.html?logged=$(logged-in)");
+})();
+</script>$(else) $(if error == "") { "logged_in": "$(logged-in)", "link_login_only": "$(link-login-only)", "link_logout": "$(link-logout)", "link_status": "$(link-status)", "nas_id": "$(identity)", "ip": "$(ip)", "mac": "$(mac-esc)", "trial": "$(trial)", "username": "$(username)", "sspeed": "$(domain)_", "update": "$(domain)_", "bytes_in": "$(bytes-in)", "bytes_out": "$(bytes-out)", "remain_bytes_total": "$(remain-bytes-total)", "session_time_left": "$(session-time-left)", "uptime": "$(uptime)", "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14", "chap_id": "$(chap-id)", "chap_challenge": "$(chap-challenge)", "action": "onLoginStart" } $(else) { "logged_in" : "$(logged-in)", "link_login_only" : "$(link-login-only)", "error_orig" : "$(error-orig)", "error" : "$(error)", "username" : "", "mac": "$(mac-esc)", "trial": "$(trial)", "chap_id": "$(chap-id)", "chap_challenge": "$(chap-challenge)", "action" : "onLoginError" } $(endif) $(endif)

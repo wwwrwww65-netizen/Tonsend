@@ -160,9 +160,15 @@
                     try {
                         localStorage.removeItem('hotspot_is_logged_in');
                         sessionStorage.removeItem('hotspot_is_logged_in');
+                        sessionStorage.removeItem('hotspot_status_instant');
                         document.cookie = 'hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
                     } catch (e) {}
                     document.documentElement.classList.remove('initial-status-view');
+                    try {
+                        if (window.history && window.history.replaceState && window.location.protocol !== 'file:') {
+                            window.history.replaceState(null, '', '/login');
+                        }
+                    } catch (eUrl) {}
                     return;
                 }
 
@@ -178,8 +184,18 @@
 
                 if (isLogged) {
                     document.documentElement.classList.add('initial-status-view');
+                    try {
+                        if (window.history && window.history.replaceState && window.location.protocol !== 'file:') {
+                            window.history.replaceState(null, '', '/status');
+                        }
+                    } catch (eUrl) {}
                 } else {
                     document.documentElement.classList.remove('initial-status-view');
+                    try {
+                        if (window.history && window.history.replaceState && window.location.protocol !== 'file:') {
+                            window.history.replaceState(null, '', '/login');
+                        }
+                    } catch (eUrl) {}
                 }
             } catch (e) {}
         })();
@@ -1196,7 +1212,7 @@
                             <p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 4px;">
                                 إذا لم يتم الأتصال تلقائيا أضغط <a
                                     style="text-decoration: underline; color: #fde047; font-weight: 700;"
-                                    href="status.html">هنا</a>
+                                    href="/status">هنا</a>
                             </p>
                         </div>
 

@@ -118,6 +118,11 @@ app.get(['/login', '/login.html', '/alogin', '/alogin.html'], (req, res) => {
   }
 
   // Regular direct request
+  if (sessionState.isLoggedIn) {
+    res.cookie('hotspot_is_logged_in', '1', { path: '/' });
+  } else {
+    res.clearCookie('hotspot_is_logged_in', { path: '/' });
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -147,14 +152,18 @@ app.get(['/status', '/status.html'], (req, res) => {
   }
 
   // Direct page request
-  res.cookie('hotspot_is_logged_in', sessionState.isLoggedIn ? '1' : '0', { path: '/' });
+  if (sessionState.isLoggedIn) {
+    res.cookie('hotspot_is_logged_in', '1', { path: '/' });
+  } else {
+    res.clearCookie('hotspot_is_logged_in', { path: '/' });
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // MikroTik Hotspot /logout endpoint
 app.get(['/logout', '/logout.html'], (req, res) => {
   sessionState.isLoggedIn = false;
-  res.cookie('hotspot_is_logged_in', '0', { path: '/' });
+  res.clearCookie('hotspot_is_logged_in', { path: '/' });
   const isCallBack = req.query.var === 'callBack';
 
   if (isCallBack) {
@@ -164,7 +173,7 @@ app.get(['/logout', '/logout.html'], (req, res) => {
     });
   }
 
-  res.redirect('/');
+  res.redirect('/login?logged=no');
 });
 
 // Control Panel routes
