@@ -175,19 +175,31 @@ html, body {
       $(endif)
     </table>
 
-    <!-- الزر الصريح والواضح لإعادة تسجيل الدخول عبر رابط ميكروتك الرسمي -->
-    <a href="$(link-login)" class="btn-relogin-primary">
-      <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
-        <path d="M10 17l5-5-5-5v10z"/>
-      </svg>
-      <span>تسجيل الدخول من جديد</span>
-    </a>
+    <!-- أزرار الإجراءات في صفحة تسجيل الخروج -->
+    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+      <!-- تسجيل الدخول من جديد بنفس الكرت -->
+      <a href="$(link-login)" class="btn-relogin-primary">
+        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: currentColor;">
+          <path d="M10 17l5-5-5-5v10z"/>
+        </svg>
+        <span>تسجيل الدخول من جديد</span>
+      </a>
 
-    <form action="$(link-login)" name="login" method="get" onSubmit="return openLogin()" style="margin-top: 10px;">
-      <button type="submit" class="btn-secondary-glass" style="width: 100%; border-radius: 14px; padding: 12px;">
-        العودة لبوابة الدخول
+      <!-- زر خروج نهائي يمسح الكرت المحفوظ ويمنع الدخول التلقائي تماماً -->
+      <button type="button" id="btnFinalLogout" class="btn-danger-glass" style="width: 100%; border-radius: 14px; padding: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: currentColor;">
+          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+        </svg>
+        <span>خروج نهائي (مسح الكرت)</span>
       </button>
-    </form>
+
+      <!-- العودة لبوابة الدخول مع حفظ الكرت في الخانة -->
+      <form action="$(link-login)" name="login" method="get" onSubmit="return openLogin()" style="margin: 0;">
+        <button type="submit" class="btn-secondary-glass" style="width: 100%; border-radius: 14px; padding: 12px; font-weight: 700; cursor: pointer;">
+          العودة لبوابة الدخول
+        </button>
+      </form>
+    </div>
 
     <!-- قسم خدمة العملاء والدعم الفني -->
     <div class="customer-support-section" style="margin-top: 20px;">
@@ -218,6 +230,9 @@ html, body {
 
 <script>
 function openLogin() {
+  try {
+    sessionStorage.setItem('prevent_auto_login', 'true');
+  } catch(e) {}
   if (window.name !== 'hotspot_logout') return true;
   try {
     open('$(link-login)', '_blank', '');
@@ -227,6 +242,42 @@ function openLogin() {
     return true;
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  var btnFinal = document.getElementById('btnFinalLogout');
+  if (btnFinal) {
+    btnFinal.addEventListener('click', function(e) {
+      e.preventDefault();
+      // مسح جميع الكوكيز المحفوظة
+      var keys = ['username', 'speed', 'password', 'storedValues', 'hotspot_username', 'hotspot_password', 'hotspot_speed'];
+      for (var i = 0; i < keys.length; i++) {
+        document.cookie = keys[i] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        document.cookie = keys[i] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
+      try {
+        localStorage.removeItem('hotspot_username');
+        localStorage.removeItem('hotspot_speed');
+        localStorage.removeItem('hotspot_password');
+        localStorage.removeItem('storedValues');
+        localStorage.removeItem('stored_cards_history');
+        localStorage.removeItem('last_user_card');
+        sessionStorage.clear();
+      } catch (err) {}
+
+      // وضع علامة لمنع الدخول التلقائي في حال كانت مفعلة
+      try {
+        sessionStorage.setItem('prevent_auto_login', 'true');
+      } catch (err) {}
+
+      // التحويل لصفحة تسجيل الدخول نظيفة وخالية من أي كرت
+      var loginUrl = '$(link-login)';
+      if (!loginUrl || loginUrl.indexOf('$(') !== -1) {
+        loginUrl = '/login';
+      }
+      window.location.href = loginUrl;
+    });
+  }
+});
 
 function toArabicBytes(bytes) {
   var num = Number(bytes);

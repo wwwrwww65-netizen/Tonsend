@@ -1,9 +1,7 @@
 $(if var == "")<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-$(if refresh-timeout)
-<meta http-equiv="refresh" content="$(refresh-timeout-secs)">
-$(endif)
+
 <meta charset="UTF-8">
 <title data-network-name>الخالد نت - حالة الاتصال</title>
 <meta name="description" content="بيانات استهلاك واشتراك شبكة الخالد نت اللاسلكية">
@@ -31,21 +29,37 @@ html, body {
   padding-bottom: 95px !important; /* مساحة أمان للشريط السفلي */
 }
 
-/* بطاقة الحالة الزجاجية الملكية الفاخرة المطابقة لصفحة تسجيل الدخول */
-#status .modal-sheet-card,
-.modal-sheet-card.status-glass-card {
-  max-width: 100% !important;
-  max-height: none !important;
-  overflow: visible !important;
+/* بطاقة الحالة الزجاجية الفيروزية الملكية المطابقة لصفحة تسجيل الدخول تماماً */
+.status-glass-card {
+  position: relative !important;
+  overflow: hidden !important;
   background: rgba(15, 118, 110, 0.22) !important;
-  border: 1.2px solid rgba(212, 175, 55, 0.45) !important;
+  border: 1px solid var(--border-glass) !important;
   border-radius: var(--radius-xl) !important;
   padding: 18px 16px !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  box-shadow: var(--shadow-lg), inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 0 25px rgba(212, 175, 55, 0.15) !important;
-  animation: none !important;
-  margin: 0 0 16px 0 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: var(--shadow-lg), inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+  margin-bottom: 20px !important;
+}
+
+.status-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--gold-gradient);
+}
+
+.status-header-card {
+  background: rgba(15, 118, 110, 0.25) !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 14px 12px !important;
+  margin-bottom: 12px !important;
+  text-align: center !important;
 }
 
 /* تثبيت ومحاذاة الشريط السفلي في المنتصف تماماً لجميع متصفحات وأجهزة الموبايل */
@@ -58,8 +72,18 @@ html, body {
   width: calc(100% - 20px) !important;
   max-width: 480px !important;
   height: 62px !important;
+  background: rgba(4, 31, 34, 0.78) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: var(--radius-xl) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(15, 118, 110, 0.3) !important;
   z-index: 9999 !important;
   display: flex !important;
+  align-items: center !important;
+  justify-content: space-around !important;
+  padding: 4px 6px !important;
+  box-sizing: border-box !important;
 }
 </style>
 <link rel="stylesheet" href="fonts/Almarai.css">
@@ -125,9 +149,9 @@ function openLogout() {
   <div class="screen status-standalone-screen">
     <div class="screen-content" style="padding: 10px 8px 20px 8px;">
       
-      <!-- شاشة الحالة داخل #status مع البطاقة الزجاجية الملكية الفاخرة -->
-      <div class="app active" id="status" style="display: block !important;">
-        <div class="modal-sheet-card status-glass-card">
+      <!-- شاشة الحالة مع البطاقة الزجاجية الملكية الفاخرة المطابقة لصفحة تسجيل الدخول -->
+      <div class="status-view" id="status">
+        <div class="status-glass-card">
           
           <!-- رأس الحاوية: يبدأ مباشرة بحاوية 'تم تسجيل دخولك بنجاح' بدون أي أيقونة live أو تعقيد -->
           <div class="status-header-card" style="padding: 10px 8px 12px 8px; text-align: center;">
@@ -615,6 +639,10 @@ function toArabicTime(timeStr) {
 
 window.Config = function(cfg) {
   if (!cfg) return;
+  window.hotspotConfig = cfg;
+  if (typeof hotspotConfig === 'undefined') {
+    window.hotspotConfig = cfg;
+  }
   if (cfg['network-name']) {
     var brandEls = document.querySelectorAll('[data-network-name]');
     for (var i = 0; i < brandEls.length; i++) {

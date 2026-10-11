@@ -71,7 +71,7 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   content = content.replace(/\$\(if logged-in\)([\s\S]*?)\$\(endif\)/g, state.isLoggedIn ? '$1' : '');
   content = content.replace(/\$\(if remain-bytes-total\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if session-time-left\)([\s\S]*?)\$\(endif\)/g, '$1');
-  content = content.replace(/\$\(if refresh-timeout\)([\s\S]*?)\$\(endif\)/g, '$1');
+  content = content.replace(/\$\(if refresh-timeout\)([\s\S]*?)\$\(endif\)/g, '');
   content = content.replace(/\$\(if domain\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, state.speed ? '$1' : '$2');
   content = content.replace(/\$\(if error\)([\s\S]*?)\$\(endif\)/g, '');
 
