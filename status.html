@@ -63,30 +63,6 @@ html, body {
   text-align: center !important;
 }
 
-/* تثبيت ومحاذاة الشريط السفلي في المنتصف تماماً لجميع متصفحات وأجهزة الموبايل */
-.bottom-nav-bar {
-  position: fixed !important;
-  bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
-  left: 50% !important;
-  right: auto !important;
-  transform: translateX(-50%) !important;
-  width: calc(100% - 20px) !important;
-  max-width: 480px !important;
-  height: 62px !important;
-  background: rgba(4, 31, 34, 0.78) !important;
-  border: 1px solid var(--border-glass) !important;
-  border-radius: var(--radius-xl) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(15, 118, 110, 0.3) !important;
-  z-index: 9999 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-around !important;
-  padding: 4px 6px !important;
-  box-sizing: border-box !important;
-}
-
 .status-actions-row button:hover {
   transform: none !important;
 }

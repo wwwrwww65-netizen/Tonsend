@@ -3063,18 +3063,81 @@ body:has(#status.active) #login {
 }
 
 /* ==========================================================================
-   BLOCKED SCREEN (#block)
+   BLOCKED SCREEN (#block) - FULL PAGE GLASS SCREEN (MATCHING LOGOUT & STATUS)
    ========================================================================== */
 
+#block {
+  position: static !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 100% !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 10px 0 24px 0 !important;
+  z-index: 10 !important;
+  overflow-y: visible !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+#block.active {
+  display: block !important;
+  animation: fadeInBackdrop 0.25s ease forwards !important;
+  opacity: 1 !important;
+  overflow-y: visible !important;
+  touch-action: pan-y !important;
+}
+
+#block .modal-sheet-card {
+  position: relative !important;
+  overflow: hidden !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  background: rgba(15, 118, 110, 0.22) !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+  border-radius: 28px !important;
+  padding: 22px 18px !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+  animation: none !important;
+  margin: 12px 0 20px 0 !important;
+}
+
+#block .modal-sheet-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #E6CA65 0%, #D4AF37 50%, #B8860B 100%);
+}
+
+/* When #block is active, hide #login and hide the bottom navigation bar (#bottomNav) just like logout.html */
+.screen-content:has(#block.active) #login,
+body:has(#block.active) #login,
+body.block-page-active #login {
+  display: none !important;
+}
+
+body:has(#block.active) #bottomNav,
+body:has(#block.active) .bottom-nav-bar,
+body.block-page-active #bottomNav,
+body.block-page-active .bottom-nav-bar {
+  display: none !important;
+}
+
 .block-card-warning {
-  background: rgba(15, 118, 110, 0.28);
-  border: 1.5px solid rgba(244, 63, 94, 0.5);
-  border-radius: var(--radius-xl);
-  padding: 26px 18px;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.32) 0%, rgba(244, 63, 94, 0.16) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 22px;
+  padding: 24px 16px;
   text-align: center;
-  box-shadow: 0 0 35px rgba(244, 63, 94, 0.3);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .block-icon-pulse {
@@ -3082,7 +3145,8 @@ body:has(#status.active) #login {
   height: 64px;
   margin: 0 auto 14px auto;
   border-radius: 50%;
-  background: rgba(15, 118, 110, 0.35);
+  background: rgba(244, 63, 94, 0.16);
+  border: 1px solid rgba(244, 63, 94, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3091,19 +3155,20 @@ body:has(#status.active) #login {
 
 @keyframes pulseBlock {
   0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(244, 63, 94, 0); }
-  50% { transform: scale(1.1); box-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
+  50% { transform: scale(1.08); box-shadow: 0 0 25px rgba(244, 63, 94, 0.45); }
 }
 
 .countdown-badge {
   display: inline-block;
-  background: #031416;
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  color: #FFFFFF;
-  font-size: 1.05rem;
+  background: rgba(3, 20, 22, 0.78);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  color: #fde047;
+  font-size: 1.02rem;
   font-weight: 800;
-  padding: 6px 18px;
+  padding: 8px 20px;
   border-radius: var(--radius-full);
-  margin-top: 12px;
+  margin-top: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 /* ==========================================================================

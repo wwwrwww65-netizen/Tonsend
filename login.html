@@ -1741,7 +1741,7 @@ window.animating = false;
 window.ModalScrollLock = {
 lockCount: 0,
 isAnyModalOpen: function () {
-var appModal = document.querySelector('.app.active:not(#status)');
+var appModal = document.querySelector('.app.active:not(#status):not(#block)');
 var loyaltyModal = document.querySelector('.loyalty-modal.active');
 var ntModal = document.querySelector('.nt-modal-overlay:not(.nt-modal-hide), .nt-card-overlay:not(.nt-card-hide)');
 var pointsModal = document.querySelector('#points-register-modal.active');
@@ -1809,7 +1809,7 @@ if (!modal) return;
 var openModals = document.querySelectorAll('.app.active');
 for (var i = 0; i < openModals.length; i++) {
 var m = openModals[i];
-if (m !== modal && m.id !== 'status') {
+if (m !== modal && m.id !== 'status' && m.id !== 'block') {
 m.classList.remove('active');
 m.style.display = 'none';
 }
@@ -1837,18 +1837,18 @@ target = document.getElementById(modalOrId);
 } else if (modalOrId instanceof HTMLElement) {
 target = modalOrId;
 }
-if (target) {
+if (target && target.id !== 'block') {
 target.classList.remove('active');
 setTimeout(function () {
 if (!target.classList.contains('active')) {
 target.style.display = 'none';
 }
 }, 180);
-} else {
+} else if (!target) {
 var activeApps = document.querySelectorAll('.app.active');
 for (var j = 0; j < activeApps.length; j++) {
 (function(m) {
-if (m.id !== 'status') {
+if (m.id !== 'status' && m.id !== 'block') {
 m.classList.remove('active');
 setTimeout(function () {
 if (!m.classList.contains('active')) {
@@ -1861,8 +1861,10 @@ m.style.display = 'none';
 }
 var statusEl = document.getElementById('status');
 var isStatusActive = statusEl && statusEl.classList && statusEl.classList.contains('active');
+var blockEl = document.getElementById('block');
+var isBlockActive = blockEl && blockEl.classList && blockEl.classList.contains('active');
 var loginEl = document.getElementById('login');
-if (!isStatusActive && loginEl) {
+if (!isStatusActive && !isBlockActive && loginEl) {
 loginEl.style.display = 'block';
 loginEl.style.visibility = 'visible';
 loginEl.classList.remove('inactive');
@@ -1879,14 +1881,14 @@ document.addEventListener('click', function (e) {
 var closeTrigger = e.target.closest ? e.target.closest('.modal-close-btn, .modal-cancel-btn, .back, button[data-modal-close]') : null;
 if (closeTrigger) {
 var parentApp = closeTrigger.closest ? closeTrigger.closest('.app') : null;
-if (parentApp && parentApp.id !== 'status') {
+if (parentApp && parentApp.id !== 'status' && parentApp.id !== 'block') {
 e.preventDefault();
 e.stopPropagation();
 closeAppModal(parentApp);
 return;
 }
 }
-if (e.target.classList && e.target.classList.contains('app') && e.target.classList.contains('active') && e.target.id !== 'status') {
+if (e.target.classList && e.target.classList.contains('app') && e.target.classList.contains('active') && e.target.id !== 'status' && e.target.id !== 'block') {
 e.preventDefault();
 closeAppModal(e.target);
 }
