@@ -119,8 +119,11 @@ html {
 }
 
 body {
+  font-family: 'Almarai', 'Tajawal', 'Cairo', sans-serif;
   font-family: var(--font-main);
+  background-color: #041f22;
   background-color: var(--bg-dark);
+  color: #FFFFFF;
   color: var(--text-primary);
   direction: rtl;
   min-height: 100vh;
@@ -231,6 +234,10 @@ svg.svg-inline,
 
 .screen-background {
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   width: 100vw;
   height: 100vh;
@@ -635,6 +642,10 @@ h1 {
 
 .slide-overlay {
   position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   background: linear-gradient(to top, rgba(18, 4, 7, 0.94) 0%, rgba(18, 4, 7, 0.3) 60%, transparent 100%);
   display: flex;
@@ -1135,7 +1146,9 @@ h1 {
 
 .login-card {
   background: rgba(15, 118, 110, 0.22);
+  border: 1px solid rgba(212, 175, 55, 0.35);
   border: 1px solid var(--border-glass);
+  border-radius: 28px;
   border-radius: var(--radius-xl);
   padding: 20px 18px;
   backdrop-filter: blur(8px);
@@ -1357,6 +1370,10 @@ input[name="username"] {
 
 #se, select#se {
   position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -1758,6 +1775,10 @@ input[name="username"] {
 .slider-pill {
   position: absolute;
   cursor: pointer;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   background-color: rgba(255, 255, 255, 0.15);
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1844,8 +1865,8 @@ button.login-submit {
   pointer-events: none;
 }
 
-.status-actions-row button::before,
-.btn-danger-glass::before {
+.status-actions-row button:not(.processing)::before,
+.btn-danger-glass:not(.processing)::before {
   display: none !important;
 }
 
@@ -1891,8 +1912,12 @@ button.login-submit {
 
 /* Advanced High-Tech Loading Spinner State */
 .login-submit.processing,
-.button.processing {
-  pointer-events: none;
+.button.processing,
+.status-actions-row button.processing,
+.btn-danger-glass.processing,
+.btn-secondary-glass.processing {
+  position: relative !important;
+  pointer-events: none !important;
   background: linear-gradient(135deg, #041f22 0%, #083339 50%, #0f766e 100%) !important;
   box-shadow: 0 8px 24px rgba(15, 118, 110, 0.6), 0 0 16px rgba(212, 175, 55, 0.35) !important;
   border: 1px solid rgba(212, 175, 55, 0.45) !important;
@@ -1900,13 +1925,24 @@ button.login-submit {
 }
 
 .login-submit.processing .button-text,
-.button.processing .button-text {
-  visibility: hidden;
+.button.processing .button-text,
+.status-actions-row button.processing span,
+.status-actions-row button.processing svg,
+.btn-danger-glass.processing span,
+.btn-danger-glass.processing svg,
+.btn-secondary-glass.processing span,
+.btn-secondary-glass.processing svg {
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 /* Outer Glowing Spinner Ring */
 .login-submit.processing::before,
-.button.processing::before {
+.button.processing::before,
+.status-actions-row button.processing::before,
+.btn-danger-glass.processing::before,
+.btn-secondary-glass.processing::before {
+  display: block !important;
   content: '';
   position: absolute;
   width: 22px;
@@ -1922,7 +1958,11 @@ button.login-submit {
 
 /* Inner Inverse Counter-Spin Dot Ring */
 .login-submit.processing::after,
-.button.processing::after {
+.button.processing::after,
+.status-actions-row button.processing::after,
+.btn-danger-glass.processing::after,
+.btn-secondary-glass.processing::after {
+  display: block !important;
   content: '';
   position: absolute;
   width: 12px;
@@ -2250,6 +2290,10 @@ body.modal-scroll-locked {
 .app {
   display: none;
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   z-index: 300; /* أعلى دائماً من الشريط السفلي */
   width: 100vw;
@@ -3366,6 +3410,10 @@ body:has(#status.active) #login {
 .qr-camera-loading,
 .qr-camera-error {
   position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   display: flex;
   flex-direction: column;
@@ -3800,6 +3848,10 @@ img, svg, video, canvas {
 .loyalty-modal {
   display: none;
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   z-index: 99999;
   width: 100vw;

@@ -1,8 +1,12 @@
 $(if var == "")<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-
+$(if refresh-timeout)
+<meta http-equiv="refresh" content="$(refresh-timeout-secs)">
+$(endif)
 <meta charset="UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
 <title data-network-name>الخالد نت - حالة الاتصال</title>
 <meta name="description" content="بيانات استهلاك واشتراك شبكة الخالد نت اللاسلكية">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
@@ -85,6 +89,15 @@ html, body {
   padding: 4px 6px !important;
   box-sizing: border-box !important;
 }
+
+.status-actions-row button:hover {
+  transform: none !important;
+}
+
+.status-actions-row button svg,
+.status-actions-row button span {
+  pointer-events: none !important;
+}
 </style>
 <link rel="stylesheet" href="fonts/Almarai.css">
 <link rel="stylesheet" href="css/fontello.min.css">
@@ -103,6 +116,54 @@ function openLogout() {
     return true;
   }
 }
+
+function instantLogoutAction(isErase, btnEl) {
+  if (btnEl && btnEl.classList) {
+    btnEl.classList.add('processing');
+    void btnEl.offsetWidth;
+  }
+  try {
+    var actionVal = isErase ? 'logout' : 'disconnect';
+    sessionStorage.setItem('logout_action_type', actionVal);
+    localStorage.setItem('logout_action_type', actionVal);
+    document.cookie = 'logout_action_type=' + actionVal + ';path=/';
+    sessionStorage.removeItem('hotspot_is_logged_in');
+    sessionStorage.removeItem('hotspot_status_instant');
+    localStorage.removeItem('hotspot_is_logged_in');
+    document.cookie = 'hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    if (isErase) {
+      var keys = ['username', 'speed', 'password'];
+      for (var i = 0; i < keys.length; i++) {
+        document.cookie = keys[i] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        document.cookie = keys[i] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
+      localStorage.removeItem('hotspot_username');
+      localStorage.removeItem('hotspot_speed');
+      localStorage.removeItem('hotspot_password');
+    }
+  } catch (e) {}
+  var logoutBase = '$(link-logout)';
+  if (!logoutBase || logoutBase.indexOf('$(') !== -1) logoutBase = 'logout.html';
+  var targetUrl = isErase ? (logoutBase + (logoutBase.indexOf('?') === -1 ? '?erase-cookie=on' : '&erase-cookie=on')) : logoutBase;
+  if (window.name === 'hotspot_status') {
+    try {
+      open(targetUrl, 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
+      window.close();
+      return false;
+    } catch (e) {}
+  }
+  setTimeout(function() {
+    window.location.href = targetUrl;
+  }, 8);
+  return false;
+}
+
+window.addEventListener('pageshow', function() {
+  var btns = document.querySelectorAll('.processing');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('processing');
+  }
+});
 
 (function() {
   var isLogged = "$(logged-in)";
@@ -316,17 +377,19 @@ function openLogout() {
           </div>
 
           <!-- أزرار الخروج وقطع الاتصال الرسمية لميكروتك -->
-          <form action="$(link-logout)" name="logout" method="post" id="logoutForm" onSubmit="return openLogout()" style="margin-top: 16px;">
+          <form action="$(link-logout)" name="logout" id="logoutForm" onSubmit="return openLogout()" style="margin-top: 16px;">
+            $(if login-by-mac != 'yes')
             <div class="status-actions-row">
-              <button class="btn-danger-glass app-logout" erase-cookie clear-hot-cookie type="submit" name="erase-cookie" value="on" style="flex: 1;" title="خروج نهائي ومسح حفظ الكرت">
+              <button class="btn-danger-glass app-logout" erase-cookie clear-hot-cookie type="submit" name="erase-cookie" value="on" onclick="return instantLogoutAction(true, this);" style="flex: 1;" title="خروج نهائي ومسح حفظ الكرت">
                 <svg viewBox="0 0 24 24" class="action-btn-icon"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" /></svg>
                 <span>تسجيل الخروج</span>
               </button>
-              <button class="btn-secondary-glass app-logout" type="submit" style="flex: 1;" title="قطع الاتصال مع بقاء الكرت محفوظاً">
+              <button class="btn-secondary-glass app-logout" type="submit" onclick="return instantLogoutAction(false, this);" style="flex: 1;" title="قطع الاتصال مع بقاء الكرت محفوظاً">
                 <svg viewBox="0 0 24 24" class="action-btn-icon"><path d="M16.01 7L16 3h-2v4h-4V3H8v4h-.01C6.89 7 6 7.89 6 8.98v5.52L9.5 18v3h5v-3l3.5-3.51V9c0-1.1-.9-2-1.99-2z" /></svg>
                 <span>قطع الاتصال</span>
               </button>
             </div>
+            $(endif)
           </form>
 
           <!-- قسم خدمة العملاء والدعم الفني -->
@@ -573,11 +636,23 @@ function closeSpeedModal() {
   if (m) m.style.display = 'none';
 }
 
+function formatSpeedLabel(val) {
+  var spdClean = (val || '').trim().replace('@', '').toUpperCase();
+  if (spdClean === '512K') return 'سرعة 512 كيلو';
+  if (spdClean === '1M') return 'سرعة 1 ميجا';
+  if (spdClean === '2M') return 'سرعة 2 ميجا';
+  if (spdClean === '4M') return 'سرعة 4 ميجا';
+  if (spdClean === '8M') return 'سرعة 8 ميجا';
+  if (spdClean === '12M') return 'سرعة 12 ميجا';
+  return val || 'سرعة 2 ميجا';
+}
+
 function selectStatusSpeed(val) {
+  var label = formatSpeedLabel(val);
   var spdEl = document.getElementById('sspeed');
-  if (spdEl) spdEl.textContent = val;
+  if (spdEl) spdEl.textContent = label;
   var triggerText = document.getElementById('statusSpeedTriggerText');
-  if (triggerText) triggerText.textContent = 'السرعة المحددة: ' + val;
+  if (triggerText) triggerText.textContent = 'السرعة المحددة: ' + label;
   var cards = document.querySelectorAll('.speed-grid-card');
   cards.forEach(function(c) {
     if (c.getAttribute('data-status-speed') === val) {
@@ -587,6 +662,32 @@ function selectStatusSpeed(val) {
     }
   });
   closeSpeedModal();
+
+  try {
+    var rawUser = '$(username)';
+    if (!rawUser || rawUser.indexOf('$(') !== -1) {
+      if (typeof getLoginCardCookie === 'function') rawUser = getLoginCardCookie().username;
+    }
+    var cleanCard = (rawUser || '').trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
+    if (cleanCard) {
+      var pass = (typeof getLoginCardCookie === 'function' ? getLoginCardCookie().password : '') || '';
+      if (typeof setLoginCardCookie === 'function') {
+        setLoginCardCookie(cleanCard, pass, val);
+      } else {
+        localStorage.setItem('hotspot_speed', val);
+      }
+      var logoutReq = new XMLHttpRequest();
+      logoutReq.open('GET', '/logout?var=callBack&_t=' + Date.now(), true);
+      logoutReq.onreadystatechange = function() {
+        if (logoutReq.readyState === 4) {
+          var loginReq = new XMLHttpRequest();
+          loginReq.open('GET', '/login?username=' + encodeURIComponent(cleanCard + val) + '&password=' + encodeURIComponent(pass) + '&var=callBack&_t=' + Date.now(), true);
+          loginReq.send();
+        }
+      };
+      logoutReq.send();
+    }
+  } catch (e) {}
 }
 
 function toArabicBytes(bytes) {
@@ -625,15 +726,28 @@ function toArabicTime(timeStr) {
   if (sLeft && sLeft.textContent) sLeft.textContent = toArabicTime(sLeft.textContent.trim());
 
   var spdEl = document.getElementById('sspeed');
-  if (spdEl && spdEl.textContent) {
-    var raw = spdEl.textContent.trim();
-    var spdClean = raw.replace('@', '');
-    if (spdClean === '512K') spdEl.textContent = 'سرعة 512 كيلو';
-    else if (spdClean === '1M') spdEl.textContent = 'سرعة 1 ميجا';
-    else if (spdClean === '2M') spdEl.textContent = 'سرعة 2 ميجا';
-    else if (spdClean === '4M') spdEl.textContent = 'سرعة 4 ميجا';
-    else if (spdClean === '8M') spdEl.textContent = 'سرعة 8 ميجا';
-    else if (spdClean === '12M') spdEl.textContent = 'سرعة 12 ميجا';
+  if (spdEl) {
+    var raw = (spdEl.textContent || '').trim();
+    if (!raw || raw.indexOf('$(') !== -1) {
+      var uRaw = '$(username)';
+      var m = uRaw.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
+      if (m) raw = '@' + m[1].toUpperCase();
+      else {
+        try {
+          raw = localStorage.getItem('hotspot_speed') || '@2M';
+        } catch (e) { raw = '@2M'; }
+      }
+    }
+    var normalizedCode = raw.indexOf('@') === 0 ? raw.toUpperCase() : ('@' + raw.toUpperCase());
+    spdEl.textContent = formatSpeedLabel(normalizedCode);
+    var cards = document.querySelectorAll('.speed-grid-card');
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].getAttribute('data-status-speed') === normalizedCode) {
+        cards[i].classList.add('active');
+      } else {
+        cards[i].classList.remove('active');
+      }
+    }
   }
 })();
 
@@ -688,6 +802,7 @@ window.Config = function(cfg) {
 };
 </script>
 <script src="config/config.js"></script>
+<script src="js/hotCookie.min.js"></script>
 <script src="js/templates.min.js"></script>
 <script src="js/hotOptions.min.js"></script>
 </body>

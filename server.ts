@@ -66,6 +66,7 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   }
 
   // Handle simple conditions
+  content = content.replace(/\$\(if login-by-mac != ['"]yes['"]\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if logged-in == ['"]yes['"]\)([\s\S]*?)\$\(endif\)/g, state.isLoggedIn ? '$1' : '');
   content = content.replace(/\$\(if logged-in != ['"]yes['"]\)([\s\S]*?)\$\(endif\)/g, !state.isLoggedIn ? '$1' : '');
   content = content.replace(/\$\(if logged-in\)([\s\S]*?)\$\(endif\)/g, state.isLoggedIn ? '$1' : '');

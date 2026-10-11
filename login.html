@@ -2155,6 +2155,11 @@ var el6 = document.getElementById('loan-news-extra-badge');
 if (el6) el6.textContent = configObj['news-extra-badge'];
 }
 };
+if (typeof hotspotConfig !== 'undefined' && Object.keys(hotspotConfig).length > 0) {
+applyConfigOptions(hotspotConfig);
+} else if (typeof hotOption !== 'undefined' && Object.keys(hotOption).length > 0) {
+applyConfigOptions(hotOption);
+} else {
 var configChecks = 0;
 var configCheckInterval = setInterval(function() {
 if (typeof hotspotConfig !== 'undefined' && Object.keys(hotspotConfig).length > 0) {
@@ -2167,6 +2172,7 @@ applyConfigOptions(hotOption);
 configChecks++;
 if (configChecks > 50) clearInterval(configCheckInterval);
 }, 100);
+}
 } catch (err) {
 console.error(err);
 }

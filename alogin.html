@@ -1,15 +1,13 @@
-<!DOCTYPE html>
+$(if var == "")<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="refresh" content="2; url=$(link-redirect)">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="0; url=$(link-status)">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="-1">
-<meta name="theme-color" content="#041f22" />
+<meta name="theme-color" content="#041f22">
 <title data-network-name>الخالد نت - تم تسجيل الدخول</title>
-<link rel="stylesheet" href="fonts/Almarai.css">
-<link rel="stylesheet" href="css/style.min.css">
 <style>
   html, body {
     background-color: #041f22 !important;
@@ -35,20 +33,26 @@
 </style>
 <script>
   function startClock() {
+    try {
+      sessionStorage.setItem('hotspot_is_logged_in', '1');
+      localStorage.setItem('hotspot_is_logged_in', '1');
+      document.cookie = 'hotspot_is_logged_in=1; path=/; max-age=604800; SameSite=Lax';
+    } catch (e) {}
     $(if popup == 'true')
     try {
       open('$(link-status)', 'hotspot_status', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=290,height=200');
     } catch(e) {}
     $(endif)
-    var target = unescape('$(link-redirect-esc)');
+    var target = '$(link-status)';
     if (!target || target.indexOf('$(') !== -1 || target === 'undefined') {
-      target = "$(link-redirect)";
+      target = unescape('$(link-redirect-esc)');
     }
-    if (!target || target.indexOf('$(') !== -1) {
-      target = "status.html";
+    if (!target || target.indexOf('$(') !== -1 || target === 'undefined') {
+      target = 'status.html';
     }
-    location.href = target;
+    window.location.replace(target);
   }
+  startClock();
 </script>
 </head>
 <body onload="startClock()">
@@ -60,8 +64,8 @@
     </div>
     <h1 style="font-size: 1.3rem; color: #FFFFFF; margin: 0 0 8px 0;">تم تسجيل دخولك بنجاح</h1>
     <p style="font-size: 0.85rem; color: #cbd5e1; margin: 0 0 16px 0;">
-      إذا لم تنتقل تلقائياً، اضغط <a href="$(link-redirect)" style="color: #D4AF37; font-weight: 700; text-decoration: underline;">هنا</a>
+      إذا لم تنتقل تلقائياً، اضغط <a href="$(link-status)" style="color: #D4AF37; font-weight: 700; text-decoration: underline;">هنا</a>
     </p>
   </div>
 </body>
-</html>
+</html>$(else) { "logged_in" : "$(logged-in)", "username": "$(username)", "mac": "$(mac-esc)", "link_login_only" : "$(link-login-only)", "link_logout" : "$(link-logout)", "link_status" : "$(link-status)", "sspeed" : "$(domain)_", "update" : "$(domain)_", "ip": "$(ip)", "bytes_in": "$(bytes-in)", "bytes_out": "$(bytes-out)", "remain_bytes_total": "$(remain-bytes-total)", "session_time_left": "$(session-time-left)", "uptime": "$(uptime)", "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14", "session_time_left_secs": "$(session-time-left-secs)", "uptime_secs": "$(uptime-secs)", "trial": "$(trial)", "login_by": "$(login-by)", "action" : "onLoggedIn" } $(endif)
