@@ -2,7 +2,7 @@ $(if var == "")<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<script>window.__mikrotikInitState={"logged_in":"$(logged-in)","link_login_only":"$(link-login-only)","link_logout":"$(link-logout)","link_status":"$(link-status)","nas_id":"$(identity)","ip":"$(ip)","mac":"$(mac-esc)","trial":"$(trial)","username":"$(username)","sspeed":"$(domain)_","update":"$(domain)_","bytes_in":"$(bytes-in)","bytes_out":"$(bytes-out)","remain_bytes_total":"$(remain-bytes-total)","session_time_left":"$(session-time-left)","uptime":"$(uptime)","bytesm":"m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14","chap_id":"$(chap-id)","chap_challenge":"$(chap-challenge)","error":"$(error)","error_orig":"$(error-orig)","action":"onLoginStart"};</script>
+<script>window.__mikrotikInitState={"logged_in":"$(logged-in)","link_login_only":"$(link-login-only)","link_logout":"$(link-logout)","link_status":"$(link-status)","nas_id":"$(identity)","ip":"$(ip)","mac":"$(mac-esc)","trial":"$(trial)","username":"$(username)","sspeed":"$(domain)_","update":"$(domain)_","bytes_in":"$(bytes-in)","bytes_out":"$(bytes-out)","remain_bytes_total":"$(remain-bytes-total)","session_time_left":"$(session-time-left)","uptime":"$(uptime)","bytesm":"m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14","error":"$(error)","error_orig":"$(error-orig)","action":"onLoginStart"};</script>
 <title data-network-name>الخالد نت - MikroTik Hotspot</title>
 <meta name="description" content="بوابة تسجيل الدخول لشبكة الخالد نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات">
 <meta property="og:title" content="الخالد نت - MikroTik Hotspot">
@@ -573,7 +573,9 @@ d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.
 </div>
 </div>
 <div class="login-card">
-<form class="login-form" name="login" onsubmit="return false;">
+<form class="login-form" name="login" action="$(link-login-only)" method="post" onSubmit="return doLogin()">
+<input type="hidden" name="dst" value="$(link-orig)" />
+<input type="hidden" name="popup" value="true" />
 <div class="speed-selector-group" style="margin-bottom: 14px;">
 <div class="speed-header">
 <span class="speed-title">
@@ -643,11 +645,57 @@ title="دخول بكرت سابق" aria-label="دخول بكرت سابق">
 <input type="hidden" name="password" class="login-input"
 placeholder="ادخل كلمة السر هنا" improve-input>
 </div>
-<button class="button login-submit login-submit-btn" parent-id="status" enable-hot-cookie
-type="button" id="mainLoginBtn">
+<button class="button login-submit login-submit-btn" enable-hot-cookie
+type="submit" id="mainLoginBtn">
 <span class="button-text">تسجيل الدخول</span>
 </button>
 </form>
+<form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+<input type="hidden" name="username" />
+<input type="hidden" name="password" />
+<input type="hidden" name="dst" value="$(link-orig)" />
+<input type="hidden" name="popup" value="true" />
+</form>
+<script src="js/md5.js"></script>
+<script>
+function doLogin() {
+var uInput = document.login && (document.login.querySelector("input[username-field]") || document.login.username);
+var rawUser = (uInput && uInput.value) ? uInput.value.trim() : "";
+var cleanCard = rawUser.replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, "");
+if (cleanCard.length < 1) {
+var errEl = document.getElementById("error");
+if (errEl) {
+errEl.innerText = "يجب ادخال قيمة صحيحة!";
+if (typeof showErrorPopup === "function") showErrorPopup();
+}
+if (typeof animating !== "undefined") animating = false;
+return false;
+}
+var submitBtn = document.getElementById("mainLoginBtn") || document.querySelector(".login-submit");
+if (submitBtn && submitBtn.classList) {
+submitBtn.classList.add("processing");
+void submitBtn.offsetWidth;
+}
+if (typeof remember === "function") {
+try { remember(); } catch (e) {}
+}
+var speedVal = (document.login && document.login.speed) ? document.login.speed.value : "";
+var act = document.sendin.getAttribute("action");
+if (!act || act.indexOf("$(") !== -1) {
+document.sendin.setAttribute("action", "/login");
+}
+var pInput = document.login && (document.login.querySelector("input[password-field]") || document.login.password);
+var rawPass = (pInput && pInput.value) ? pInput.value : "";
+document.sendin.username.value = cleanCard + speedVal;
+$(if chap-id)
+document.sendin.password.value = hexMD5('$(chap-id)' + rawPass + '$(chap-challenge)');
+$(else)
+document.sendin.password.value = rawPass;
+$(endif)
+document.sendin.submit();
+return false;
+}
+</script>
 </div>
 <div class="customer-support-section">
 <div class="support-header">
@@ -1534,7 +1582,7 @@ d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5
 <script src="js/md5.js"></script>
 <script src="js/init.min.js"></script>
 <script src="js/hotInImprover.min.js"></script>
-<script src="js/hotCookie.min.js"></script>
+<script src="js/hotCookie.min.js" login-error="$(error)"></script>
 <script src="js/hotOptions.min.js"></script>
 <script src="js/hotBlocker.min.js"></script>
 <script src="js/main.min.js"></script>
@@ -2533,7 +2581,7 @@ if (singleLocal && cardsList.indexOf(singleLocal) === -1) {
 cardsList.push(singleLocal);
 }
 } catch (err) { }
-var usernameInput = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
+var usernameInput = document.querySelector('input[username-field]') || (document.login && document.login.querySelector('input[name="username"]'));
 if (cardsList.length > 0) {
 var selectedCard = cardsList[prevCardCycleIndex % cardsList.length];
 prevCardCycleIndex++;
@@ -2560,7 +2608,7 @@ showErrorPopup();
 }
 });
 }
-var usernameInputField = document.querySelector('input[name="username"]') || document.querySelector('input[username-field]');
+var usernameInputField = document.querySelector('input[username-field]') || (document.login && document.login.querySelector('input[name="username"]'));
 if (usernameInputField) {
 var persistCard = function () {
 var val = usernameInputField.value ? usernameInputField.value.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '') : '';
@@ -2714,28 +2762,7 @@ statusWasActive = false;
 statusObserver.observe(statusSection, { attributes: true, attributeFilter: ['class', 'style'] });
 }
 if (document.login) {
-var usernameInput = document.login.querySelector("input[name='username']");
-if (usernameInput) {
-usernameInput.addEventListener('keydown', function (e) {
-if (e.key === 'Enter' || e.keyCode === 13) {
-e.preventDefault();
-var mainBtn = document.getElementById('mainLoginBtn') || document.querySelector('.login-submit');
-if (mainBtn) {
-mainBtn.click();
-} else if (typeof onLoginSubmitted === 'function') {
-onLoginSubmitted();
-}
-}
-});
-}
-document.login.addEventListener('submit', function (e) {
-e.preventDefault();
-var mainBtn = document.getElementById('mainLoginBtn') || document.querySelector('.login-submit');
-if (mainBtn) {
-mainBtn.click();
-} else if (typeof onLoginSubmitted === 'function') {
-onLoginSubmitted();
-}
+document.login.addEventListener('submit', function () {
 setTimeout(resetWindowScrollToTop, 100);
 setTimeout(resetWindowScrollToTop, 350);
 });

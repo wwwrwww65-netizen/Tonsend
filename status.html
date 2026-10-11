@@ -103,6 +103,8 @@ function instantLogoutAction(isErase, btnEl) {
     sessionStorage.setItem('logout_action_type', actionVal);
     localStorage.setItem('logout_action_type', actionVal);
     document.cookie = 'logout_action_type=' + actionVal + ';path=/';
+    sessionStorage.setItem('prevent_auto_login', '1');
+    localStorage.setItem('prevent_auto_login', '1');
     sessionStorage.removeItem('hotspot_is_logged_in');
     sessionStorage.removeItem('hotspot_status_instant');
     localStorage.removeItem('hotspot_is_logged_in');
@@ -118,9 +120,11 @@ function instantLogoutAction(isErase, btnEl) {
       localStorage.removeItem('hotspot_password');
     }
   } catch (e) {}
+
   var logoutBase = '$(link-logout)';
   if (!logoutBase || logoutBase.indexOf('$(') !== -1) logoutBase = 'logout.html';
   var targetUrl = isErase ? (logoutBase + (logoutBase.indexOf('?') === -1 ? '?erase-cookie=on' : '&erase-cookie=on')) : logoutBase;
+
   if (window.name === 'hotspot_status') {
     try {
       open(targetUrl, 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');

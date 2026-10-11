@@ -76,6 +76,8 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   content = content.replace(/\$\(if session-time-left\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if refresh-timeout\)([\s\S]*?)\$\(endif\)/g, '');
   content = content.replace(/\$\(if domain\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, state.speed ? '$1' : '$2');
+  content = content.replace(/\$\(if chap-id\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, '$1');
+  content = content.replace(/\$\(if chap-id\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if error\)([\s\S]*?)\$\(endif\)/g, '');
 
   // Replace MikroTik variables
@@ -95,6 +97,7 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   content = content.replace(/\$\(logged-in\)/g, state.isLoggedIn ? 'yes' : 'no');
   content = content.replace(/\$\(link-login\)/g, '/login');
   content = content.replace(/\$\(link-login-only\)/g, '/login');
+  content = content.replace(/\$\(link-orig\)/g, '/status');
   content = content.replace(/\$\(link-logout\)/g, '/logout');
   content = content.replace(/\$\(link-status\)/g, '/status');
   content = content.replace(/\$\(link-redirect\)/g, '/status');
@@ -109,13 +112,14 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
 
 // POST /login - Handle native login form submit from MikroTik portal
 app.post(['/login', '/login.html'], (req, res) => {
-  const username = req.body.username || req.query.username || '123456';
-  const speed = req.body.speed || req.query.speed || '@2M';
+  const username = String(req.body.username || req.query.username || '123456');
+  const speedMatch = username.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
+  const speed = speedMatch ? `@${speedMatch[1].toUpperCase()}` : (req.body.speed || req.query.speed || '');
   const combinedUsername = username.includes('@') ? username : `${username}${speed}`;
 
   sessionState.isLoggedIn = true;
   sessionState.username = combinedUsername;
-  sessionState.speed = speed || '@2M';
+  sessionState.speed = speed;
   sessionState.startTime = Date.now();
 
   res.cookie('hotspot_is_logged_in', '1', { path: '/' });
@@ -256,6 +260,11 @@ app.get(['/status', '/status.html'], (req, res) => {
 app.post(['/logout', '/logout.html'], (req, res) => {
   sessionState.isLoggedIn = false;
   res.clearCookie('hotspot_is_logged_in', { path: '/' });
+  if (req.body['erase-cookie'] || req.query['erase-cookie']) {
+    res.clearCookie('username', { path: '/' });
+    res.clearCookie('password', { path: '/' });
+    res.clearCookie('speed', { path: '/' });
+  }
   const rendered = renderMikrotikTemplate(path.join(__dirname, 'logout.html'), sessionState);
   res.send(rendered);
 });
@@ -264,6 +273,11 @@ app.post(['/logout', '/logout.html'], (req, res) => {
 app.get(['/logout', '/logout.html'], (req, res) => {
   sessionState.isLoggedIn = false;
   res.clearCookie('hotspot_is_logged_in', { path: '/' });
+  if (req.query['erase-cookie']) {
+    res.clearCookie('username', { path: '/' });
+    res.clearCookie('password', { path: '/' });
+    res.clearCookie('speed', { path: '/' });
+  }
   const isCallBack = req.query.var === 'callBack';
 
   if (isCallBack) {

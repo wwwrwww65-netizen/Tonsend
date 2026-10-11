@@ -104,6 +104,8 @@ try {
   sessionStorage.removeItem('hotspot_status_instant');
   localStorage.removeItem('hotspot_is_logged_in');
   document.cookie = 'hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  sessionStorage.setItem('prevent_auto_login', '1');
+  localStorage.setItem('prevent_auto_login', '1');
 } catch (e) {}
 
 function Config(cfg) {
@@ -118,14 +120,16 @@ function openLogin() {
     void btn.offsetWidth;
   }
   try {
-    sessionStorage.removeItem('prevent_auto_login');
+    sessionStorage.setItem('prevent_auto_login', '1');
+    localStorage.setItem('prevent_auto_login', '1');
+    sessionStorage.removeItem('hotspot_is_logged_in');
+    sessionStorage.removeItem('hotspot_status_instant');
+    localStorage.removeItem('hotspot_is_logged_in');
+    document.cookie = 'hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   } catch(e) {}
+
   var loginTarget = '$(link-login)';
-  if (!loginTarget || loginTarget.indexOf('$(') !== -1) loginTarget = '/login';
-  var loginOnlyTarget = '$(link-login-only)';
-  if (!loginOnlyTarget || loginOnlyTarget.indexOf('$(') !== -1) loginOnlyTarget = loginTarget.split('?')[0] || '/login';
-  var statusTarget = '$(link-status)';
-  if (!statusTarget || statusTarget.indexOf('$(') !== -1) statusTarget = '/status';
+  if (!loginTarget || loginTarget.indexOf('$(') !== -1) loginTarget = 'login.html';
 
   if (window.name === 'hotspot_logout') {
     try {
@@ -135,43 +139,9 @@ function openLogin() {
     } catch(e) {}
   }
 
-  // فحص ما إذا كان الكرت محفوظاً (في حالة قطع الاتصال) لتسجيل الدخول فوراً والانتقال مباشرة لصفحة الحالة في أجزاء من الثانية
-  var savedUser = '';
-  var savedSpeed = '';
-  var savedPass = '';
-  try {
-    if (document.cookie) {
-      var parts = document.cookie.split(';');
-      for (var i = 0; i < parts.length; i++) {
-        var kv = parts[i].trim().split('=');
-        if (kv[0] === 'username' && kv[1]) savedUser = decodeURIComponent(kv.slice(1).join('='));
-        if (kv[0] === 'speed' && kv[1]) savedSpeed = decodeURIComponent(kv.slice(1).join('='));
-        if (kv[0] === 'password' && kv[1]) savedPass = decodeURIComponent(kv.slice(1).join('='));
-      }
-    }
-    if (!savedUser) {
-      savedUser = localStorage.getItem('hotspot_username') || '';
-      savedSpeed = localStorage.getItem('hotspot_speed') || '';
-      savedPass = localStorage.getItem('hotspot_password') || '';
-    }
-  } catch (e) {}
-
-  if (savedUser) {
-    var cleanCard = savedUser.trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
-    var embeddedMatch = savedUser.trim().match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
-    var effectiveSpeed = (savedSpeed && savedSpeed.indexOf('@') === 0) ? savedSpeed : (embeddedMatch ? '@' + embeddedMatch[1].toUpperCase() : '');
-    var fullUser = effectiveSpeed ? (cleanCard + effectiveSpeed) : cleanCard;
-    var sep = loginOnlyTarget.indexOf('?') === -1 ? '?' : '&';
-    var directAutoLoginUrl = loginOnlyTarget + sep + 'username=' + encodeURIComponent(fullUser) + '&password=' + encodeURIComponent(savedPass);
-    setTimeout(function() {
-      window.location.href = directAutoLoginUrl;
-    }, 8);
-    return false;
-  }
-
   setTimeout(function() {
     window.location.href = loginTarget;
-  }, 8);
+  }, 10);
   return false;
 }
 
@@ -347,4 +317,4 @@ function toArabicTime(timeStr) {
 </script>
 <script src="config/config.js" defer></script>
 </body>
-</html>$(else) { "action": "onLogout", "logged_in": "no" } $(endif)
+</html>$(else) { "action": "onLoggedOut", "logged_in": "no" } $(endif)
