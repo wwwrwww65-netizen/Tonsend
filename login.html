@@ -2,7 +2,7 @@ $(if var == "")<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<script>window.__mikrotikInitState={"logged_in":"$(logged-in)","link_login_only":"$(link-login-only)","link_logout":"$(link-logout)","link_status":"$(link-status)","nas_id":"$(identity)","ip":"$(ip)","mac":"$(mac-esc)","trial":"$(trial)","username":"$(username)","sspeed":"$(domain)_","update":"$(domain)_","bytes_in":"$(bytes-in)","bytes_out":"$(bytes-out)","remain_bytes_total":"$(remain-bytes-total)","session_time_left":"$(session-time-left)","uptime":"$(uptime)","bytesm":"m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14","chap_id":"$(chap-id)","chap_challenge":"$(chap-challenge)","action":"onLoginStart"};</script>
+<script>window.__mikrotikInitState={"logged_in":"$(logged-in)","link_login_only":"$(link-login-only)","link_logout":"$(link-logout)","link_status":"$(link-status)","nas_id":"$(identity)","ip":"$(ip)","mac":"$(mac-esc)","trial":"$(trial)","username":"$(username)","sspeed":"$(domain)_","update":"$(domain)_","bytes_in":"$(bytes-in)","bytes_out":"$(bytes-out)","remain_bytes_total":"$(remain-bytes-total)","session_time_left":"$(session-time-left)","uptime":"$(uptime)","bytesm":"m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14","chap_id":"$(chap-id)","chap_challenge":"$(chap-challenge)","error":"$(error)","error_orig":"$(error-orig)","action":"onLoginStart"};</script>
 <title data-network-name>الخالد نت - MikroTik Hotspot</title>
 <meta name="description" content="بوابة تسجيل الدخول لشبكة الخالد نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات">
 <meta property="og:title" content="الخالد نت - MikroTik Hotspot">
@@ -1049,10 +1049,10 @@ stroke="none" />
 </div>
 <h2 class="title" id="status-title"
 style="font-size: 1.25rem; font-weight: 800; color: #ffffff;">تم تسجيل دخولك بنجاح!</h2>
-<p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 4px;">
-إذا لم يتم الأتصال تلقائيا أضغط <a
+<p style="font-size: 0.82rem; color: #cbd5e1; margin-top: 4px;">
+مرحباً بك <a
 style="text-decoration: underline; color: #fde047; font-weight: 700;"
-href="/status">هنا</a>
+href="/login" onclick="try{sessionStorage.setItem('prevent_auto_login','1');}catch(e){}">اذا لم يتم تسجيل دخولك انقر هنا</a>
 </p>
 </div>
 <section class="section" style="margin-top: 10px; margin-bottom: 10px;">
@@ -1176,7 +1176,7 @@ d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9
 <span style="font-size: 0.78rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">تنزيل تطبيق الاستراحة الاخطبوط</span>
 </a>
 </div>
-<div class="statusdiv">
+<div class="statusdiv" style="display: none;">
 <div
 style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
 <span class="status-metric-label">

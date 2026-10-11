@@ -58,9 +58,9 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   // Handle $(if var == "") ... $(else) ... $(endif)
   if (content.includes('$(if var == "")')) {
     const startIdx = content.indexOf('$(if var == "")');
-    const elseIdx = content.indexOf('$(else)');
+    const elseIdx = content.lastIndexOf('$(else)');
     const endIdx = content.lastIndexOf('$(endif)');
-    if (startIdx !== -1 && elseIdx !== -1 && endIdx !== -1) {
+    if (startIdx !== -1 && elseIdx !== -1 && endIdx !== -1 && elseIdx > startIdx) {
       content = content.substring(startIdx + '$(if var == "")'.length, elseIdx);
     }
   }
@@ -70,6 +70,8 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   content = content.replace(/\$\(if logged-in == ['"]yes['"]\)([\s\S]*?)\$\(endif\)/g, state.isLoggedIn ? '$1' : '');
   content = content.replace(/\$\(if logged-in != ['"]yes['"]\)([\s\S]*?)\$\(endif\)/g, !state.isLoggedIn ? '$1' : '');
   content = content.replace(/\$\(if logged-in\)([\s\S]*?)\$\(endif\)/g, state.isLoggedIn ? '$1' : '');
+  content = content.replace(/\$\(if remain-bytes-total\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, '$1');
+  content = content.replace(/\$\(if session-time-left\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if remain-bytes-total\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if session-time-left\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if refresh-timeout\)([\s\S]*?)\$\(endif\)/g, '');
@@ -99,6 +101,8 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   content = content.replace(/\$\(link-redirect-esc\)/g, '%2Fstatus');
   content = content.replace(/\$\(chap-id\)/g, '01');
   content = content.replace(/\$\(chap-challenge\)/g, 'abc123challenge');
+  content = content.replace(/\$\(error-orig\)/g, '');
+  content = content.replace(/\$\(error\)/g, '');
 
   return content;
 }
@@ -120,11 +124,25 @@ app.post(['/login', '/login.html'], (req, res) => {
   return res.redirect('/status');
 });
 
-// GET / or /login - Login page or AJAX status query
+// GET / or /login - Login page, direct GET login, or AJAX status query
 app.get(['/', '/login', '/login.html'], (req, res) => {
   const isCallBack = req.query.var === 'callBack';
   const username = req.query.username as string;
   const domain = (req.query.domain as string) || '';
+
+  if (username && !isCallBack) {
+    const speedMatch = username.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
+    const extractedSpeed = speedMatch ? `@${speedMatch[1].toUpperCase()}` : (domain.split('_')[0] || '@2M');
+
+    sessionState.isLoggedIn = true;
+    sessionState.username = username;
+    sessionState.speed = extractedSpeed;
+    sessionState.updateOption = domain.includes('_Uoff') ? '_Uoff' : '_Uon';
+    sessionState.startTime = Date.now();
+
+    res.cookie('hotspot_is_logged_in', '1', { path: '/' });
+    return res.redirect('/status');
+  }
 
   if (isCallBack) {
     if (username) {

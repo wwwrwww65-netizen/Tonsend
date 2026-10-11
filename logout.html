@@ -159,34 +159,10 @@ function openLogin() {
     var effectiveSpeed = (savedSpeed && savedSpeed.indexOf('@') === 0) ? savedSpeed : (embeddedMatch ? '@' + embeddedMatch[1].toUpperCase() : '');
     var fullUser = effectiveSpeed ? (cleanCard + effectiveSpeed) : cleanCard;
     var sep = loginOnlyTarget.indexOf('?') === -1 ? '?' : '&';
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', loginOnlyTarget + sep + 'username=' + encodeURIComponent(fullUser) + '&password=' + encodeURIComponent(savedPass) + '&var=callBack&_t=' + Date.now(), true);
-    xhr.timeout = 2500;
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        try {
-          var res = JSON.parse(xhr.responseText);
-          if (res && (res.logged_in === 'yes' || res.action === 'onLoggedIn')) {
-            try {
-              sessionStorage.setItem('hotspot_is_logged_in', '1');
-              localStorage.setItem('hotspot_is_logged_in', '1');
-              document.cookie = 'hotspot_is_logged_in=1; path=/; max-age=604800; SameSite=Lax';
-            } catch (eS) {}
-            window.location.replace(res.link_status && res.link_status.indexOf('$(') === -1 ? res.link_status : statusTarget);
-            return;
-          }
-        } catch (err) {
-          if (xhr.status === 200 && xhr.responseText && (xhr.responseText.indexOf('onLoggedIn') !== -1 || xhr.responseText.indexOf('تم تسجيل دخولك بنجاح') !== -1)) {
-            window.location.replace(statusTarget);
-            return;
-          }
-        }
-        window.location.href = loginTarget;
-      }
-    };
-    xhr.onerror = function() { window.location.href = loginTarget; };
-    xhr.ontimeout = function() { window.location.href = loginTarget; };
-    xhr.send();
+    var directAutoLoginUrl = loginOnlyTarget + sep + 'username=' + encodeURIComponent(fullUser) + '&password=' + encodeURIComponent(savedPass);
+    setTimeout(function() {
+      window.location.href = directAutoLoginUrl;
+    }, 8);
     return false;
   }
 
@@ -266,7 +242,7 @@ function toArabicTime(timeStr) {
 
         <form action="$(link-login)" name="login" onSubmit="return openLogin()" style="margin: 0;">
           <table class="logout-metrics-table">
-            <tr>
+            <tr style="display: none;">
               <td>عنوان الشبكة :</td>
               <td style="color: #38bdf8; font-family: monospace;">$(ip)</td>
             </tr>
@@ -278,22 +254,18 @@ function toArabicTime(timeStr) {
               <td>الرفع:</td>
               <td id="logout_bytes_out">$(bytes-out)</td>
             </tr>
-            $(if remain-bytes-total)
-            <tr>
+            <tr id="logout_remain_row">
               <td>التحميل المتبقي:</td>
               <td id="logout_remain_bytes">$(remain-bytes-total)</td>
             </tr>
-            $(endif)
             <tr>
               <td>الوقت المستهلك :</td>
               <td id="logout_uptime">$(uptime)</td>
             </tr>
-            $(if session-time-left)
-            <tr>
+            <tr id="logout_session_row">
               <td>الوقت المتبقي :</td>
               <td id="logout_session_left">$(session-time-left)</td>
             </tr>
-            $(endif)
           </table>
 
           <button type="submit" id="logoutLoginBtn" class="button login-submit login-submit-btn" style="width: 100%; margin-top: 6px; cursor: pointer;">
@@ -345,13 +317,29 @@ function toArabicTime(timeStr) {
   if (bOut && bOut.textContent) bOut.textContent = toArabicBytes(bOut.textContent.trim());
 
   var bRem = document.getElementById('logout_remain_bytes');
-  if (bRem && bRem.textContent) bRem.textContent = toArabicBytes(bRem.textContent.trim());
+  var bRemRow = document.getElementById('logout_remain_row');
+  if (bRem) {
+    var rTxt = (bRem.textContent || '').trim();
+    if (!rTxt || rTxt === '-' || rTxt.indexOf('$(') !== -1) {
+      if (bRemRow) bRemRow.style.display = 'none';
+    } else {
+      bRem.textContent = toArabicBytes(rTxt);
+    }
+  }
 
   var up = document.getElementById('logout_uptime');
   if (up && up.textContent) up.textContent = toArabicTime(up.textContent.trim());
 
   var sLeft = document.getElementById('logout_session_left');
-  if (sLeft && sLeft.textContent) sLeft.textContent = toArabicTime(sLeft.textContent.trim());
+  var sLeftRow = document.getElementById('logout_session_row');
+  if (sLeft) {
+    var sTxt = (sLeft.textContent || '').trim();
+    if (!sTxt || sTxt === '-' || sTxt.indexOf('$(') !== -1) {
+      if (sLeftRow) sLeftRow.style.display = 'none';
+    } else {
+      sLeft.textContent = toArabicTime(sTxt);
+    }
+  }
 })();
 </script>
 <script src="config/config.js" defer></script>
