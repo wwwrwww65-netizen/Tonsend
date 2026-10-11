@@ -2218,20 +2218,19 @@ body.keyboard-open .bottom-nav-bar,
    MODALS / POPUP DIALOGS (#speed-modal, #price, #sell-point, #loan, #block, #status)
    ========================================================================== */
 
-/* Keep original page visible and smoothly blurred behind the modal */
+/* Keep original page clean, visible and interactable without persistent blur traps */
 #login.inactive {
   display: block !important;
   visibility: visible !important;
-  filter: blur(8px) brightness(0.72);
-  -webkit-filter: blur(8px) brightness(0.72);
-  pointer-events: none;
-  transform: scale(0.985);
-  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
+  filter: none !important;
+  -webkit-filter: none !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  user-select: auto;
 }
 
-/* Guard: Ensure #login is never blurred when no modal or status overlay is actively open */
-body:not(:has(.app.active, .loyalty-modal.active, .nt-card-overlay.nt-card-show)) #login {
+/* Guard: Ensure #login is never blurred or frozen */
+#login {
   filter: none !important;
   -webkit-filter: none !important;
   pointer-events: auto !important;

@@ -50,15 +50,83 @@ function getUptimeString(startTime: number): string {
   return `${seconds}s`;
 }
 
-// MikroTik Hotspot /login endpoint
-app.get(['/login', '/login.html', '/alogin', '/alogin.html'], (req, res) => {
+// Function to render MikroTik template files with live simulated variables
+function renderMikrotikTemplate(filePath: string, state: typeof sessionState): string {
+  if (!fs.existsSync(filePath)) return '';
+  let content = fs.readFileSync(filePath, 'utf-8');
+
+  // Handle $(if var == "") ... $(else) ... $(endif)
+  if (content.includes('$(if var == "")')) {
+    const startIdx = content.indexOf('$(if var == "")');
+    const elseIdx = content.indexOf('$(else)');
+    const endIdx = content.lastIndexOf('$(endif)');
+    if (startIdx !== -1 && elseIdx !== -1 && endIdx !== -1) {
+      content = content.substring(startIdx + '$(if var == "")'.length, elseIdx);
+    }
+  }
+
+  // Handle simple conditions
+  content = content.replace(/\$\(if logged-in == ['"]yes['"]\)([\s\S]*?)\$\(endif\)/g, state.isLoggedIn ? '$1' : '');
+  content = content.replace(/\$\(if logged-in != ['"]yes['"]\)([\s\S]*?)\$\(endif\)/g, !state.isLoggedIn ? '$1' : '');
+  content = content.replace(/\$\(if logged-in\)([\s\S]*?)\$\(endif\)/g, state.isLoggedIn ? '$1' : '');
+  content = content.replace(/\$\(if remain-bytes-total\)([\s\S]*?)\$\(endif\)/g, '$1');
+  content = content.replace(/\$\(if session-time-left\)([\s\S]*?)\$\(endif\)/g, '$1');
+  content = content.replace(/\$\(if refresh-timeout\)([\s\S]*?)\$\(endif\)/g, '$1');
+  content = content.replace(/\$\(if domain\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, state.speed ? '$1' : '$2');
+  content = content.replace(/\$\(if error\)([\s\S]*?)\$\(endif\)/g, '');
+
+  // Replace MikroTik variables
+  content = content.replace(/\$\(username\)/g, state.isLoggedIn ? state.username : '');
+  content = content.replace(/\$\(ip\)/g, state.ip);
+  content = content.replace(/\$\(mac-esc\)/g, state.mac.replace(/:/g, '%3A'));
+  content = content.replace(/\$\(mac\)/g, state.mac);
+  content = content.replace(/\$\(bytes-in\)/g, String(state.bytesIn));
+  content = content.replace(/\$\(bytes-out\)/g, String(state.bytesOut));
+  content = content.replace(/\$\(remain-bytes-total\)/g, String(state.remainBytes));
+  content = content.replace(/\$\(uptime\)/g, getUptimeString(state.startTime));
+  content = content.replace(/\$\(session-time-left\)/g, '4h15m');
+  content = content.replace(/\$\(refresh-timeout-secs\)/g, '10');
+  content = content.replace(/\$\(domain\)/g, state.speed || '@2M');
+  content = content.replace(/\$\(identity\)/g, 'الخالد نت');
+  content = content.replace(/\$\(trial\)/g, 'no');
+  content = content.replace(/\$\(logged-in\)/g, state.isLoggedIn ? 'yes' : 'no');
+  content = content.replace(/\$\(link-login\)/g, '/login');
+  content = content.replace(/\$\(link-login-only\)/g, '/login');
+  content = content.replace(/\$\(link-logout\)/g, '/logout');
+  content = content.replace(/\$\(link-status\)/g, '/status');
+  content = content.replace(/\$\(link-redirect\)/g, '/status');
+  content = content.replace(/\$\(link-redirect-esc\)/g, '%2Fstatus');
+  content = content.replace(/\$\(chap-id\)/g, '01');
+  content = content.replace(/\$\(chap-challenge\)/g, 'abc123challenge');
+
+  return content;
+}
+
+// POST /login - Handle native login form submit from MikroTik portal
+app.post(['/login', '/login.html'], (req, res) => {
+  const username = req.body.username || req.query.username || '123456';
+  const speed = req.body.speed || req.query.speed || '@2M';
+  const combinedUsername = username.includes('@') ? username : `${username}${speed}`;
+
+  sessionState.isLoggedIn = true;
+  sessionState.username = combinedUsername;
+  sessionState.speed = speed || '@2M';
+  sessionState.startTime = Date.now();
+
+  res.cookie('hotspot_is_logged_in', '1', { path: '/' });
+
+  // Native MikroTik behavior redirects to status
+  return res.redirect('/status');
+});
+
+// GET / or /login - Login page or AJAX status query
+app.get(['/', '/login', '/login.html'], (req, res) => {
   const isCallBack = req.query.var === 'callBack';
   const username = req.query.username as string;
   const domain = (req.query.domain as string) || '';
 
   if (isCallBack) {
     if (username) {
-      // Extract @speed suffix from username if present (e.g. 123456@2M)
       const speedMatch = username.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
       const extractedSpeed = speedMatch ? `@${speedMatch[1].toUpperCase()}` : (domain.split('_')[0] || '');
 
@@ -75,6 +143,8 @@ app.get(['/login', '/login.html', '/alogin', '/alogin.html'], (req, res) => {
         username: sessionState.username,
         mac: sessionState.mac,
         link_login_only: '/login',
+        link_logout: '/logout',
+        link_status: '/status',
         sspeed: `${sessionState.speed}_`,
         update: sessionState.updateOption,
         ip: sessionState.ip,
@@ -94,7 +164,6 @@ app.get(['/login', '/login.html', '/alogin', '/alogin.html'], (req, res) => {
 
     const rawToken = `m056fd9fdfdsffsdffdfd1697455${sessionState.username}dsfd6571fgfgfgfgdf53sdfdsfgsd14`;
 
-    // Initial check (before login submitted)
     return res.json({
       logged_in: sessionState.isLoggedIn ? 'yes' : 'no',
       link_login_only: '/login',
@@ -117,16 +186,18 @@ app.get(['/login', '/login.html', '/alogin', '/alogin.html'], (req, res) => {
     });
   }
 
-  // Regular direct request
+  // If already logged in, native MikroTik redirects to status
   if (sessionState.isLoggedIn) {
     res.cookie('hotspot_is_logged_in', '1', { path: '/' });
-  } else {
-    res.clearCookie('hotspot_is_logged_in', { path: '/' });
+    return res.redirect('/status');
   }
-  res.sendFile(path.join(__dirname, 'index.html'));
+
+  res.clearCookie('hotspot_is_logged_in', { path: '/' });
+  const rendered = renderMikrotikTemplate(path.join(__dirname, 'login.html'), sessionState);
+  res.send(rendered);
 });
 
-// MikroTik Hotspot /status endpoint
+// GET /status - Serve dedicated status page with live simulated metrics
 app.get(['/status', '/status.html'], (req, res) => {
   const isCallBack = req.query.var === 'callBack';
 
@@ -151,16 +222,26 @@ app.get(['/status', '/status.html'], (req, res) => {
     });
   }
 
-  // Direct page request
-  if (sessionState.isLoggedIn) {
-    res.cookie('hotspot_is_logged_in', '1', { path: '/' });
-  } else {
+  // If not logged in, simulate captive portal redirect to login
+  if (!sessionState.isLoggedIn) {
     res.clearCookie('hotspot_is_logged_in', { path: '/' });
+    return res.redirect('/login');
   }
-  res.sendFile(path.join(__dirname, 'index.html'));
+
+  res.cookie('hotspot_is_logged_in', '1', { path: '/' });
+  const rendered = renderMikrotikTemplate(path.join(__dirname, 'status.html'), sessionState);
+  res.send(rendered);
 });
 
-// MikroTik Hotspot /logout endpoint
+// POST /logout - Handle native logout form submit
+app.post(['/logout', '/logout.html'], (req, res) => {
+  sessionState.isLoggedIn = false;
+  res.clearCookie('hotspot_is_logged_in', { path: '/' });
+  const rendered = renderMikrotikTemplate(path.join(__dirname, 'logout.html'), sessionState);
+  res.send(rendered);
+});
+
+// GET /logout - Handle logout link click or AJAX logout
 app.get(['/logout', '/logout.html'], (req, res) => {
   sessionState.isLoggedIn = false;
   res.clearCookie('hotspot_is_logged_in', { path: '/' });
@@ -173,7 +254,14 @@ app.get(['/logout', '/logout.html'], (req, res) => {
     });
   }
 
-  res.redirect('/login?logged=no');
+  const rendered = renderMikrotikTemplate(path.join(__dirname, 'logout.html'), sessionState);
+  res.send(rendered);
+});
+
+// GET /alogin - Post-login redirection page
+app.get(['/alogin', '/alogin.html'], (req, res) => {
+  const rendered = renderMikrotikTemplate(path.join(__dirname, 'alogin.html'), sessionState);
+  res.send(rendered);
 });
 
 // Control Panel routes
@@ -181,7 +269,6 @@ app.get(['/dashboard', '/dashboard.html', '/admin', '/admin.html', '/control', '
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-// Serve static assets from project root and specific subfolders
 // Public API endpoints for Notifications / Announcements system
 app.get('/api/v1/public/content', (req, res) => {
   res.json({
@@ -228,9 +315,10 @@ app.use('/config', express.static(path.join(__dirname, 'config')));
 app.use('/2024', express.static(path.join(__dirname, '2024')));
 app.use(express.static(__dirname));
 
-// Fallback route to index.html
+// Fallback route to login
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  const rendered = renderMikrotikTemplate(path.join(__dirname, 'login.html'), sessionState);
+  res.send(rendered);
 });
 
 app.listen(PORT, '0.0.0.0', () => {
