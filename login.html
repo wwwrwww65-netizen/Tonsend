@@ -263,17 +263,33 @@ if (cfg['loan-button'] === false) {
 var lnBtns = document.querySelectorAll('[data-loan-button]');
 for (var lnb = 0; lnb < lnBtns.length; lnb++) lnBtns[lnb].style.display = 'none';
 }
+if (cfg['login-speeds-mode'] === false) {
+var spdGroups = document.querySelectorAll('.speed-selector-group');
+for (var sg = 0; sg < spdGroups.length; sg++) spdGroups[sg].style.display = 'none';
+} else if (cfg['login-speeds-mode'] === true) {
+var spdGroupsShow = document.querySelectorAll('.speed-selector-group');
+for (var sgs = 0; sgs < spdGroupsShow.length; sgs++) spdGroupsShow[sgs].style.display = '';
+}
 if (cfg['app-store-status-button'] === false || cfg['show-app-download-buttons'] === false) {
 var appDlBtns = document.querySelectorAll('[data-app-download-links], [data-app-store-status-button]');
 for (var ad = 0; ad < appDlBtns.length; ad++) appDlBtns[ad].style.display = 'none';
+} else if (cfg['show-app-download-buttons'] === true) {
+var appDlShow = document.querySelectorAll('[data-app-download-links]');
+for (var ads = 0; ads < appDlShow.length; ads++) appDlShow[ads].style.display = 'flex';
 }
 if (cfg['show-esterahah-button'] === false) {
 var estBtns = document.querySelectorAll('[data-esterahah-link]');
 for (var eb = 0; eb < estBtns.length; eb++) estBtns[eb].style.display = 'none';
+} else if (cfg['show-esterahah-button'] === true) {
+var estBtnsShow = document.querySelectorAll('[data-esterahah-link]');
+for (var ebs = 0; ebs < estBtnsShow.length; ebs++) estBtnsShow[ebs].style.display = 'inline-flex';
 }
-if (cfg['redirect-to-mobasher']) {
+if (cfg['redirect-to-mobasher'] !== undefined) {
 var mobLinks = document.querySelectorAll('[data-mobasher-link]');
-for (var ml = 0; ml < mobLinks.length; ml++) mobLinks[ml].setAttribute('href', cfg['redirect-to-mobasher']);
+for (var ml = 0; ml < mobLinks.length; ml++) {
+if (cfg['redirect-to-mobasher'] === '') mobLinks[ml].style.display = 'none';
+else mobLinks[ml].setAttribute('href', cfg['redirect-to-mobasher']);
+}
 }
 if (cfg['redirect-to-esterahah']) {
 var estLinksH = document.querySelectorAll('[data-esterahah-link]');
@@ -1698,11 +1714,12 @@ startAutoplay();
 };
 startAutoplay();
 }
-var initialConfigImgs = (window.hotspotConfig && Array.isArray(window.hotspotConfig['ad-images']) && window.hotspotConfig['ad-images'].length > 0)
+var hasExplicitAdImages = !!(window.hotspotConfig && Array.isArray(window.hotspotConfig['ad-images']) && window.hotspotConfig['ad-images'].length > 0);
+var initialConfigImgs = hasExplicitAdImages
 ? window.hotspotConfig['ad-images']
 : ['1.jpg', '5.jpg', '7.jpg'];
 renderCarousel(initialConfigImgs);
-if (window.location.port === '3000' && typeof fetch === 'function') {
+if (!hasExplicitAdImages && window.location.port === '3000' && typeof fetch === 'function') {
 fetch('/api/v1/ad-images')
 .then(function(res) { return res.json(); })
 .then(function(data) {
@@ -1715,7 +1732,7 @@ runStaticProbeDiscovery();
 .catch(function() {
 runStaticProbeDiscovery();
 });
-} else if (!window.hotspotConfig || !Array.isArray(window.hotspotConfig['ad-images']) || window.hotspotConfig['ad-images'].length === 0) {
+} else if (!hasExplicitAdImages) {
 setTimeout(runStaticProbeDiscovery, 900);
 }
 function runStaticProbeDiscovery() {

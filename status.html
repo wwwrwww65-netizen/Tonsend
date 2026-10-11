@@ -488,12 +488,13 @@ window.addEventListener('pageshow', function() {
           <p id="loan-news-title" style="font-weight: 800; font-size: 1.1rem; color: #fde047; margin-bottom: 8px;">زبائن شبكة الخالد نت الكرام</p>
           <p id="loan-news-content">أهلاً وسهلاً بكم في شبكة الخالد نت. كروت وباقات الإنترنت متوفرة في جميع نقاط البيع ومراكز التوزيع. للمحافظة على الرصيد يرجى اختيار السرعة المناسبة لاحتياجك.</p>
           <div id="loan-news-code" class="loan-highlight-badge">خدمة العملاء: 776418435 - 734059346</div>
-          <br><br>
-          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+          <br id="loan-news-break"><br id="loan-news-break-2">
+          <div id="loan-news-extra-header" style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
             <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--accent-cyan);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" /></svg>
-            <strong style="color: var(--accent-cyan);">البث المباشر والمباريات:</strong>
+            <strong id="loan-news-extra-title" style="color: var(--accent-cyan);">البث المباشر والمباريات:</strong>
           </div>
-          <p>استمتع بمشاهدة البث المباشر للمباريات والدوريات العالمية مجاناً عبر منصة وسيرفر الشبكة.</p>
+          <p id="loan-news-extra-content">استمتع بمشاهدة البث المباشر للمباريات والدوريات العالمية مجاناً عبر منصة وسيرفر الشبكة.</p>
+          <div id="loan-news-extra-badge" class="loan-highlight-badge">بث المباريات</div>
         </div>
         <button class="button app-submit modal-cancel-btn" type="button" onclick="closeModal('loan')">
           <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
@@ -608,15 +609,43 @@ function closeSpeedModal() {
   if (m) m.style.display = 'none';
 }
 
+var statusSpeedLabelMap = {
+  '@512K': 'سرعة 512 كيلو',
+  '@1M': 'سرعة 1 ميجا',
+  '@2M': 'سرعة 2 ميجا',
+  '@4M': 'سرعة 4 ميجا',
+  '@8M': 'سرعة 8 ميجا',
+  '@12M': 'سرعة 12 ميجا',
+  '': 'بدون تحديد (تلقائي)'
+};
+
 function formatSpeedLabel(val) {
-  var spdClean = (val || '').trim().replace('@', '').toUpperCase();
+  var raw = (val !== void 0 && val !== null) ? String(val).trim() : '';
+  if (statusSpeedLabelMap[raw]) return statusSpeedLabelMap[raw];
+  var withAt = raw.indexOf('@') === 0 ? raw.toUpperCase() : ('@' + raw.toUpperCase());
+  if (statusSpeedLabelMap[withAt]) return statusSpeedLabelMap[withAt];
+  var spdClean = raw.replace('@', '').toUpperCase();
   if (spdClean === '512K') return 'سرعة 512 كيلو';
   if (spdClean === '1M') return 'سرعة 1 ميجا';
   if (spdClean === '2M') return 'سرعة 2 ميجا';
   if (spdClean === '4M') return 'سرعة 4 ميجا';
   if (spdClean === '8M') return 'سرعة 8 ميجا';
   if (spdClean === '12M') return 'سرعة 12 ميجا';
-  return val || 'سرعة 2 ميجا';
+  return raw || 'بدون تحديد (تلقائي)';
+}
+
+function stripKnownSpeedSuffix(userStr) {
+  var s = (userStr || '').trim();
+  if (!s) return '';
+  if (window.hotspotConfig && Array.isArray(window.hotspotConfig.speeds)) {
+    for (var i = 0; i < window.hotspotConfig.speeds.length; i++) {
+      var v = window.hotspotConfig.speeds[i].value;
+      if (v && s.toUpperCase().endsWith(String(v).toUpperCase())) {
+        return s.slice(0, s.length - String(v).length);
+      }
+    }
+  }
+  return s.replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
 }
 
 function selectStatusSpeed(val) {
@@ -640,7 +669,7 @@ function selectStatusSpeed(val) {
     if (!rawUser || rawUser.indexOf('$(') !== -1) {
       if (typeof getLoginCardCookie === 'function') rawUser = getLoginCardCookie().username;
     }
-    var cleanCard = (rawUser || '').trim().replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
+    var cleanCard = stripKnownSpeedSuffix(rawUser);
     if (cleanCard) {
       var pass = (typeof getLoginCardCookie === 'function' ? getLoginCardCookie().password : '') || '';
       if (typeof setLoginCardCookie === 'function') {
@@ -724,7 +753,7 @@ function toArabicTime(timeStr) {
         } catch (e) { raw = '@2M'; }
       }
     }
-    var normalizedCode = raw.indexOf('@') === 0 ? raw.toUpperCase() : ('@' + raw.toUpperCase());
+    var normalizedCode = raw.indexOf('@') === 0 ? raw.toUpperCase() : (raw ? ('@' + raw.toUpperCase()) : '');
     spdEl.textContent = formatSpeedLabel(normalizedCode);
     var cards = document.querySelectorAll('.speed-grid-card');
     for (var i = 0; i < cards.length; i++) {
@@ -807,50 +836,158 @@ function goToLoginManual() {
 window.Config = function(cfg) {
   if (!cfg) return;
   window.hotspotConfig = cfg;
-  if (typeof hotspotConfig === 'undefined') {
-    window.hotspotConfig = cfg;
+  if (typeof hotspotConfig !== 'undefined') {
+    hotspotConfig = cfg;
   }
   if (cfg['network-name']) {
+    var netName = String(cfg['network-name']).trim();
     var brandEls = document.querySelectorAll('[data-network-name]');
     for (var i = 0; i < brandEls.length; i++) {
-      brandEls[i].textContent = cfg['network-name'].trim();
+      brandEls[i].textContent = netName;
     }
-    document.title = cfg['network-name'].trim() + ' - حالة الاتصال';
+    document.title = netName + ' - حالة الاتصال';
   }
   if (cfg['news-line']) {
     var newsEls = document.querySelectorAll('[data-news-line]');
     for (var j = 0; j < newsEls.length; j++) {
-      newsEls[j].textContent = cfg['news-line'].trim();
+      newsEls[j].textContent = String(cfg['news-line']).trim();
     }
   }
   if (cfg['service-number']) {
-    var num = cfg['service-number'].trim();
+    var num = String(cfg['service-number']).trim();
+    var srvEls = document.querySelectorAll('[data-service-number]');
+    for (var sIdx = 0; sIdx < srvEls.length; sIdx++) {
+      srvEls[sIdx].textContent = 'خدمة العملاء: ' + num;
+    }
     var cleanNum = num.replace(/\D/g, '');
     var waNum = cleanNum.startsWith('967') ? cleanNum : ('967' + cleanNum);
     var waLinks = document.querySelectorAll('.support-btn-whatsapp');
     for (var k = 0; k < waLinks.length; k++) {
-      waLinks[k].href = 'whatsapp://send?phone=' + waNum + '&text=' + encodeURIComponent('مرحبا خدمة عملاء ' + (cfg['network-name'] || ''));
+      waLinks[k].href = 'whatsapp://send?phone=' + waNum + '&text=' + encodeURIComponent('مرحبا خدمة عملاء ' + (cfg['network-name'] ? String(cfg['network-name']).trim() : ''));
     }
-    var telLinks = document.querySelectorAll('.support-btn-call');
+    var telLinks = document.querySelectorAll('.support-btn-call, a[href^="tel:"]');
     for (var l = 0; l < telLinks.length; l++) {
       telLinks[l].href = 'tel:' + cleanNum;
     }
   }
-  if (cfg.profiles && document.getElementById('profiles')) {
+  if (Array.isArray(cfg.profiles) && document.getElementById('profiles')) {
     var pBody = document.getElementById('profiles');
     pBody.innerHTML = cfg.profiles.map(function(p) {
-      return '<tr><td>' + (p.price||'') + '</td><td>' + (p.time||'') + '</td><td>' + (p.transfer||'') + '</td><td>' + (p.validity||'') + '</td></tr>';
+      return '<tr><td>' + (p.price || '') + '</td><td>' + (p.time || '') + '</td><td>' + (p.transfer || '-') + '</td><td>' + (p.validity || '-') + '</td></tr>';
     }).join('');
   }
-  if (cfg['sell-points'] && document.getElementById('sell-points')) {
+  if (Array.isArray(cfg['sell-points']) && document.getElementById('sell-points')) {
     var spBody = document.getElementById('sell-points');
     spBody.innerHTML = cfg['sell-points'].map(function(s) {
-      return '<tr><td>' + (s.name||'') + '</td></tr>';
+      return '<tr><td>' + (s.name || '') + '</td></tr>';
     }).join('');
   }
+  if (cfg['news-title']) {
+    var nt = document.getElementById('loan-news-title');
+    if (nt) nt.textContent = cfg['news-title'];
+  }
+  if (cfg['news-content']) {
+    var nc = document.getElementById('loan-news-content');
+    if (nc) nc.innerHTML = cfg['news-content'];
+  }
+  if (cfg['news-code']) {
+    var ncd = document.getElementById('loan-news-code');
+    if (ncd) ncd.textContent = cfg['news-code'];
+  }
+  if (cfg['news-extra-title']) {
+    var net = document.getElementById('loan-news-extra-title');
+    if (net) net.textContent = cfg['news-extra-title'];
+  }
+  if (cfg['news-extra-content']) {
+    var nec = document.getElementById('loan-news-extra-content');
+    if (nec) nec.textContent = cfg['news-extra-content'];
+  }
+  if (cfg['news-extra-badge']) {
+    var neb = document.getElementById('loan-news-extra-badge');
+    if (neb) neb.textContent = cfg['news-extra-badge'];
+  }
+  if (cfg['price-button'] === false) {
+    var pBtns = document.querySelectorAll('[data-price-button]');
+    for (var pb = 0; pb < pBtns.length; pb++) pBtns[pb].style.display = 'none';
+  }
+  if (cfg['sell-point-button'] === false) {
+    var spBtns = document.querySelectorAll('[data-sell-point-button]');
+    for (var spb = 0; spb < spBtns.length; spb++) spBtns[spb].style.display = 'none';
+  }
+  if (cfg['loan-button'] === false) {
+    var lnBtns = document.querySelectorAll('[data-loan-button]');
+    for (var lnb = 0; lnb < lnBtns.length; lnb++) lnBtns[lnb].style.display = 'none';
+  }
+  if (cfg['show-esterahah-button'] === true) {
+    var estBtnsShow = document.querySelectorAll('[data-esterahah-link]');
+    for (var ebs = 0; ebs < estBtnsShow.length; ebs++) estBtnsShow[ebs].style.display = 'inline-flex';
+  } else if (cfg['show-esterahah-button'] === false) {
+    var estBtnsHide = document.querySelectorAll('[data-esterahah-link]');
+    for (var ebh = 0; ebh < estBtnsHide.length; ebh++) estBtnsHide[ebh].style.display = 'none';
+  }
+  if (cfg['redirect-to-mobasher'] !== undefined) {
+    var mobLinks = document.querySelectorAll('[data-mobasher-link]');
+    for (var ml = 0; ml < mobLinks.length; ml++) {
+      if (cfg['redirect-to-mobasher'] === '') {
+        mobLinks[ml].style.display = 'none';
+      } else {
+        mobLinks[ml].setAttribute('href', cfg['redirect-to-mobasher']);
+      }
+    }
+  }
+  if (cfg['redirect-to-esterahah'] !== undefined) {
+    var estLinks = document.querySelectorAll('[data-esterahah-link]');
+    for (var el = 0; el < estLinks.length; el++) {
+      if (cfg['redirect-to-esterahah']) {
+        estLinks[el].setAttribute('href', cfg['redirect-to-esterahah']);
+      }
+    }
+  }
+  if (Array.isArray(cfg.speeds) && cfg.speeds.length > 0) {
+    statusSpeedLabelMap = {};
+    var gridEl = document.getElementById('statusSpeedCardsGrid');
+    var gridHtml = '';
+    for (var spIdx = 0; spIdx < cfg.speeds.length; spIdx++) {
+      var item = cfg.speeds[spIdx];
+      if (item.value === '1M/8M' && cfg['enable-ultra-speed'] === false) continue;
+      statusSpeedLabelMap[item.value] = item.name;
+      var tagText = item.recommended ? 'السرعة الموصى بها' : (item.default ? 'السرعة الافتراضية' : 'تغيير فوري للسرعة');
+      var activeClass = item.default ? ' active' : '';
+      var safeVal = String(item.value || '').replace(/'/g, "\\'");
+      gridHtml += '<div class="speed-grid-card' + activeClass + '" data-status-speed="' + (item.value || '') + '" onclick="selectStatusSpeed(\'' + safeVal + '\')">' +
+        '<div class="speed-grid-card-name">' + (item.name || '') + '</div>' +
+        '<div class="speed-grid-card-tag">' + tagText + '</div>' +
+        '</div>';
+    }
+    if (gridEl && gridHtml) {
+      gridEl.innerHTML = gridHtml;
+    }
+    var spdNowEl = document.getElementById('sspeed');
+    if (spdNowEl) {
+      var uRawNow = '$(username)';
+      var matchedVal = '';
+      for (var checkIdx = 0; checkIdx < cfg.speeds.length; checkIdx++) {
+        var sv = cfg.speeds[checkIdx].value;
+        if (sv && uRawNow.toUpperCase().endsWith(String(sv).toUpperCase())) {
+          matchedVal = sv;
+          break;
+        }
+      }
+      if (matchedVal && statusSpeedLabelMap[matchedVal]) {
+        spdNowEl.textContent = statusSpeedLabelMap[matchedVal];
+      }
+    }
+  }
   if (cfg['enable-loyalty-system'] === true) {
+    document.documentElement.classList.remove('loyalty-system-disabled');
     var unreg = document.getElementById('loyalty-unregistered-section-status');
     if (unreg) unreg.style.display = 'block';
+  } else if (cfg['enable-loyalty-system'] === false) {
+    document.documentElement.classList.add('loyalty-system-disabled');
+    var unregHide = document.getElementById('loyalty-unregistered-section-status');
+    if (unregHide) unregHide.style.display = 'none';
+    var regHide = document.getElementById('loyalty-registered-section-status');
+    if (regHide) regHide.style.display = 'none';
   }
 };
 </script>

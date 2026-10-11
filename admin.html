@@ -1114,27 +1114,61 @@
                             </div>
                         </div>
 
-                        <!-- System input filters (matching config.js) -->
+                        <!-- System input filters & cookies (matching Sections 6 & 7 of config.js) -->
                         <div style="margin-top: 16px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px;">
                             <div style="font-size: 0.85rem; font-weight: 700; color: #60a5fa; margin-bottom: 10px;">
-                                <i class="fas fa-filter"></i> قواعد فلترة الكروت (مطابقة لـ config.js):
+                                <i class="fas fa-filter"></i> 6. إعدادات معالجة وتصحيح أرقام الكروت المدخلة:
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.82rem;">
                                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" id="rmWhiteSpacesCheck" onchange="updateConfigField('input-rm-white-spaces', this.checked ? 1 : 0)">
-                                    <span>إزالة المسافات الفارغة</span>
+                                    <span>إزالة المسافات الفارغة (input-rm-white-spaces)</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" id="toArabicNumbersCheck" onchange="updateConfigField('input-to-arabic-numbers', this.checked ? 1 : 0)">
-                                    <span>تحويل الأرقام العربية لإنجليزية</span>
+                                    <span>تحويل الأرقام العربية لإنجليزية (input-to-arabic-numbers)</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" id="onlyNumbersCheck" onchange="updateConfigField('input-only-numbers', this.checked ? 1 : 0)">
-                                    <span>قبول الأرقام فقط</span>
+                                    <span>قبول الأرقام فقط (input-only-numbers)</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="toLowerCheck" onchange="updateConfigField('input-to-lower', this.checked ? 1 : 0)">
+                                    <span>تحويل الحروف إلى صغيرة (input-to-lower)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="toUpperCheck" onchange="updateConfigField('input-to-upper', this.checked ? 1 : 0)">
+                                    <span>تحويل الحروف إلى كبيرة (input-to-upper)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="noNumbersCheck" onchange="updateConfigField('input-no-numbers', this.checked ? 1 : 0)">
+                                    <span>منع الأرقام (input-no-numbers)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="onlyAlphanumericCheck" onchange="updateConfigField('input-only-alphanumeric', this.checked ? 1 : 0)">
+                                    <span>حروف وأرقام فقط (input-only-alphanumeric)</span>
+                                </label>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="white-space: nowrap;">input-to-tel-type-when:</span>
+                                    <input type="number" class="form-control" id="toTelTypeWhenInput" style="padding: 4px 8px; height: 30px; width: 70px;" oninput="updateConfigField('input-to-tel-type-when', parseInt(this.value) || 0)">
+                                </div>
+                            </div>
+
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #34d399; margin: 14px 0 10px; padding-top: 10px; border-top: 1px solid var(--border-color);">
+                                <i class="fas fa-cookie-bite"></i> 7. إعدادات الكوكيز وحفظ الكرت في المتصفح:
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 0.82rem;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" id="enableHotCookieCheck" onchange="updateConfigField('enable-hot-cookie', this.checked ? 1 : 0)">
-                                    <span>تفعيل حفظ الكرت (hot-cookie)</span>
+                                    <span>حفظ الكرت (enable-hot-cookie)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="clearRouterCookieCheck" onchange="updateConfigField('clear-router-cookie', this.checked ? 1 : 0)">
+                                    <span>مسح كوكيز الراوتر (clear-router-cookie)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="clearHotCookieCheck" onchange="updateConfigField('clear-hot-cookie', this.checked ? 1 : 0)">
+                                    <span>مسح كوكيز الصفحة (clear-hot-cookie)</span>
                                 </label>
                             </div>
                         </div>
@@ -1147,7 +1181,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                            <i class="fas fa-shield-alt"></i> 4. نظام الحظر والتخمين (HotBlocker)
+                            <i class="fas fa-shield-alt"></i> 8. نظام مكافحة التخمين والحظر التلقائي (HotBlocker)
                         </h2>
                     </div>
 
@@ -1209,7 +1243,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                            <i class="fas fa-toggle-on"></i> 5. إظهار وإخفاء أزرار الواجهة والروابط الخارجية
+                            <i class="fas fa-toggle-on"></i> 9 & 10. إظهار وإخفاء أزرار القائمة والشاشات والروابط الخارجية
                         </h2>
                     </div>
 
@@ -1278,10 +1312,58 @@
                                     </label>
                                 </div>
                             </div>
+
+                            <!-- app-store-status-button -->
+                            <div class="feature-toggle-card">
+                                <div class="feature-toggle-info">
+                                    <div class="feature-toggle-icon"><i class="fas fa-shopping-bag"></i></div>
+                                    <div>
+                                        <div class="feature-toggle-title">زر متجر البرامج (app-store-status-button)</div>
+                                    </div>
+                                </div>
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="appStoreStatusButtonToggle" onchange="updateBooleanField('app-store-status-button', this.checked)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- show-app-download-buttons -->
+                            <div class="feature-toggle-card">
+                                <div class="feature-toggle-info">
+                                    <div class="feature-toggle-icon"><i class="fas fa-download"></i></div>
+                                    <div>
+                                        <div class="feature-toggle-title">أزرار تحميل التطبيقات (show-app-download-buttons)</div>
+                                    </div>
+                                </div>
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="showAppDownloadButtonsToggle" onchange="updateBooleanField('show-app-download-buttons', this.checked)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- show-date-field -->
+                            <div class="feature-toggle-card">
+                                <div class="feature-toggle-info">
+                                    <div class="feature-toggle-icon"><i class="fas fa-calendar-alt"></i></div>
+                                    <div>
+                                        <div class="feature-toggle-title">إظهار حقل التاريخ (show-date-field)</div>
+                                    </div>
+                                </div>
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="showDateFieldToggle" onchange="updateBooleanField('show-date-field', this.checked)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Redirect links -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 16px;">
                             <div class="form-group">
                                 <label class="form-label" for="redirectToMobasherInput">
                                     <i class="fas fa-tv"></i> رابط البث المباشر (redirect-to-mobasher)
@@ -1295,6 +1377,20 @@
                                 </label>
                                 <input type="text" class="form-control" id="redirectToEsterahahInput" placeholder="lamsports.html" oninput="updateConfigField('redirect-to-esterahah', this.value)">
                             </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="appStoreBaseUrlInput">
+                                    <i class="fas fa-globe"></i> رابط متجر البرامج (app-store-base-url)
+                                </label>
+                                <input type="text" class="form-control" id="appStoreBaseUrlInput" placeholder="" oninput="updateConfigField('app-store-base-url', this.value)">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="appStoreBaseUrlExtInput">
+                                    <i class="fas fa-puzzle-piece"></i> امتداد رابط المتجر (app-store-base-url-ext)
+                                </label>
+                                <input type="text" class="form-control" id="appStoreBaseUrlExtInput" placeholder="" oninput="updateConfigField('app-store-base-url-ext', this.value)">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1305,7 +1401,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                            <i class="fas fa-tachometer-alt"></i> 6. قائمة سرعات الإنترنت (speeds)
+                            <i class="fas fa-tachometer-alt"></i> 5. إعدادات وقائمة سرعات الإنترنت (speeds)
                         </h2>
                         <button class="btn btn-primary btn-sm" onclick="addNewSpeedRow()">
                             <i class="fas fa-plus"></i> إضافة سرعة
@@ -1313,6 +1409,26 @@
                     </div>
 
                     <div class="card-body">
+                        <!-- Speed general settings from section 5 of config.js -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 16px; background: rgba(15, 23, 42, 0.45); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 600;">
+                                <input type="checkbox" id="loginSpeedsModeCheck" onchange="updateBooleanField('login-speeds-mode', this.checked)" style="width: 17px; height: 17px; accent-color: #3b82f6;">
+                                <span>تفعيل اختيار السرعة (login-speeds-mode)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 600;">
+                                <input type="checkbox" id="enableUltraSpeedCheck" onchange="updateBooleanField('enable-ultra-speed', this.checked)" style="width: 17px; height: 17px; accent-color: #3b82f6;">
+                                <span>تفعيل السرعات العالية (enable-ultra-speed)</span>
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+                                <span style="white-space: nowrap;">مرات تغيير السرعة (speed-trychange):</span>
+                                <input type="number" class="form-control" id="speedTrychangeInput" min="1" max="50" style="padding: 5px 10px; height: 34px; width: 80px;" oninput="updateConfigField('speed-trychange', parseInt(this.value) || 3)">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+                                <span style="white-space: nowrap;">مدة حظر التغيير بالدقائق (timeout):</span>
+                                <input type="number" class="form-control" id="speedTrychangeTimeoutInput" min="1" max="120" style="padding: 5px 10px; height: 34px; width: 80px;" oninput="updateConfigField('speed-trychange-timeout', parseInt(this.value) || 3)">
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="custom-table">
                                 <thead>
@@ -1339,7 +1455,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                            <i class="fas fa-box-open"></i> 7. جدول باقات وأسعار الكروت (profiles)
+                            <i class="fas fa-box-open"></i> 11. جدول باقات وأسعار الكروت (profiles)
                         </h2>
                         <button class="btn btn-primary btn-sm" onclick="addNewProfileCard()">
                             <i class="fas fa-plus"></i> إضافة باقة
@@ -1359,7 +1475,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                            <i class="fas fa-map-marked-alt"></i> 8. نقاط البيع والموزعين (sell-points)
+                            <i class="fas fa-map-marked-alt"></i> 12. نقاط البيع ومراكز توزيع الكروت (sell-points)
                         </h2>
                         <button class="btn btn-primary btn-sm" onclick="addNewSalesPoint()">
                             <i class="fas fa-plus"></i> إضافة نقطة بيع
@@ -1379,7 +1495,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                            <i class="fas fa-newspaper"></i> 9. نصوص جديدنا والعروض (news-*)
+                            <i class="fas fa-newspaper"></i> 13. نصوص جديدنا والعروض (news-*)
                         </h2>
                     </div>
 
@@ -1428,12 +1544,15 @@
                     <i class="fas fa-check-double"></i>
                 </div>
                 <div class="bottom-info-text">
-                    <h3>تم الحفظ في المتصفح وجاهز للتصدير</h3>
+                    <h3>جاهز للتصدير والمزامنة الكاملة (متطابق 100% مع config/config.js)</h3>
                     <p>اضغط على "تصدير config.js" أو "نسخ الكود" ثم ضع الملف داخل مجلد <code>config/</code> بالشبكة</p>
                 </div>
             </div>
 
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="resetToDefaultConfig()">
+                    <i class="fas fa-undo"></i> استعادة الأصلي
+                </button>
                 <button class="btn btn-outline" onclick="copyConfigCode()">
                     <i class="fas fa-copy"></i> نسخ الكود
                 </button>
@@ -1492,7 +1611,7 @@
 
     <!-- SCRIPT -->
     <script>
-        // Exact config.js schema default values (from config/config.js)
+        // Exact config.js schema default values (100% identical to config/config.js)
         const DEFAULT_CONFIG = {
             "network-name": "  الخالد نت  ",
             "service-number": "776418435",
@@ -1504,7 +1623,7 @@
             "enable-loyalty-system": false,
             "login-type": "User",
             "login-chap": 0,
-            "input-type": "tel",
+            "input-type": "text",
             "input-autocomplete": "on",
             "login-speeds-mode": true,
             "enable-ultra-speed": true,
@@ -1523,7 +1642,7 @@
             "input-to-lower": 0,
             "input-to-upper": 0,
             "input-to-arabic-numbers": 1,
-            "input-only-numbers": 1,
+            "input-only-numbers": 0,
             "input-no-numbers": 0,
             "input-only-alphanumeric": 0,
             "input-to-tel-type-when": 0,
@@ -1578,15 +1697,47 @@
             "news-extra-badge": "بث المباريات"
         };
 
+        const STORAGE_KEY = 'mikrotik_hotspot_exact_config_v2';
         let currentConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const cached = localStorage.getItem('mikrotik_hotspot_exact_config');
+        // Hook for loading live config/config.js if opened in browser
+        window.Config = function(liveCfg) {
+            if (liveCfg && typeof liveCfg === 'object') {
+                Object.assign(DEFAULT_CONFIG, JSON.parse(JSON.stringify(liveCfg)));
+            }
+        };
+
+        function escapeAttr(val) {
+            return String(val === undefined || val === null ? '' : val)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Try fetching live config/config.js first so DEFAULT_CONFIG is always up-to-date
+            try {
+                const res = await fetch('config/config.js', { cache: 'no-store' });
+                if (res.ok) {
+                    const txt = await res.text();
+                    const fn = new Function('Config', txt);
+                    fn(function(cfgObj) {
+                        if (cfgObj && typeof cfgObj === 'object') {
+                            Object.assign(DEFAULT_CONFIG, JSON.parse(JSON.stringify(cfgObj)));
+                        }
+                    });
+                }
+            } catch (e) {}
+
+            currentConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+
+            const cached = localStorage.getItem(STORAGE_KEY);
             if (cached) {
                 try {
                     const parsed = JSON.parse(cached);
                     if (parsed && typeof parsed === 'object') {
-                        currentConfig = Object.assign({}, DEFAULT_CONFIG, parsed);
+                        currentConfig = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_CONFIG)), parsed);
                     }
                 } catch (e) {}
             }
@@ -1595,38 +1746,53 @@
 
         function saveConfig() {
             try {
-                localStorage.setItem('mikrotik_hotspot_exact_config', JSON.stringify(currentConfig));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentConfig));
             } catch (e) {}
+        }
+
+        function resetToDefaultConfig() {
+            localStorage.removeItem(STORAGE_KEY);
+            currentConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+            renderAll();
+            showToast('تمت استعادة الإعدادات الأصلية المطابقة لملف config.js بنجاح', 'success');
         }
 
         function renderAll() {
             // Inputs
-            document.getElementById('networkNameInput').value = currentConfig["network-name"] || '';
-            document.getElementById('serviceNumberInput').value = currentConfig["service-number"] || '';
-            document.getElementById('newsLineInput').value = currentConfig["news-line"] || '';
+            document.getElementById('networkNameInput').value = currentConfig["network-name"] !== undefined ? currentConfig["network-name"] : '';
+            document.getElementById('serviceNumberInput').value = currentConfig["service-number"] !== undefined ? currentConfig["service-number"] : '';
+            document.getElementById('newsLineInput').value = currentConfig["news-line"] !== undefined ? currentConfig["news-line"] : '';
             document.getElementById('adImagesInput').value = (currentConfig["ad-images"] || []).join(', ');
-            document.getElementById('popupAdvTimeInput').value = currentConfig["popup-adv-time"] || 5;
-            document.getElementById('popupAdvRepeatInput').value = currentConfig["popup-adv-repeat-after"] || 120;
+            document.getElementById('popupAdvTimeInput').value = currentConfig["popup-adv-time"] !== undefined ? currentConfig["popup-adv-time"] : 5;
+            document.getElementById('popupAdvRepeatInput').value = currentConfig["popup-adv-repeat-after"] !== undefined ? currentConfig["popup-adv-repeat-after"] : 120;
             
             document.getElementById('loginTypeSelect').value = currentConfig["login-type"] || 'User';
             document.getElementById('loginChapSelect').value = String(currentConfig["login-chap"] !== undefined ? currentConfig["login-chap"] : 0);
-            document.getElementById('inputTypeSelect').value = currentConfig["input-type"] || 'tel';
+            document.getElementById('inputTypeSelect').value = currentConfig["input-type"] || 'text';
             document.getElementById('inputAutocompleteSelect').value = currentConfig["input-autocomplete"] || 'on';
 
-            document.getElementById('tryCountInput').value = currentConfig["try-count"] || 20;
-            document.getElementById('warnWhenInput').value = currentConfig["warn-when"] || 10;
-            document.getElementById('blockTimeInput').value = currentConfig["block-time"] || 1;
-            document.getElementById('warnMessageInput').value = currentConfig["warn-message"] || '';
+            document.getElementById('tryCountInput').value = currentConfig["try-count"] !== undefined ? currentConfig["try-count"] : 20;
+            document.getElementById('warnWhenInput').value = currentConfig["warn-when"] !== undefined ? currentConfig["warn-when"] : 10;
+            document.getElementById('blockTimeInput').value = currentConfig["block-time"] !== undefined ? currentConfig["block-time"] : 1;
+            document.getElementById('warnMessageInput').value = currentConfig["warn-message"] !== undefined ? currentConfig["warn-message"] : '';
 
-            document.getElementById('redirectToMobasherInput').value = currentConfig["redirect-to-mobasher"] || '';
-            document.getElementById('redirectToEsterahahInput').value = currentConfig["redirect-to-esterahah"] || '';
+            document.getElementById('redirectToMobasherInput').value = currentConfig["redirect-to-mobasher"] !== undefined ? currentConfig["redirect-to-mobasher"] : '';
+            document.getElementById('redirectToEsterahahInput').value = currentConfig["redirect-to-esterahah"] !== undefined ? currentConfig["redirect-to-esterahah"] : '';
+            document.getElementById('appStoreBaseUrlInput').value = currentConfig["app-store-base-url"] !== undefined ? currentConfig["app-store-base-url"] : '';
+            document.getElementById('appStoreBaseUrlExtInput').value = currentConfig["app-store-base-url-ext"] !== undefined ? currentConfig["app-store-base-url-ext"] : '';
 
-            document.getElementById('newsTitleInput').value = currentConfig["news-title"] || '';
-            document.getElementById('newsCodeInput').value = currentConfig["news-code"] || '';
-            document.getElementById('newsContentInput').value = currentConfig["news-content"] || '';
-            document.getElementById('newsExtraTitleInput').value = currentConfig["news-extra-title"] || '';
-            document.getElementById('newsExtraBadgeInput').value = currentConfig["news-extra-badge"] || '';
-            document.getElementById('newsExtraContentInput').value = currentConfig["news-extra-content"] || '';
+            document.getElementById('newsTitleInput').value = currentConfig["news-title"] !== undefined ? currentConfig["news-title"] : '';
+            document.getElementById('newsCodeInput').value = currentConfig["news-code"] !== undefined ? currentConfig["news-code"] : '';
+            document.getElementById('newsContentInput').value = currentConfig["news-content"] !== undefined ? currentConfig["news-content"] : '';
+            document.getElementById('newsExtraTitleInput').value = currentConfig["news-extra-title"] !== undefined ? currentConfig["news-extra-title"] : '';
+            document.getElementById('newsExtraBadgeInput').value = currentConfig["news-extra-badge"] !== undefined ? currentConfig["news-extra-badge"] : '';
+            document.getElementById('newsExtraContentInput').value = currentConfig["news-extra-content"] !== undefined ? currentConfig["news-extra-content"] : '';
+
+            // Speeds section controls
+            document.getElementById('loginSpeedsModeCheck').checked = Boolean(currentConfig["login-speeds-mode"] !== false);
+            document.getElementById('enableUltraSpeedCheck').checked = Boolean(currentConfig["enable-ultra-speed"] !== false);
+            document.getElementById('speedTrychangeInput').value = currentConfig["speed-trychange"] !== undefined ? currentConfig["speed-trychange"] : 3;
+            document.getElementById('speedTrychangeTimeoutInput').value = currentConfig["speed-trychange-timeout"] !== undefined ? currentConfig["speed-trychange-timeout"] : 3;
 
             // Toggles
             setToggle('popupAdvImgTypeToggle', 'badgeAdvImg', Boolean(currentConfig["popup-adv-img-type"]));
@@ -1637,11 +1803,23 @@
             document.getElementById('sellPointButtonToggle').checked = Boolean(currentConfig["sell-point-button"]);
             document.getElementById('loanButtonToggle').checked = Boolean(currentConfig["loan-button"]);
             document.getElementById('showEsterahahToggle').checked = Boolean(currentConfig["show-esterahah-button"]);
+            document.getElementById('appStoreStatusButtonToggle').checked = Boolean(currentConfig["app-store-status-button"]);
+            document.getElementById('showAppDownloadButtonsToggle').checked = Boolean(currentConfig["show-app-download-buttons"]);
+            document.getElementById('showDateFieldToggle').checked = Boolean(currentConfig["show-date-field"]);
 
+            // Section 6 & 7 checkboxes/inputs
             document.getElementById('rmWhiteSpacesCheck').checked = Boolean(currentConfig["input-rm-white-spaces"]);
+            document.getElementById('toLowerCheck').checked = Boolean(currentConfig["input-to-lower"]);
+            document.getElementById('toUpperCheck').checked = Boolean(currentConfig["input-to-upper"]);
             document.getElementById('toArabicNumbersCheck').checked = Boolean(currentConfig["input-to-arabic-numbers"]);
             document.getElementById('onlyNumbersCheck').checked = Boolean(currentConfig["input-only-numbers"]);
+            document.getElementById('noNumbersCheck').checked = Boolean(currentConfig["input-no-numbers"]);
+            document.getElementById('onlyAlphanumericCheck').checked = Boolean(currentConfig["input-only-alphanumeric"]);
+            document.getElementById('toTelTypeWhenInput').value = currentConfig["input-to-tel-type-when"] !== undefined ? currentConfig["input-to-tel-type-when"] : 0;
+
             document.getElementById('enableHotCookieCheck').checked = Boolean(currentConfig["enable-hot-cookie"]);
+            document.getElementById('clearRouterCookieCheck').checked = Boolean(currentConfig["clear-router-cookie"]);
+            document.getElementById('clearHotCookieCheck').checked = Boolean(currentConfig["clear-hot-cookie"]);
 
             renderSpeedsTable();
             renderProfilesGrid();
@@ -1702,7 +1880,7 @@
             const el = document.getElementById('headerNetworkTitle');
             const name = (currentConfig["network-name"] || '').trim();
             if (el) {
-                el.innerHTML = `لوحة تحكم ${name || 'الشبكة'} <span style="font-size: 0.85rem; color: #10b981; font-weight: 600; vertical-align: middle;"><i class="fas fa-circle-check"></i> متطابق 100%</span>`;
+                el.innerHTML = `لوحة تحكم ${escapeAttr(name || 'الشبكة')} <span style="font-size: 0.85rem; color: #10b981; font-weight: 600; vertical-align: middle;"><i class="fas fa-circle-check"></i> متطابق 100%</span>`;
             }
         }
 
@@ -1724,10 +1902,10 @@
                 tr.innerHTML = `
                     <td style="text-align: center; color: var(--text-muted); font-weight: 700;">${idx + 1}</td>
                     <td>
-                        <input type="text" value="${spd.name || ''}" placeholder="اسم السرعة" oninput="editSpeedItem(${idx}, 'name', this.value)">
+                        <input type="text" value="${escapeAttr(spd.name || '')}" placeholder="اسم السرعة" oninput="editSpeedItem(${idx}, 'name', this.value)">
                     </td>
                     <td>
-                        <input type="text" value="${spd.value || ''}" placeholder="مثال: @2M" oninput="editSpeedItem(${idx}, 'value', this.value)">
+                        <input type="text" value="${escapeAttr(spd.value || '')}" placeholder="مثال: @2M" oninput="editSpeedItem(${idx}, 'value', this.value)">
                     </td>
                     <td style="text-align: center;">
                         <input type="radio" name="defaultSpeedRadio" ${spd.default ? 'checked' : ''} onchange="setDefaultSpeedIndex(${idx})" style="width: 17px; height: 17px; cursor: pointer; accent-color: #3b82f6;">
@@ -1809,22 +1987,22 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div class="card-field-row">
                             <span class="card-field-label">السعر (price)</span>
-                            <input type="text" class="card-field-input price-highlight" value="${prof.price || ''}" placeholder="200 ريال" oninput="editProfileItem(${idx}, 'price', this.value)">
+                            <input type="text" class="card-field-input price-highlight" value="${escapeAttr(prof.price || '')}" placeholder="200 ريال" oninput="editProfileItem(${idx}, 'price', this.value)">
                         </div>
                         <div class="card-field-row">
                             <span class="card-field-label">الصلاحية (validity)</span>
-                            <input type="text" class="card-field-input" value="${prof.validity || ''}" placeholder="يومان" oninput="editProfileItem(${idx}, 'validity', this.value)">
+                            <input type="text" class="card-field-input" value="${escapeAttr(prof.validity || '')}" placeholder="يومان" oninput="editProfileItem(${idx}, 'validity', this.value)">
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div class="card-field-row">
                             <span class="card-field-label">الرصيد (transfer)</span>
-                            <input type="text" class="card-field-input" value="${prof.transfer || ''}" placeholder="800 ميجا" oninput="editProfileItem(${idx}, 'transfer', this.value)">
+                            <input type="text" class="card-field-input" value="${escapeAttr(prof.transfer || '')}" placeholder="800 ميجا" oninput="editProfileItem(${idx}, 'transfer', this.value)">
                         </div>
                         <div class="card-field-row">
                             <span class="card-field-label">الوقت (time)</span>
-                            <input type="text" class="card-field-input" value="${prof.time || ''}" placeholder="مفتوح" oninput="editProfileItem(${idx}, 'time', this.value)">
+                            <input type="text" class="card-field-input" value="${escapeAttr(prof.time || '')}" placeholder="مفتوح" oninput="editProfileItem(${idx}, 'time', this.value)">
                         </div>
                     </div>
                 `;
@@ -1874,7 +2052,7 @@
                 item.className = 'sales-item';
                 item.innerHTML = `
                     <div class="sales-index">${idx + 1}</div>
-                    <input type="text" class="sales-input" value="${pt.name || ''}" placeholder="اسم البقالة / الموقع..." oninput="editSalesPointItem(${idx}, this.value)">
+                    <input type="text" class="sales-input" value="${escapeAttr(pt.name || '')}" placeholder="اسم البقالة / الموقع..." oninput="editSalesPointItem(${idx}, this.value)">
                     <button class="btn btn-danger btn-sm btn-icon" onclick="deleteSalesPointItem(${idx})" title="حذف"><i class="fas fa-trash"></i></button>
                 `;
                 list.appendChild(item);
@@ -1907,13 +2085,13 @@
             }
         }
 
-        // GENERATE EXACT config.js CODE (Identical structure to config/config.js)
+        // GENERATE EXACT config.js CODE (100% Byte-for-Byte Identical structure, comments, and fields to config/config.js)
         function generateExactConfigJs() {
             const c = currentConfig;
             
             // Format speeds
             const speedsFormatted = (c.speeds || []).map(s => {
-                let parts = [`name: ${JSON.stringify(s.name)}`, `value: ${JSON.stringify(s.value)}`];
+                let parts = [`name: ${JSON.stringify(s.name !== undefined ? s.name : '')}`, `value: ${JSON.stringify(s.value !== undefined ? s.value : '')}`];
                 if (s.default) parts.push('default: true');
                 if (s.recommended) parts.push('recommended: true');
                 return `    { ${parts.join(', ')} },`;
@@ -1921,16 +2099,17 @@
 
             // Format profiles
             const profilesFormatted = (c.profiles || []).map(p => {
-                return `    { price: ${JSON.stringify(p.price || '')}, time: ${JSON.stringify(p.time || '')}, transfer: ${JSON.stringify(p.transfer || '')}, validity: ${JSON.stringify(p.validity || '')} },`;
+                return `    { price: ${JSON.stringify(p.price !== undefined ? p.price : '')}, time: ${JSON.stringify(p.time !== undefined ? p.time : '')}, transfer: ${JSON.stringify(p.transfer !== undefined ? p.transfer : '')}, validity: ${JSON.stringify(p.validity !== undefined ? p.validity : '')} },`;
             }).join('\n');
 
             // Format sell-points
             const sellPointsFormatted = (c["sell-points"] || []).map(sp => {
-                return `    { name: ${JSON.stringify(sp.name || '')} },`;
+                return `    { name: ${JSON.stringify(sp.name !== undefined ? sp.name : '')} },`;
             }).join('\n');
 
-            // Format ad-images
-            const adImagesFormatted = JSON.stringify(c["ad-images"] || ["1.jpg", "5.jpg", "7.jpg"]);
+            // Format ad-images with space after comma matching ["1.jpg", "5.jpg", "7.jpg"]
+            const adImagesArr = Array.isArray(c["ad-images"]) ? c["ad-images"] : ["1.jpg", "5.jpg", "7.jpg"];
+            const adImagesFormatted = `[${adImagesArr.map(img => JSON.stringify(img)).join(', ')}]`;
 
             return `Config({
   // =========================================================================
@@ -1938,22 +2117,22 @@
   // =========================================================================
 
   // اسم الشبكة الذي يظهر في أعلى الصفحة والترويسة
-  "network-name": ${JSON.stringify(c["network-name"] || "  الخالد نت  ")},
+  "network-name": ${JSON.stringify(c["network-name"] !== undefined ? c["network-name"] : "  الخالد نت  ")},
 
   // رقم خدمة العملاء / واتساب / الدعم الفني للاتصال والاستفسار
-  "service-number": ${JSON.stringify(c["service-number"] || "")},
+  "service-number": ${JSON.stringify(c["service-number"] !== undefined ? c["service-number"] : "")},
 
   // =========================================================================
   // 👇 [نص الشريط الإخباري المتحرك] 👇
   // اكتب هنا النص الذي تريده أن يتحرك في الشريط (آيات قرآنية، إعلانات، تنبيهات)
   // =========================================================================
   "news-line":
-    ${JSON.stringify(c["news-line"] || "")},
+    ${JSON.stringify(c["news-line"] !== undefined ? c["news-line"] : "")},
 
   // =========================================================================
   // 2. إعدادات الإعلانات وبنر الصور (Ad Banner & Popup)
   // =========================================================================
-  "ad-images": ${adImagesFormatted}, // قائمة صور شريط الإعلانات في مجلد adimg
+  "ad-images": ${adImagesFormatted}, // قائمة صور شريط الإعلانات في مجلد adimg (تبدأ بصورة مساحة إعلانية 1.jpg)
   "popup-adv-time": ${c["popup-adv-time"] !== undefined ? c["popup-adv-time"] : 5},           // مدة ظهور الإعلان بالثواني قبل إمكانية إغلاقه
   "popup-adv-img-type": ${Boolean(c["popup-adv-img-type"])},    // تفعيل عرض صورة الإعلان
   "popup-adv-repeat-after": ${c["popup-adv-repeat-after"] !== undefined ? c["popup-adv-repeat-after"] : 120}, // تكرار ظهور الإعلان بعد عدد معين من الدقائق
@@ -1961,25 +2140,32 @@
   // =========================================================================
   // 3. إعدادات نظام النقاط والمكافآت (Shabakaty Loyalty & Points System)
   // =========================================================================
-  "enable-loyalty-system": ${Boolean(c["enable-loyalty-system"])}, // تفعيل أو تعطيل نظام النقاط بالكامل
+  "enable-loyalty-system": ${Boolean(c["enable-loyalty-system"])}, // تفعيل أو تعطيل نظام النقاط بالكامل:
+                                  // true  : تشغيل نظام النقاط وعرض الإشعارات والبطاقات وتنبيهات التسجيل ونوافذ الاستبدال
+                                  // false : تعطيل وإخفاء نظام النقاط بالكامل من صفحة الدخول والحالة وكأنه غير موجود
 
   // =========================================================================
   // 4. إعدادات تسجيل الدخول ونوع الكرت
   // =========================================================================
   "login-type": ${JSON.stringify(c["login-type"] || "User")},          // نوع تسجيل الدخول (User: مستخدم فقط / UserPass: مستخدم وكلمة مرور)
   "login-chap": ${c["login-chap"] !== undefined ? c["login-chap"] : 0},               // نوع التشفير (0: عادي / 1: CHAP)
-  "input-type": ${JSON.stringify(c["input-type"] || "tel")},           // نوع لوحة المفاتيح في الهاتف (tel: أرقام لسرعة الإدخال)
+  "input-type": ${JSON.stringify(c["input-type"] || "text")},          // السماح بنسخ ولصق وكتابة النصوص والأرقام بحرية
   "input-autocomplete": ${JSON.stringify(c["input-autocomplete"] || "on")},    // إكمال تلقائي لأرقام الكروت المحفوظة
 
   // =========================================================================
-  // 5. إعدادات وقائمة سرعات الإنترنت
+  // 5. إعدادات وقائمة سرعات الإنترنت (مطابقة تماماً لمشروع الخالد نت)
+  // تتزامن فورياً وبشكل تلقائي في صفحة تسجيل الدخول وصفحة الحالة وتغيير السرعة
   // =========================================================================
   "login-speeds-mode": ${Boolean(c["login-speeds-mode"] !== false)},      // تفعيل ميزة اختيار السرعة قبل الدخول
   "enable-ultra-speed": ${Boolean(c["enable-ultra-speed"] !== false)},     // تفعيل السرعات العالية
   "speed-trychange": ${c["speed-trychange"] !== undefined ? c["speed-trychange"] : 3},           // أقصى عدد لمرات تغيير السرعة المسموح بها للمشترك
   "speed-trychange-timeout": ${c["speed-trychange-timeout"] !== undefined ? c["speed-trychange-timeout"] : 3},   // مدة حظر تغيير السرعة بالدقائق عند تجاوز المحاولات
 
-  // قائمة السرعات المعرفة للشبكة:
+  // قائمة السرعات المعرفة لشبكة الخالد نت:
+  // - name: اسم السرعة الظاهر للمستخدم في القائمة وشاشة الحالة
+  // - value: قيمة اللاحقة الموجهة لسيرفر ميكروتك (@512K, @1M, @2M, @4M, @8M, @12M)
+  // - default: تعيينها كسرعة افتراضية أولى عند فتح الصفحة (true / false)
+  // - recommended: إظهار علامة (الموصى بها) بجانب الاسم (اختياري)
   "speeds": [
 ${speedsFormatted}
   ],
@@ -1990,8 +2176,8 @@ ${speedsFormatted}
   "input-rm-white-spaces": ${c["input-rm-white-spaces"] !== undefined ? c["input-rm-white-spaces"] : 1},    // إزالة المسافات الفارغة تلقائياً
   "input-to-lower": ${c["input-to-lower"] !== undefined ? c["input-to-lower"] : 0},           // تحويل الحروف الإنجليزية إلى صغيرة
   "input-to-upper": ${c["input-to-upper"] !== undefined ? c["input-to-upper"] : 0},           // تحويل الحروف الإنجليزية إلى كبيرة
-  "input-to-arabic-numbers": ${c["input-to-arabic-numbers"] !== undefined ? c["input-to-arabic-numbers"] : 1},  // تحويل الأرقام العربية إلى إنجليزية تلقائياً
-  "input-only-numbers": ${c["input-only-numbers"] !== undefined ? c["input-only-numbers"] : 1},       // قبول الأرقام فقط في حقل الكرت
+  "input-to-arabic-numbers": ${c["input-to-arabic-numbers"] !== undefined ? c["input-to-arabic-numbers"] : 1},  // تحويل الأرقام العربية (١٢٣) إلى إنجليزية (123) تلقائياً
+  "input-only-numbers": ${c["input-only-numbers"] !== undefined ? c["input-only-numbers"] : 0},       // السماح بنسخ ولصق النصوص والأرقام كما في المشروع السابق
   "input-no-numbers": ${c["input-no-numbers"] !== undefined ? c["input-no-numbers"] : 0},
   "input-only-alphanumeric": ${c["input-only-alphanumeric"] !== undefined ? c["input-only-alphanumeric"] : 0},
   "input-to-tel-type-when": ${c["input-to-tel-type-when"] !== undefined ? c["input-to-tel-type-when"] : 0},
@@ -2010,51 +2196,52 @@ ${speedsFormatted}
   "try-count": ${c["try-count"] !== undefined ? c["try-count"] : 20},               // عدد المحاولات الخاطئة المسموح بها قبل فرض الحظر
   "warn-when": ${c["warn-when"] !== undefined ? c["warn-when"] : 10},               // بدء إظهار رسالة التحذير عند الوصول لهذا العدد من الأخطاء
   "block-time": ${c["block-time"] !== undefined ? c["block-time"] : 1},               // مدة الحظر بالدقائق عند تجاوز عدد المحاولات المسموحة
+  // نص رسالة التحذير التي تظهر للعميل عند تكرار إدخال كروت خاطئة
   "warn-message":
-    ${JSON.stringify(c["warn-message"] || "")},
+    ${JSON.stringify(c["warn-message"] !== undefined ? c["warn-message"] : "")},
 
   // =========================================================================
   // 9. إظهار وإخفاء أزرار القائمة والشاشات
   // =========================================================================
-  "price-button": ${Boolean(c["price-button"] !== false)},          // إظهار زر قائمة أسعار الكروت
-  "sell-point-button": ${Boolean(c["sell-point-button"] !== false)},     // إظهار زر نقاط البيع وأماكن التوزيع
-  "loan-button": ${Boolean(c["loan-button"] !== false)},           // إظهار زر خدمة جديدنا والعروض
-  "show-esterahah-button": ${Boolean(c["show-esterahah-button"])}, // ظهور زر الاستراحة في صفحة الحالة
-  "app-store-status-button": ${Boolean(c["app-store-status-button"])},   // ظهور زر متجر البرامج
-  "show-app-download-buttons": ${Boolean(c["show-app-download-buttons"])}, // ظهور أزرار تحميل التطبيقات
+  "price-button": ${Boolean(c["price-button"] !== false)},          // إظهار زر قائمة أسعار الكروت (true: نعم / false: لا)
+  "sell-point-button": ${Boolean(c["sell-point-button"] !== false)},     // إظهار زر نقاط البيع وأماكن التوزيع (true: نعم / false: لا)
+  "loan-button": ${Boolean(c["loan-button"] !== false)},           // إظهار زر خدمة الاستدانة / جديدنا (true: نعم / false: لا)
+  "show-esterahah-button": ${Boolean(c["show-esterahah-button"])}, // إلغاء ظهور زر الاستراحة في صفحة الحالة
+  "app-store-status-button": ${Boolean(c["app-store-status-button"])},   // إلغاء ظهور زر متجر البرامج في صفحة الحالة
+  "show-app-download-buttons": ${Boolean(c["show-app-download-buttons"])}, // إلغاء ظهور أزرار تحميل التطبيقات في صفحة الحالة
   "show-date-field": ${Boolean(c["show-date-field"])},
 
   // =========================================================================
   // 10. الروابط الخارجية وتطبيقات الشبكة (البث المباشر / الاستراحة)
   // =========================================================================
-  "redirect-to-esterahah": ${JSON.stringify(c["redirect-to-esterahah"] || "lamsports.html")}, // رابط صفحة عرض البث والمحتوى
-  "redirect-to-mobasher": ${JSON.stringify(c["redirect-to-mobasher"] || "live/index.html")}, // رابط منصة البث المباشر للمباريات
-  "app-store-base-url": ${JSON.stringify(c["app-store-base-url"] || "")},
-  "app-store-base-url-ext": ${JSON.stringify(c["app-store-base-url-ext"] || "")},
+  "redirect-to-esterahah": ${JSON.stringify(c["redirect-to-esterahah"] !== undefined ? c["redirect-to-esterahah"] : "lamsports.html")}, // رابط صفحة عرض البث والمحتوى
+  "redirect-to-mobasher": ${JSON.stringify(c["redirect-to-mobasher"] !== undefined ? c["redirect-to-mobasher"] : "live/index.html")}, // رابط منصة البث المباشر للمباريات
+  "app-store-base-url": ${JSON.stringify(c["app-store-base-url"] !== undefined ? c["app-store-base-url"] : "")},
+  "app-store-base-url-ext": ${JSON.stringify(c["app-store-base-url-ext"] !== undefined ? c["app-store-base-url-ext"] : "")},
 
   // =========================================================================
-  // 11. جدول باقات وأسعار الكروت
+  // 11. جدول باقات وأسعار الكروت (مطابق لمشروع الخالد نت السابق من bundles.html)
   // =========================================================================
   profiles: [
 ${profilesFormatted}
   ],
 
   // =========================================================================
-  // 12. نقاط البيع ومراكز توزيع الكروت
+  // 12. نقاط البيع ومراكز توزيع الكروت (مطابقة لمشروع الخالد نت السابق من sell-points.html)
   // =========================================================================
   "sell-points": [
 ${sellPointsFormatted}
   ],
 
   // =========================================================================
-  // 13. نصوص جديدنا والعروض
+  // 13. نصوص جديدنا والعروض (مطابقة لبيانات شبكة الخالد نت)
   // =========================================================================
-  "news-title": ${JSON.stringify(c["news-title"] || "زبائن شبكة الخالد نت الكرام")},
-  "news-content": ${JSON.stringify(c["news-content"] || "")},
-  "news-code": ${JSON.stringify(c["news-code"] || "")},
-  "news-extra-title": ${JSON.stringify(c["news-extra-title"] || "البث المباشر والمباريات:")},
-  "news-extra-content": ${JSON.stringify(c["news-extra-content"] || "")},
-  "news-extra-badge": ${JSON.stringify(c["news-extra-badge"] || "بث المباريات")},
+  "news-title": ${JSON.stringify(c["news-title"] !== undefined ? c["news-title"] : "زبائن شبكة الخالد نت الكرام")},
+  "news-content": ${JSON.stringify(c["news-content"] !== undefined ? c["news-content"] : "")},
+  "news-code": ${JSON.stringify(c["news-code"] !== undefined ? c["news-code"] : "")},
+  "news-extra-title": ${JSON.stringify(c["news-extra-title"] !== undefined ? c["news-extra-title"] : "البث المباشر والمباريات:")},
+  "news-extra-content": ${JSON.stringify(c["news-extra-content"] !== undefined ? c["news-extra-content"] : "")},
+  "news-extra-badge": ${JSON.stringify(c["news-extra-badge"] !== undefined ? c["news-extra-badge"] : "بث المباريات")},
 });
 `;
         }
@@ -2145,7 +2332,7 @@ ${sellPointsFormatted}
                 }
 
                 if (parsedObj && typeof parsedObj === 'object') {
-                    currentConfig = Object.assign({}, DEFAULT_CONFIG, parsedObj);
+                    currentConfig = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_CONFIG)), parsedObj);
                     saveConfig();
                     renderAll();
                     closeModal('importModal');
