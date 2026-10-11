@@ -132,15 +132,15 @@ body {
   max-width: 100%;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
   padding-top: env(safe-area-inset-top, 0px);
   padding-right: env(safe-area-inset-right, 0px);
   padding-left: env(safe-area-inset-left, 0px);
   padding-bottom: 0;
   line-height: 1.6;
   position: relative;
-  user-select: none;
-  -webkit-user-select: none;
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
@@ -157,7 +157,39 @@ button {
   appearance: none;
   font-family: inherit;
   font-size: 16px; /* Essential 16px to prevent iOS Safari auto-zooming viewport */
-  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+.container,
+.screen,
+.login,
+.app,
+p,
+span,
+div,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+td,
+th,
+li,
+label,
+strong,
+b,
+input,
+textarea,
+[contenteditable="true"],
+.login-input {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
 }
 
 /* ==========================================================================
@@ -331,7 +363,6 @@ svg.svg-inline,
   align-items: stretch;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
-  touch-action: pan-y;
 }
 
 .screen {
@@ -1330,7 +1361,6 @@ input[name="username"] {
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  user-select: none;
 }
 
 .prev-card-pill-btn:hover {
@@ -1745,7 +1775,6 @@ input[name="username"] {
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.5);
   transition: var(--transition-smooth);
-  user-select: none;
   min-width: 48px;
   text-align: center;
 }
@@ -2598,7 +2627,6 @@ tbody td:last-child {
   padding: 0 0 95px 0 !important;
   z-index: 10 !important;
   overflow-y: visible !important;
-  touch-action: pan-y !important;
   -webkit-overflow-scrolling: touch !important;
 }
 
@@ -2607,7 +2635,6 @@ tbody td:last-child {
   animation: none !important;
   opacity: 1 !important;
   overflow-y: visible !important;
-  touch-action: pan-y !important;
 }
 
 @keyframes fadeInStatusPage {
@@ -3077,7 +3104,6 @@ body:has(#status.active) #login {
   padding: 10px 0 24px 0 !important;
   z-index: 10 !important;
   overflow-y: visible !important;
-  touch-action: pan-y !important;
   -webkit-overflow-scrolling: touch !important;
 }
 
@@ -3086,7 +3112,6 @@ body:has(#status.active) #login {
   animation: fadeInBackdrop 0.25s ease forwards !important;
   opacity: 1 !important;
   overflow-y: visible !important;
-  touch-action: pan-y !important;
 }
 
 #block .modal-sheet-card {
