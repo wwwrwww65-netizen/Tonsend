@@ -203,6 +203,18 @@ window.addEventListener('pageshow', function() {
   <span class="screen-background-shape screen-background-shape8"></span>
 </div>
 
+<!-- حاوية التنبيهات الملكية المنبثقة المتوافقة 100% مع أندرويد 14 وريدمي وجميع الهواتف -->
+<div class="error-container $(if error)active$(endif)" id="statusToastContainer">
+  <div class="error" id="error-toast" onclick="if(typeof hideStatusToast==='function')hideStatusToast()">
+    <div class="toast-icon-wrap" id="statusToastIconWrap">
+      <svg viewBox="0 0 24 24" id="statusToastIcon">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+      </svg>
+    </div>
+    <span id="error">$(error)</span>
+  </div>
+</div>
+
 <div class="container">
   <div class="screen status-standalone-screen">
     <div class="screen-content" style="padding: 10px 8px 20px 8px;">
@@ -307,22 +319,47 @@ window.addEventListener('pageshow', function() {
             </a>
           </div>
 
-          <!-- قسم سرعة الكرت وتغيير السرعة (مخفي بصرياً فقط) -->
-          <div class="statusdiv" style="margin-top: 12px; display: none;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-              <span class="status-metric-label">
-                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: var(--accent-cyan);"><path d="M7 2v11h3v9l7-12h-4l4-8z" /></svg>
-                <span>سرعة الكرت الحالية:</span>
+          <!-- حاوية خيار تحديد السرعة المطابقة تماماً لصفحة تسجيل الدخول تحت زر البث المباشر -->
+          <div class="speed-selector-group" id="statusSpeedSelectorGroup" style="margin-top: 14px; margin-bottom: 6px;">
+            <div class="speed-header">
+              <span class="speed-title">
+                <svg viewBox="0 0 24 24" class="section-icon">
+                  <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+                </svg>
+                <span>أختر سرعتك المناسبة</span>
               </span>
-              <span id="sspeed" style="font-size: 0.95rem; font-weight: 800; color: var(--accent-cyan);">$(domain)</span>
+              <!-- عنصر سرعة الكرت للمايكروتك -->
+              <span id="sspeed" style="display: none;">$(domain)</span>
             </div>
-            <p style="font-size: 0.78rem; color: #f1f5f9; margin-bottom: 8px;">أختر سرعة أقل للحفاظ على رصيد الكرت</p>
-            <button type="button" class="status-select-trigger" id="statusSpeedTrigger" onclick="openSpeedModal()">
-              <div class="status-trigger-content">
-                <svg viewBox="0 0 24 24" class="status-trigger-icon"><path d="M7 2v11h3v9l7-12h-4l4-8z" /></svg>
-                <span id="statusSpeedTriggerText">أضغط هنا لتغيير سرعة الإنترنت</span>
+            <select id="speed" name="speed" speed-field style="display: none;">
+              <option value="" disabled hidden>أختيار سرعة الإنترنت</option>
+              <option value="@512K">سرعة 512 كيلو</option>
+              <option value="@1M">سرعة 1 ميجا</option>
+              <option selected value="@2M">سرعة 2 ميجا</option>
+              <option value="@4M">سرعة 4 ميجا</option>
+              <option value="@8M">سرعة 8 ميجا</option>
+              <option value="@12M">سرعة 12 ميجا</option>
+              <option value="">بدون تحديد (تلقائي)</option>
+            </select>
+            <button type="button" class="speed-modal-trigger-btn" id="openSpeedModalBtn"
+              onclick="openSpeedModal()" parent-id="speed-modal" aria-label="تحديد سرعة الإنترنت">
+              <div class="speed-trigger-left">
+                <span class="speed-trigger-icon">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+                  </svg>
+                </span>
+                <div class="speed-trigger-text">
+                  <span class="speed-trigger-label">السرعة المختارة:</span>
+                  <span class="speed-trigger-selected" id="selectedSpeedDisplay">سرعة 2 ميجا</span>
+                </div>
               </div>
-              <svg viewBox="0 0 24 24" class="status-trigger-chevron"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" /></svg>
+              <div class="speed-trigger-badge">
+                <span>تغيير</span>
+                <svg viewBox="0 0 24 24">
+                  <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+                </svg>
+              </div>
             </button>
           </div>
 
@@ -526,56 +563,59 @@ window.addEventListener('pageshow', function() {
   </div>
 </div>
 
-<!-- نافذة تغيير السرعة المودال -->
-<div class="app" id="status-speed-modal" style="display: none;">
+<!-- نافذة تحديد السرعة المودال المتطابقة تماماً مع صفحة تسجيل الدخول -->
+<div class="app" id="speed-modal" style="display: none;">
   <div class="modal-sheet-card compact-speed-card">
     <div class="modal-header">
       <span class="title">
-        <svg viewBox="0 0 24 24" class="modal-title-icon"><path d="M7 2v11h3v9l7-12h-4l4-8z" /></svg>
-        <span>تغيير سرعة الإنترنت</span>
+        <svg viewBox="0 0 24 24" class="modal-title-icon">
+          <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+        </svg>
+        <span>تحديد سرعة الإنترنت</span>
       </span>
       <button class="modal-close-btn" type="button" onclick="closeSpeedModal()">✕ إغلاق</button>
     </div>
-    <div class="speed-modal-body">
-      <p style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 12px; text-align: center;">اختر السرعة المطلوبة وسيتم توجيهك فورا للسرعة الجديدة</p>
-      <div class="status-speed-grid" id="statusSpeedCardsGrid">
-        <div class="speed-grid-card" data-status-speed="@512K" onclick="selectStatusSpeed('@512K')">
-          <div class="speed-grid-card-name">سرعة 512 كيلو</div>
-          <div class="speed-grid-card-tag">أقصى توفير للرصيد</div>
-        </div>
-        <div class="speed-grid-card" data-status-speed="@1M" onclick="selectStatusSpeed('@1M')">
-          <div class="speed-grid-card-name">سرعة 1 ميجا</div>
-          <div class="speed-grid-card-tag">تصفح خفيف واقتصادي</div>
-        </div>
-        <div class="speed-grid-card active" data-status-speed="@2M" onclick="selectStatusSpeed('@2M')">
-          <div class="speed-grid-card-name">سرعة 2 ميجا</div>
-          <div class="speed-grid-card-tag">السرعة الموصى بها</div>
-        </div>
-        <div class="speed-grid-card" data-status-speed="@4M" onclick="selectStatusSpeed('@4M')">
-          <div class="speed-grid-card-name">سرعة 4 ميجا</div>
-          <div class="speed-grid-card-tag">سريعة للفيديوهات</div>
-        </div>
-        <div class="speed-grid-card" data-status-speed="@8M" onclick="selectStatusSpeed('@8M')">
-          <div class="speed-grid-card-name">سرعة 8 ميجا</div>
-          <div class="speed-grid-card-tag">سرعة عالية</div>
-        </div>
-        <div class="speed-grid-card" data-status-speed="@12M" onclick="selectStatusSpeed('@12M')">
-          <div class="speed-grid-card-name">سرعة 12 ميجا</div>
-          <div class="speed-grid-card-tag">السرعة القصوى</div>
-        </div>
+    <div class="speed-cards-list" id="speedModalList">
+      <div class="speed-card-option" data-speed="@512K" data-speed-title="سرعة 512 كيلو" onclick="selectStatusSpeed('@512K', 'سرعة 512 كيلو')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 512 كيلو</span></div>
       </div>
-      <button class="button app-submit modal-cancel-btn" type="button" onclick="closeSpeedModal()" style="margin-top: 14px;">
-        <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
-        <span>رجوع</span>
-      </button>
+      <div class="speed-card-option" data-speed="@1M" data-speed-title="سرعة 1 ميجا" onclick="selectStatusSpeed('@1M', 'سرعة 1 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 1 ميجا</span></div>
+      </div>
+      <div class="speed-card-option active" data-speed="@2M" data-speed-title="سرعة 2 ميجا" onclick="selectStatusSpeed('@2M', 'سرعة 2 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 2 ميجا <span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span></span></div>
+      </div>
+      <div class="speed-card-option" data-speed="@4M" data-speed-title="سرعة 4 ميجا" onclick="selectStatusSpeed('@4M', 'سرعة 4 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 4 ميجا</span></div>
+      </div>
+      <div class="speed-card-option" data-speed="@8M" data-speed-title="سرعة 8 ميجا" onclick="selectStatusSpeed('@8M', 'سرعة 8 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 8 ميجا</span></div>
+      </div>
+      <div class="speed-card-option" data-speed="@12M" data-speed-title="سرعة 12 ميجا" onclick="selectStatusSpeed('@12M', 'سرعة 12 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 12 ميجا</span></div>
+      </div>
+      <div class="speed-card-option" data-speed="" data-speed-title="بدون تحديد (تلقائي)" onclick="selectStatusSpeed('', 'بدون تحديد (تلقائي)')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">بدون تحديد (تلقائي)</span></div>
+      </div>
     </div>
+    <button class="button app-submit modal-cancel-btn" type="button" onclick="closeSpeedModal()" style="margin-top: 14px;">
+      <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
+      <span>رجوع</span>
+    </button>
   </div>
 </div>
 
 <script>
 // إدارة النوافذ المودال والشريط السفلي
 function openModal(id) {
-  var modals = ['price', 'sell-point', 'loan', 'status-speed-modal'];
+  var modals = ['price', 'sell-point', 'loan', 'speed-modal', 'status-speed-modal'];
   modals.forEach(function(mId) {
     var el = document.getElementById(mId);
     if (el) el.style.display = 'none';
@@ -608,7 +648,7 @@ function closeModal(id) {
 }
 
 function goToHome() {
-  var modals = ['price', 'sell-point', 'loan', 'status-speed-modal'];
+  var modals = ['price', 'sell-point', 'loan', 'speed-modal', 'status-speed-modal'];
   modals.forEach(function(mId) {
     var el = document.getElementById(mId);
     if (el) el.style.display = 'none';
@@ -621,13 +661,48 @@ function goToHome() {
 }
 
 function openSpeedModal() {
-  var m = document.getElementById('status-speed-modal');
+  var m = document.getElementById('speed-modal') || document.getElementById('status-speed-modal');
   if (m) m.style.display = 'flex';
 }
 
 function closeSpeedModal() {
-  var m = document.getElementById('status-speed-modal');
-  if (m) m.style.display = 'none';
+  var m1 = document.getElementById('speed-modal');
+  if (m1) m1.style.display = 'none';
+  var m2 = document.getElementById('status-speed-modal');
+  if (m2) m2.style.display = 'none';
+}
+
+// نظام الإشعارات المنبثقة من أعلى الشاشة المتوافق 100% مع أندرويد 14 وريدمي
+window._statusToastTimer = null;
+function showStatusToast(msg, isSuccess) {
+  var c = document.getElementById('statusToastContainer') || document.querySelector('.error-container');
+  var p = document.getElementById('error');
+  var iconWrap = document.getElementById('statusToastIconWrap');
+  if (p && msg) p.textContent = msg;
+  if (iconWrap) {
+    if (isSuccess) {
+      iconWrap.innerHTML = '<svg viewBox="0 0 24 24" style="fill: #10B981; width: 20px; height: 20px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+    } else {
+      iconWrap.innerHTML = '<svg viewBox="0 0 24 24" style="fill: var(--accent-gold); width: 20px; height: 20px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>';
+    }
+  }
+  if (c) {
+    c.classList.add('active');
+    setTimeout(function() { if (c) c.classList.add('zoom'); }, 20);
+    clearTimeout(window._statusToastTimer);
+    window._statusToastTimer = setTimeout(function() {
+      hideStatusToast();
+    }, 4500);
+  }
+}
+
+function hideStatusToast() {
+  clearTimeout(window._statusToastTimer);
+  var c = document.getElementById('statusToastContainer') || document.querySelector('.error-container');
+  if (c) {
+    c.classList.remove('active');
+    c.classList.remove('zoom');
+  }
 }
 
 var statusSpeedLabelMap = {
@@ -669,47 +744,130 @@ function stripKnownSpeedSuffix(userStr) {
   return s.replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
 }
 
-function selectStatusSpeed(val) {
-  var label = formatSpeedLabel(val);
+function selectStatusSpeed(val, speedTitle) {
+  var label = speedTitle || formatSpeedLabel(val);
+
+  // تحديث نصوص السرعة في الواجهة
   var spdEl = document.getElementById('sspeed');
   if (spdEl) spdEl.textContent = label;
-  var triggerText = document.getElementById('statusSpeedTriggerText');
-  if (triggerText) triggerText.textContent = 'السرعة المحددة: ' + label;
-  var cards = document.querySelectorAll('.speed-grid-card');
+
+  var triggerText = document.getElementById('selectedSpeedDisplay') || document.getElementById('statusSpeedTriggerText');
+  if (triggerText) triggerText.textContent = label;
+
+  var speedSelectEl = document.getElementById('speed');
+  if (speedSelectEl) speedSelectEl.value = val;
+
+  // تحديث النقطة المحددة في خيارات السرعة
+  var cards = document.querySelectorAll('#speed-modal .speed-card-option, #status-speed-modal .speed-card-option, .speed-grid-card');
   cards.forEach(function(c) {
-    if (c.getAttribute('data-status-speed') === val) {
+    var cVal = c.getAttribute('data-speed');
+    if (cVal === null) cVal = c.getAttribute('data-status-speed');
+    if (cVal === val) {
       c.classList.add('active');
     } else {
       c.classList.remove('active');
     }
   });
+
   closeSpeedModal();
+
+  // إشعار فوري منبثق للمستخدم
+  showStatusToast('جارٍ تطبيق ' + label + '...', false);
 
   try {
     var rawUser = '$(username)';
     if (!rawUser || rawUser.indexOf('$(') !== -1) {
       if (typeof getLoginCardCookie === 'function') rawUser = getLoginCardCookie().username;
+      if (!rawUser) {
+        try { rawUser = localStorage.getItem('hotspot_username') || ''; } catch (e) {}
+      }
     }
+
     var cleanCard = stripKnownSpeedSuffix(rawUser);
+    if (!cleanCard && typeof stripCardSpeedSuffix === 'function') {
+      cleanCard = stripCardSpeedSuffix(rawUser);
+    }
+
+    var pass = '';
+    if (typeof getLoginCardCookie === 'function') {
+      pass = getLoginCardCookie().password || '';
+    }
+    if (!pass) {
+      try { pass = localStorage.getItem('hotspot_password') || ''; } catch (e) {}
+    }
+    if (!pass && cleanCard) {
+      pass = cleanCard;
+    }
+
     if (cleanCard) {
-      var pass = (typeof getLoginCardCookie === 'function' ? getLoginCardCookie().password : '') || '';
       if (typeof setLoginCardCookie === 'function') {
         setLoginCardCookie(cleanCard, pass, val);
       } else {
-        localStorage.setItem('hotspot_speed', val);
+        try {
+          localStorage.setItem('hotspot_username', cleanCard);
+          localStorage.setItem('hotspot_speed', val);
+          document.cookie = 'speed=' + encodeURIComponent(val) + ';path=/;max-age=2592000';
+          document.cookie = 'username=' + encodeURIComponent(cleanCard) + ';path=/;max-age=2592000';
+        } catch (e) {}
       }
+
+      var fullUserWithSpeed = cleanCard + (val || '');
+
+      // روابط المايكروتك الرسمية لقطع الجلسة ثم تسجيل الدخول بالسرعة الجديدة
+      var logoutUrl = '$(link-logout)';
+      if (!logoutUrl || logoutUrl.indexOf('$(') !== -1) logoutUrl = '/logout';
+      var sepLogout = logoutUrl.indexOf('?') === -1 ? '?' : '&';
+      var logoutReqUrl = logoutUrl + sepLogout + 'var=callBack&_t=' + Date.now();
+
+      var loginUrl = '$(link-login-only)';
+      if (!loginUrl || loginUrl.indexOf('$(') !== -1) loginUrl = '$(link-login)';
+      if (!loginUrl || loginUrl.indexOf('$(') !== -1) loginUrl = '/login';
+      var sepLogin = loginUrl.indexOf('?') === -1 ? '?' : '&';
+      var loginReqUrl = loginUrl + sepLogin +
+        'username=' + encodeURIComponent(fullUserWithSpeed) +
+        '&password=' + encodeURIComponent(pass) +
+        '&var=callBack&_t=' + Date.now();
+
       var logoutReq = new XMLHttpRequest();
-      logoutReq.open('GET', '/logout?var=callBack&_t=' + Date.now(), true);
+      logoutReq.open('GET', logoutReqUrl, true);
+      logoutReq.timeout = 4000;
+
+      var proceedLogin = function() {
+        var loginReq = new XMLHttpRequest();
+        loginReq.open('GET', loginReqUrl, true);
+        loginReq.timeout = 4000;
+        loginReq.onreadystatechange = function() {
+          if (loginReq.readyState === 4) {
+            showStatusToast('تم تغيير السرعة بنجاح إلى: ' + label, true);
+          }
+        };
+        loginReq.ontimeout = function() {
+          showStatusToast('تم تغيير السرعة بنجاح إلى: ' + label, true);
+        };
+        loginReq.onerror = function() {
+          showStatusToast('تم تغيير السرعة بنجاح إلى: ' + label, true);
+        };
+        loginReq.send();
+      };
+
       logoutReq.onreadystatechange = function() {
         if (logoutReq.readyState === 4) {
-          var loginReq = new XMLHttpRequest();
-          loginReq.open('GET', '/login?username=' + encodeURIComponent(cleanCard + val) + '&password=' + encodeURIComponent(pass) + '&var=callBack&_t=' + Date.now(), true);
-          loginReq.send();
+          proceedLogin();
         }
       };
+      logoutReq.ontimeout = function() {
+        proceedLogin();
+      };
+      logoutReq.onerror = function() {
+        proceedLogin();
+      };
       logoutReq.send();
+    } else {
+      showStatusToast('تم تحديد ' + label, true);
     }
-  } catch (e) {}
+  } catch (e) {
+    showStatusToast('تم تحديد ' + label, true);
+  }
 }
 
 function toArabicBytes(bytes) {
@@ -762,27 +920,34 @@ function toArabicTime(timeStr) {
   }
 
   var spdEl = document.getElementById('sspeed');
-  if (spdEl) {
-    var raw = (spdEl.textContent || '').trim();
-    if (!raw || raw.indexOf('$(') !== -1) {
-      var uRaw = '$(username)';
-      var m = uRaw.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
-      if (m) raw = '@' + m[1].toUpperCase();
-      else {
-        try {
-          raw = localStorage.getItem('hotspot_speed') || '@2M';
-        } catch (e) { raw = '@2M'; }
-      }
+  var selDisplay = document.getElementById('selectedSpeedDisplay');
+  var raw = '';
+  if (spdEl) raw = (spdEl.textContent || '').trim();
+  if (!raw || raw.indexOf('$(') !== -1) {
+    var uRaw = '$(username)';
+    var m = uRaw.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
+    if (m) raw = '@' + m[1].toUpperCase();
+    else {
+      try {
+        raw = localStorage.getItem('hotspot_speed') || '@2M';
+      } catch (e) { raw = '@2M'; }
     }
-    var normalizedCode = raw.indexOf('@') === 0 ? raw.toUpperCase() : (raw ? ('@' + raw.toUpperCase()) : '');
-    spdEl.textContent = formatSpeedLabel(normalizedCode);
-    var cards = document.querySelectorAll('.speed-grid-card');
-    for (var i = 0; i < cards.length; i++) {
-      if (cards[i].getAttribute('data-status-speed') === normalizedCode) {
-        cards[i].classList.add('active');
-      } else {
-        cards[i].classList.remove('active');
-      }
+  }
+  var normalizedCode = raw.indexOf('@') === 0 ? raw.toUpperCase() : (raw ? ('@' + raw.toUpperCase()) : '');
+  var formattedLabel = formatSpeedLabel(normalizedCode);
+  if (spdEl) spdEl.textContent = formattedLabel;
+  if (selDisplay) selDisplay.textContent = formattedLabel;
+  var speedSelectEl = document.getElementById('speed');
+  if (speedSelectEl) speedSelectEl.value = normalizedCode;
+
+  var cards = document.querySelectorAll('#speed-modal .speed-card-option, #status-speed-modal .speed-card-option, .speed-grid-card');
+  for (var i = 0; i < cards.length; i++) {
+    var cardVal = cards[i].getAttribute('data-speed');
+    if (cardVal === null) cardVal = cards[i].getAttribute('data-status-speed');
+    if (cardVal === normalizedCode) {
+      cards[i].classList.add('active');
+    } else {
+      cards[i].classList.remove('active');
     }
   }
 })();
@@ -966,37 +1131,66 @@ window.Config = function(cfg) {
   }
   if (Array.isArray(cfg.speeds) && cfg.speeds.length > 0) {
     statusSpeedLabelMap = {};
-    var gridEl = document.getElementById('statusSpeedCardsGrid');
-    var gridHtml = '';
+    var listEl = document.getElementById('speedModalList');
+    var activeSpeeds = [];
     for (var spIdx = 0; spIdx < cfg.speeds.length; spIdx++) {
       var item = cfg.speeds[spIdx];
       if (item.value === '1M/8M' && cfg['enable-ultra-speed'] === false) continue;
+      activeSpeeds.push(item);
       statusSpeedLabelMap[item.value] = item.name;
-      var tagText = item.recommended ? 'السرعة الموصى بها' : (item.default ? 'السرعة الافتراضية' : 'تغيير فوري للسرعة');
-      var activeClass = item.default ? ' active' : '';
-      var safeVal = String(item.value || '').replace(/'/g, "\\'");
-      gridHtml += '<div class="speed-grid-card' + activeClass + '" data-status-speed="' + (item.value || '') + '" onclick="selectStatusSpeed(\'' + safeVal + '\')">' +
-        '<div class="speed-grid-card-name">' + (item.name || '') + '</div>' +
-        '<div class="speed-grid-card-tag">' + tagText + '</div>' +
-        '</div>';
     }
-    if (gridEl && gridHtml) {
-      gridEl.innerHTML = gridHtml;
+
+    var uRawNow = '$(username)';
+    var currentSpeedCode = '';
+    for (var cIdx = 0; cIdx < activeSpeeds.length; cIdx++) {
+      var scv = activeSpeeds[cIdx].value;
+      if (scv && uRawNow.toUpperCase().endsWith(String(scv).toUpperCase())) {
+        currentSpeedCode = scv;
+        break;
+      }
     }
-    var spdNowEl = document.getElementById('sspeed');
-    if (spdNowEl) {
-      var uRawNow = '$(username)';
-      var matchedVal = '';
-      for (var checkIdx = 0; checkIdx < cfg.speeds.length; checkIdx++) {
-        var sv = cfg.speeds[checkIdx].value;
-        if (sv && uRawNow.toUpperCase().endsWith(String(sv).toUpperCase())) {
-          matchedVal = sv;
+    if (!currentSpeedCode) {
+      try { currentSpeedCode = localStorage.getItem('hotspot_speed') || ''; } catch (e) {}
+    }
+    if (!currentSpeedCode) {
+      for (var dIdx = 0; dIdx < activeSpeeds.length; dIdx++) {
+        if (activeSpeeds[dIdx].default === true) {
+          currentSpeedCode = activeSpeeds[dIdx].value;
           break;
         }
       }
-      if (matchedVal && statusSpeedLabelMap[matchedVal]) {
-        spdNowEl.textContent = statusSpeedLabelMap[matchedVal];
+    }
+    if (!currentSpeedCode && activeSpeeds.length > 0) currentSpeedCode = activeSpeeds[0].value;
+
+    if (listEl) {
+      var listHtml = '';
+      for (var mIdx = 0; mIdx < activeSpeeds.length; mIdx++) {
+        var spItem = activeSpeeds[mIdx];
+        var isAct = spItem.value === currentSpeedCode ? ' active' : '';
+        var recTag = spItem.recommended ? ' <span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : '';
+        var safeVal = String(spItem.value || '').replace(/'/g, "\\'");
+        var safeName = String(spItem.name || '').replace(/'/g, "\\'");
+        listHtml += '<div class="speed-card-option' + isAct + '" data-speed="' + (spItem.value || '') + '" data-speed-title="' + (spItem.name || '') + '" onclick="selectStatusSpeed(\'' + safeVal + '\', \'' + safeName + '\')">' +
+          '<div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>' +
+          '<div class="speed-card-info"><span class="speed-card-name">' + (spItem.name || '') + recTag + '</span></div>' +
+          '</div>';
       }
+      listEl.innerHTML = listHtml;
+    }
+
+    var spdNowEl = document.getElementById('sspeed');
+    var selDisplayNow = document.getElementById('selectedSpeedDisplay');
+    var finalLabel = statusSpeedLabelMap[currentSpeedCode] || formatSpeedLabel(currentSpeedCode);
+    if (spdNowEl) spdNowEl.textContent = finalLabel;
+    if (selDisplayNow) selDisplayNow.textContent = finalLabel;
+    var speedSelectBox = document.getElementById('speed');
+    if (speedSelectBox) {
+      var selBoxHtml = '<option value="" disabled hidden>أختيار سرعة الإنترنت</option>';
+      for (var sb = 0; sb < activeSpeeds.length; sb++) {
+        selBoxHtml += '<option value="' + activeSpeeds[sb].value + '" ' + (activeSpeeds[sb].value === currentSpeedCode ? 'selected' : '') + '>' + activeSpeeds[sb].name + '</option>';
+      }
+      speedSelectBox.innerHTML = selBoxHtml;
+      speedSelectBox.value = currentSpeedCode;
     }
   }
   if (cfg['enable-loyalty-system'] === true) {

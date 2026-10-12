@@ -1,137 +1,1214 @@
-﻿<html>
+$(if var == "")<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-    $(if refresh-timeout)
-    <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
-    $(endif)
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="pragma" content="no-cache">
-    <meta http-equiv="expires" content="-1">
-    <title>الخالد نت</title>
-    <link rel="stylesheet" href="css/styleaaa.css">
-    <script src="js/mine.js"></script>
-    <script src="js/hotCookie.min.js"></script>
-    <script>
-        function openLogout() {
-            if (window.name !== 'hotspot_status') return true;
-            open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
-            window.close();
-            return false;
-        }
-    </script>
+<meta charset="UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+<title data-network-name>الخالد نت - حالة الاتصال</title>
+<meta name="description" content="بيانات استهلاك واشتراك شبكة الخالد نت اللاسلكية">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+<meta name="theme-color" content="#041f22">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<link rel="preload" href="fonts/almarai-800-ar.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/almarai-700-ar.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/almarai-400-ar.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Instant Royal Dark Turquoise Theme Initialization (Zero White Screen Flash) */
+html, body {
+  background-color: #041f22 !important;
+  color: #FFFFFF !important;
+  font-family: 'Almarai', 'Tajawal', 'Cairo', sans-serif !important;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
 
+.status-standalone-screen {
+  padding-bottom: 95px !important; /* مساحة أمان للشريط السفلي */
+}
+
+/* بطاقة الحالة الزجاجية الفيروزية الملكية المطابقة لصفحة تسجيل الدخول تماماً */
+.status-glass-card {
+  position: relative !important;
+  overflow: hidden !important;
+  background: rgba(15, 118, 110, 0.22) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: var(--radius-xl) !important;
+  padding: 18px 16px !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: var(--shadow-lg), inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+  margin-bottom: 20px !important;
+}
+
+.status-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--gold-gradient);
+}
+
+.status-header-card {
+  background: rgba(15, 118, 110, 0.25) !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 14px 12px !important;
+  margin-bottom: 12px !important;
+  text-align: center !important;
+}
+
+.status-actions-row button:hover {
+  transform: none !important;
+}
+
+.status-actions-row button svg,
+.status-actions-row button span {
+  pointer-events: none !important;
+}
+</style>
+<link rel="stylesheet" href="fonts/Almarai.css">
+<link rel="stylesheet" href="css/fontello.min.css">
+<link rel="stylesheet" href="css/style.min.css">
+<link rel="stylesheet" href="css/loyalty-system.css">
+<link rel="stylesheet" href="css/loyalty-modal.css">
+<link rel="stylesheet" href="css/announcements-style.css">
+<script>
+function openLogout() {
+  if (window.name !== 'hotspot_status') return true;
+  try {
+    open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
+    window.close();
+    return false;
+  } catch(e) {
+    return true;
+  }
+}
+
+function instantLogoutAction(isErase, btnEl) {
+  if (btnEl && btnEl.classList) {
+    btnEl.classList.add('processing');
+    void btnEl.offsetWidth;
+  }
+  try {
+    var actionVal = isErase ? 'logout' : 'disconnect';
+    sessionStorage.setItem('logout_action_type', actionVal);
+    localStorage.setItem('logout_action_type', actionVal);
+    document.cookie = 'logout_action_type=' + actionVal + ';path=/';
+    sessionStorage.setItem('prevent_auto_login', '1');
+    localStorage.setItem('prevent_auto_login', '1');
+    sessionStorage.removeItem('hotspot_is_logged_in');
+    sessionStorage.removeItem('hotspot_status_instant');
+    localStorage.removeItem('hotspot_is_logged_in');
+    document.cookie = 'hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    if (isErase) {
+      var keys = ['username', 'speed', 'password'];
+      for (var i = 0; i < keys.length; i++) {
+        document.cookie = keys[i] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        document.cookie = keys[i] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
+      localStorage.removeItem('hotspot_username');
+      localStorage.removeItem('hotspot_speed');
+      localStorage.removeItem('hotspot_password');
+    }
+  } catch (e) {}
+
+  if (document.logout) {
+    var eraseInput = document.getElementById('statusEraseCookieInput');
+    if (isErase) {
+      if (!eraseInput) {
+        eraseInput = document.createElement('input');
+        eraseInput.type = 'hidden';
+        eraseInput.name = 'erase-cookie';
+        eraseInput.id = 'statusEraseCookieInput';
+        document.logout.appendChild(eraseInput);
+      }
+      eraseInput.value = 'on';
+    } else {
+      if (eraseInput && eraseInput.parentNode) {
+        eraseInput.parentNode.removeChild(eraseInput);
+      }
+    }
+    // إذا كانت نافذة منبثقة أصلية لميكروتك
+    if (window.name === 'hotspot_status') {
+      return openLogout();
+    }
+    document.logout.submit();
+    return false;
+  }
+
+  var logoutBase = '$(link-logout)';
+  if (!logoutBase || logoutBase.indexOf('$(') !== -1) logoutBase = 'logout.html';
+  var targetUrl = isErase ? (logoutBase + (logoutBase.indexOf('?') === -1 ? '?erase-cookie=on' : '&erase-cookie=on')) : logoutBase;
+
+  setTimeout(function() {
+    window.location.href = targetUrl;
+  }, 8);
+  return false;
+}
+
+window.addEventListener('pageshow', function() {
+  var btns = document.querySelectorAll('.processing');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('processing');
+  }
+});
+
+(function() {
+  var isLogged = "$(logged-in)";
+  if (isLogged === "no") {
+    var loginUrl = "$(link-login)";
+    if (!loginUrl || loginUrl.indexOf("$(") !== -1) loginUrl = "login.html";
+    window.location.replace(loginUrl);
+  }
+})();
+</script>
 </head>
-<body>
-<div class="ie-fixMinHeight">
-    <div class="main">
-        <div class="wrap animated fadeIn">
-            <img src="img/logo.png" class="logo" alt="عدن">
-			
-			
-			  <p class="info $(if error)alert$(endif)">
-			  
-			 
-			<br><br>
-						عزيزي العميل تتميز الشبكة بتطبيق لتسجيل الدخول gمعرفة الرصيد والوقت المتبقي
-						<br>
-						<a href="ALKHALID_LOGIN.apk" class="btn btn-small">اضغط هنا للتحميل</a>
-                        <br><br>
-                        	<br>	
-                        <br>
-						عزيزي العميل لمشاهدة بث المباريات اضغط هنا
-			</p>
-			<p class="info $(if error)alert$(endif)">
-			  
-			 
-			<a href="live/index.html">
-	<img border="0" src="33.png" width="238" height="136"></a><br>
-			</p>
-            <h1 class="logo-title">بيانات الاستخدام</h1>
-            <br>
-            <h2 style="text-align: center">
-                مرحبا
-                <span>
-                    
-                </span>
-            </h2>
-           
-            <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
-                <table>
-                    <tr>
-                        <td>عنوان الشبكة :</td>
-                        <td>$(ip)</td>
-                    </tr>
-                    <tr>
-                        <td>الرفع:</td>
-                        <td>
-                            <script type="text/javascript">
-                                document.write(toArabicBytes("$(bytes-in)"));
-                            </script>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>التحميل:</td>
-                        <td>
-                            <script type="text/javascript">
-                                document.write(toArabicBytes("$(bytes-out)"));
-                            </script>
-                        </td>
-                    </tr>
-                    $(if remain-bytes-total)
-                    <tr>
-                        <td>التحميل المتبقي: </td>
-                        <td>
-                            <script type="text/javascript">
-                                document.write(toArabicBytes("$(remain-bytes-total)"));
-                            </script>
-                        </td>
-                    </tr>
-                    $(endif)
+<body translate="no">
 
-                    <tr>
-                        <td>الوقت المستهلك : </td>
-                        <td>
-                            <script type="text/javascript">
-                                document.write(toArabicTime("$(uptime)"));
-                            </script>
-                        </td>
-                    </tr>
-                    $(if session-time-left)
-                    <tr>
-                        <td>الوقت المتبقي : </td>
-                        <td>
-                            <script type="text/javascript">
-                                document.write(toArabicTime("$(session-time-left)"));
-                            </script>
-                        </td>
-                    </tr>
-                    $(endif)
-                </table>
-                $(if login-by-mac != 'yes')
-                <input type="submit" value="تسجيل الخروج" style="margin-bottom: 7px">
-                <input type="submit" name="erase-cookie" value="خروج نهائي" clear-hot-cookie>
-                $(endif)
-				
-				            </form>
+<!-- الأيقونات المتصاعدة والأنيميشن المتحرك من أسفل الصفحة كصفحة تسجيل الدخول تماماً -->
+<ul class="floating-icons">
+  <li><svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4zm0 2.9a13.9 13.9 0 0 1 9.35 3.65L12 19.89 2.65 10.55A13.9 13.9 0 0 1 12 6.9z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 1.5l3.09 6.26L22 8.77l-5 4.87 1.18 6.88L12 17.27l-6.18 3.25L7 13.64 2 8.77l6.91-1.01L12 1.5z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M19 3H5L2 9l10 12L22 9l-3-6zM5.3 5h13.4l1.5 3H3.8l1.5-3zm6.7 13.5L5.4 10h13.2L12 18.5z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 3C6.95 3 2.38 5.05 0 8.41L1.44 9.9C3.47 6.94 7.47 5 12 5c4.53 0 8.53 1.94 10.56 4.9L24 8.41C21.62 5.05 17.05 3 12 3zm0 4c-3.73 0-7.04 1.54-9.4 4l1.45 1.45C5.7 10.82 8.65 9.5 12 9.5c3.35 0 6.3 1.32 8.35 3.35L21.8 11.4C19.44 8.94 16.13 7 12 7zm0 4c-2.4 0-4.57 1-6.14 2.6L12 21l6.14-7.4A8.52 8.52 0 0 0 12 11z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8H7z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 0l2.6 8.4L23 11l-8.4 2.6L12 22l-2.6-8.4L1 11l8.4-2.6L12 0z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4zm0 2.9a13.9 13.9 0 0 1 9.35 3.65L12 19.89 2.65 10.55A13.9 13.9 0 0 1 12 6.9z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8H7z" /></svg></li>
+  <li><svg viewBox="0 0 24 24"><path d="M19 3H5L2 9l10 12L22 9l-3-6z" /></svg></li>
+</ul>
 
-        <p class="info bt">
-			  
-			  <span>خدمة العملاء </span> <br>
-                    <span>776418435-734059346</span>
-
-                        <br><br>
-                    <span>للتواصل المباشر عبر واتساب </span>
-                    <span><a href="https://wa.me/967734059346">اضغط هنا</a></span>
-                </p>
-	   </div>
-			<p class="info $(if error)alert$(endif)"> 
-<br/> Copyright © 2023 ALKHALID NET
- <br/> برمجة وتركيب
-<br/> م/ محمود سهيل سعيدي
-<br/> 772739060 - 737370707
-</p>
-    </div>
-	
+<!-- أشكال التوهج اللوني الملكية الأصلية للشبكة -->
+<div class="screen-background">
+  <span class="screen-background-shape screen-background-shape1"></span>
+  <span class="screen-background-shape screen-background-shape2"></span>
+  <span class="screen-background-shape screen-background-shape3"></span>
+  <span class="screen-background-shape screen-background-shape4"></span>
+  <span class="screen-background-shape screen-background-shape5"></span>
+  <span class="screen-background-shape screen-background-shape6"></span>
+  <span class="screen-background-shape screen-background-shape7"></span>
+  <span class="screen-background-shape screen-background-shape8"></span>
 </div>
+
+<!-- حاوية التنبيهات الملكية المنبثقة المتوافقة 100% مع أندرويد 14 وريدمي وجميع الهواتف -->
+<div class="error-container $(if error)active$(endif)" id="statusToastContainer">
+  <div class="error" id="error-toast" onclick="if(typeof hideStatusToast==='function')hideStatusToast()">
+    <div class="toast-icon-wrap" id="statusToastIconWrap">
+      <svg viewBox="0 0 24 24" id="statusToastIcon">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+      </svg>
+    </div>
+    <span id="error">$(error)</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="screen status-standalone-screen">
+    <div class="screen-content" style="padding: 10px 8px 20px 8px;">
+      
+      <!-- شاشة الحالة مع البطاقة الزجاجية الملكية الفاخرة المطابقة لصفحة تسجيل الدخول -->
+      <div class="status-view" id="status">
+        <div class="status-glass-card">
+          
+          <!-- رأس الحاوية: يبدأ مباشرة بحاوية 'تم تسجيل دخولك بنجاح' بدون أي أيقونة live أو تعقيد -->
+          <div class="status-header-card" style="padding: 10px 8px 12px 8px; text-align: center;">
+            <h2 class="title" id="status-title" style="font-size: 1.3rem; font-weight: 800; color: #ffffff; margin: 0 0 6px 0;">تم تسجيل دخولك بنجاح!</h2>
+            <p style="font-size: 0.82rem; color: #cbd5e1; margin: 0;">
+              مرحباً بك <a href="$(link-login)" onclick="return goToLoginManual();" style="color: #fde047; font-weight: 700; text-decoration: underline;">اذا لم يتم تسجيل دخولك انقر هنا</a>
+              <strong style="color: #D4AF37; display: none;">$(username)</strong>
+              <span style="color: #38bdf8; font-family: monospace; display: none;">$(ip)</span>
+            </p>
+          </div>
+
+          <!-- شريط الأخبار المتحرك -->
+          <section class="section" style="margin-top: 10px; margin-bottom: 10px;">
+            <div class="ticker-container">
+              <div class="ticker-content-track">
+                <p class="marquee" data-news-line>أهلاً بكم في شبكة الخالد نت | خدمة العملاء: 776418435 - 734059346 | للمحافظة على الرصيد يرجى اختيار سرعة مناسبة</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- أقسام نظام النقاط والمكافآت -->
+          <div id="loyalty-unregistered-section-status" style="display: none;">
+            <div class="points-notice-alert" role="alert">
+              <div class="notice-icon-wrap">
+                <svg viewBox="0 0 24 24" class="notice-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
+              </div>
+              <div class="notice-content">
+                <strong class="notice-tag">تنبيه:</strong>
+                <span class="notice-text">أنت غير مسجل حالياً في نظام النقاط لذلك لن يتم احتساب أي نقاط عند تسجيل الدخول..</span>
+              </div>
+            </div>
+            <button type="button" class="button points-register-btn loyalty-register-btn" id="openPointsRegisterBtnStatus" onclick="openModal('points-register-modal')" aria-label="انقر للتسجيل في نظام النقاط">
+              <svg viewBox="0 0 24 24" class="points-btn-icon"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+              <span class="button-text">انقر للتسجيل في نظام النقاط</span>
+            </button>
+          </div>
+
+          <div id="loyalty-registered-section-status" style="display: none;">
+            <div class="loyalty-user-card">
+              <div class="loyalty-user-header">
+                <div class="loyalty-user-profile-info">
+                  <div class="loyalty-user-avatar">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                  </div>
+                  <div class="loyalty-user-details">
+                    <span class="loyalty-user-title">حساب نظام النقاط</span>
+                    <span class="loyalty-user-phone-number loyalty-user-phone-display" id="loyalty-user-phone-status">77XXXXXXX</span>
+                  </div>
+                </div>
+                <button type="button" id="loyalty-logout-btn-status" class="loyalty-logout-pill-btn" title="تسجيل الخروج من نظام النقاط">
+                  <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; fill: currentColor;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" /></svg>
+                  <span>خروج</span>
+                </button>
+              </div>
+              <div class="loyalty-points-display-banner">
+                <div class="loyalty-points-label">
+                  <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                  <span>رصيد نقاطك الحالي:</span>
+                </div>
+                <div class="loyalty-points-count-badge">
+                  <span class="loyalty-points-value">0</span>
+                  <span class="loyalty-points-unit">نقطة</span>
+                </div>
+              </div>
+              <div class="loyalty-actions-grid">
+                <button type="button" class="loyalty-action-card-btn" id="loyalty-loan-btn-status">
+                  <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                  <span>طلب سلفة</span>
+                </button>
+                <button type="button" class="loyalty-action-card-btn" id="loyalty-buy-card-btn-status">
+                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.1 0 2-.89 2-2V6c0-1.1-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                  <span>استبدال كرت</span>
+                </button>
+                <button type="button" class="loyalty-action-card-btn" id="loyalty-saved-cards-btn-status">
+                  <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                  <span>الكروت المحفوظة</span>
+                </button>
+                <button type="button" class="loyalty-action-card-btn" id="loyalty-account-btn-status">
+                  <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                  <span>الدخول الى حسابي</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- روابط الاستراحة والبث المباشر -->
+          <div class="entertainment-links" style="display: flex; gap: 10px; margin-top: 10px;">
+            <a class="stream-card-link" data-esterahah-link href="lamsports.html" style="display: none; flex: 1;">
+              <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z" /></svg>
+              <span>الاستراحة</span>
+            </a>
+            <a class="stream-card-link" data-mobasher-link href="live/index.html" style="flex: 1;">
+              <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zm-11-2l6-4-6-4v8z" /></svg>
+              <span>البث المباشر للمباريات</span>
+            </a>
+          </div>
+
+          <!-- حاوية خيار تحديد السرعة المطابقة تماماً لصفحة تسجيل الدخول تحت زر البث المباشر -->
+          <div class="speed-selector-group" id="statusSpeedSelectorGroup" style="margin-top: 14px; margin-bottom: 6px;">
+            <div class="speed-header">
+              <span class="speed-title">
+                <svg viewBox="0 0 24 24" class="section-icon">
+                  <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+                </svg>
+                <span>أختر سرعتك المناسبة</span>
+              </span>
+              <!-- عنصر سرعة الكرت للمايكروتك -->
+              <span id="sspeed" style="display: none;">$(domain)</span>
+            </div>
+            <select id="speed" name="speed" speed-field style="display: none;">
+              <option value="" disabled hidden>أختيار سرعة الإنترنت</option>
+              <option value="@512K">سرعة 512 كيلو</option>
+              <option value="@1M">سرعة 1 ميجا</option>
+              <option selected value="@2M">سرعة 2 ميجا</option>
+              <option value="@4M">سرعة 4 ميجا</option>
+              <option value="@8M">سرعة 8 ميجا</option>
+              <option value="@12M">سرعة 12 ميجا</option>
+              <option value="">بدون تحديد (تلقائي)</option>
+            </select>
+            <button type="button" class="speed-modal-trigger-btn" id="openSpeedModalBtn"
+              onclick="openSpeedModal()" parent-id="speed-modal" aria-label="تحديد سرعة الإنترنت">
+              <div class="speed-trigger-left">
+                <span class="speed-trigger-icon">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+                  </svg>
+                </span>
+                <div class="speed-trigger-text">
+                  <span class="speed-trigger-label">السرعة المختارة:</span>
+                  <span class="speed-trigger-selected" id="selectedSpeedDisplay">سرعة 2 ميجا</span>
+                </div>
+              </div>
+              <div class="speed-trigger-badge">
+                <span>تغيير</span>
+                <svg viewBox="0 0 24 24">
+                  <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+                </svg>
+              </div>
+            </button>
+          </div>
+
+          <!-- شبكة مؤشرات الاستهلاك -->
+          <div style="margin-top: 14px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--accent-gold);"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" /></svg>
+              <span style="font-size: 0.95rem; font-weight: 800; color: #ffffff;">معلومات واستهلاك الكرت</span>
+            </div>
+            <div class="status-grid-metrics">
+              <div class="metric-card-glass">
+                <span class="metric-title">
+                  <svg viewBox="0 0 24 24" class="metric-icon"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z" /></svg>
+                  <span>التنزيل (Download)</span>
+                </span>
+                <span class="metric-val cyan" id="bytes_out">$(bytes-out)</span>
+              </div>
+              <div class="metric-card-glass">
+                <span class="metric-title">
+                  <svg viewBox="0 0 24 24" class="metric-icon"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" /></svg>
+                  <span>الرفع (Upload)</span>
+                </span>
+                <span class="metric-val emerald" id="bytes_in">$(bytes-in)</span>
+              </div>
+              <div class="metric-card-glass full-width" remain_bytes_total>
+                <span class="metric-title">
+                  <svg viewBox="0 0 24 24" class="metric-icon"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5zm0 2.24l6 3.75v7.52l-6 3.75-6-3.75V7.99l6-3.75z" /></svg>
+                  <span>التحميل المتبقي</span>
+                </span>
+                <span class="metric-val gold" id="remain_bytes_total">$(remain-bytes-total)</span>
+              </div>
+              <div class="metric-card-glass">
+                <span class="metric-title">
+                  <svg viewBox="0 0 24 24" class="metric-icon"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" /></svg>
+                  <span>الوقت المستهلك</span>
+                </span>
+                <span class="metric-val" id="uptime">$(uptime)</span>
+              </div>
+              <div class="metric-card-glass" session_time_left>
+                <span class="metric-title">
+                  <svg viewBox="0 0 24 24" class="metric-icon"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6zm10 14.5V20H8v-3.5l4-4 4 4zM12 11.5l-4-4V4h8v3.5l-4 4z" /></svg>
+                  <span>الوقت المتبقي</span>
+                </span>
+                <span class="metric-val gold" id="session_time_left">$(session-time-left)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- أزرار الخروج وقطع الاتصال الرسمية لميكروتك -->
+          <form action="$(link-logout)" name="logout" id="logoutForm" onSubmit="return openLogout()" style="margin-top: 16px;">
+            <div class="status-actions-row">
+              <button class="btn-danger-glass app-logout" erase-cookie clear-hot-cookie type="submit" name="erase-cookie" value="on" onclick="return instantLogoutAction(true, this);" style="flex: 1;" title="خروج نهائي ومسح حفظ الكرت">
+                <svg viewBox="0 0 24 24" class="action-btn-icon"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" /></svg>
+                <span>تسجيل الخروج</span>
+              </button>
+              <button class="btn-secondary-glass app-logout" type="submit" onclick="return instantLogoutAction(false, this);" style="flex: 1;" title="قطع الاتصال مع بقاء الكرت محفوظاً">
+                <svg viewBox="0 0 24 24" class="action-btn-icon"><path d="M16.01 7L16 3h-2v4h-4V3H8v4h-.01C6.89 7 6 7.89 6 8.98v5.52L9.5 18v3h5v-3l3.5-3.51V9c0-1.1-.9-2-1.99-2z" /></svg>
+                <span>قطع الاتصال</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- قسم خدمة العملاء والدعم الفني -->
+          <div class="customer-support-section" style="margin-top: 18px;">
+            <div class="support-header">
+              <svg viewBox="0 0 24 24" class="support-header-icon">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z" />
+              </svg>
+              <span class="support-title">خدمة العملاء</span>
+            </div>
+            <div class="support-actions-grid">
+              <a href="whatsapp://send?phone=967776418435&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D8%B4%D8%A8%D9%83%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%84%D8%AF%20%D9%86%D8%AA"
+                 class="support-btn support-btn-whatsapp" aria-label="مراسلة واتساب">
+                <svg viewBox="0 0 24 24" class="support-btn-icon">
+                  <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.8 14.16c-.24.68-1.2 1.28-1.92 1.34-.69.06-1.58.08-4.57-1.16-3.82-1.58-6.28-5.47-6.47-5.73-.19-.25-1.57-2.09-1.57-3.99s.99-2.84 1.34-3.23c.35-.38.77-.48 1.03-.48.26 0 .52.01.75.02.24.01.56-.09.87.66.32.77 1.09 2.66 1.18 2.86.1.19.16.42.03.68-.13.25-.19.41-.38.64-.19.23-.4.51-.57.69-.19.19-.39.4-.17.78.22.38.98 1.62 2.11 2.62 1.45 1.29 2.67 1.69 3.05 1.88.38.19.61.16.83-.1.23-.26.96-1.12 1.22-1.5.26-.38.51-.32.86-.19.35.13 2.22 1.05 2.6 1.24.38.19.64.29.74.45.09.16.09.92-.15 1.6z" />
+                </svg>
+                <span>مراسلة واتساب</span>
+              </a>
+              <a href="tel:776418435" class="support-btn support-btn-call" aria-label="اتصال مباشر">
+                <svg viewBox="0 0 24 24" class="support-btn-icon">
+                  <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.11 15.11 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 3.99c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.61c0-.55-.45-1-1-1z" />
+                </svg>
+                <span>اتصال هاتفي</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- الشريط السفلي الفاخر الأصلي الثابت للشبكة -->
+<nav class="bottom-nav-bar" id="bottomNav">
+  <button class="nav-item-btn active" id="navHome" type="button" onclick="goToHome()">
+    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
+    <span>الرئيسية</span>
+  </button>
+  <button class="nav-item-btn price-icon" id="navPrice" parent-id="price" data-price-button type="button" onclick="openModal('price')">
+    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.1 0 2-.89 2-2V6c0-1.1-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" /></svg>
+    <span>الأسعار</span>
+  </button>
+  <button class="nav-item-btn sellpoint" id="navSellPoint" parent-id="sell-point" data-sell-point-button type="button" onclick="openModal('sell-point')">
+    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+    <span>نقاط البيع</span>
+  </button>
+  <button class="nav-item-btn" id="navLoan" parent-id="loan" data-loan-button type="button" onclick="openModal('loan')">
+    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.1 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.1 0 2-.89 2-2V8c0-1.1-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z" /></svg>
+    <span>العروض</span>
+  </button>
+</nav>
+
+<!-- نافذة مودال الأسعار -->
+<div class="app" id="price" style="display: none;">
+  <div class="modal-sheet-card">
+    <div class="modal-header">
+      <span class="title">
+        <svg viewBox="0 0 24 24" class="modal-title-icon"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.1 0 2-.89 2-2V6c0-1.1-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" /></svg>
+        <span>أسعار الكروت</span>
+      </span>
+      <button class="modal-close-btn" type="button" onclick="closeModal('price')">✕ إغلاق</button>
+    </div>
+    <div class="price-div">
+      <div class="wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">الفئة</th>
+              <th scope="col">الوقت</th>
+              <th scope="col">الرصيد</th>
+              <th scope="col">الصلاحية</th>
+            </tr>
+          </thead>
+          <tbody id="profiles"></tbody>
+        </table>
+        <button class="button app-submit modal-cancel-btn" type="button" onclick="closeModal('price')">
+          <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
+          <span>رجوع</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة مودال نقاط البيع -->
+<div class="app" id="sell-point" style="display: none;">
+  <div class="modal-sheet-card">
+    <div class="modal-header">
+      <span class="title">
+        <svg viewBox="0 0 24 24" class="modal-title-icon"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+        <span>نقاط البيع والتوزيع</span>
+      </span>
+      <button class="modal-close-btn" type="button" onclick="closeModal('sell-point')">✕ إغلاق</button>
+    </div>
+    <div class="sell-point-div">
+      <div class="wrapper">
+        <table>
+          <tbody class="sell-point" id="sell-points"></tbody>
+        </table>
+        <button class="button app-submit modal-cancel-btn" type="button" onclick="closeModal('sell-point')">
+          <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
+          <span>رجوع</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة مودال جديدنا والعروض -->
+<div class="app" id="loan" style="display: none;">
+  <div class="modal-sheet-card">
+    <div class="modal-header">
+      <span class="title">
+        <svg viewBox="0 0 24 24" class="modal-title-icon"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.1 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.1 0 2-.89 2-2V8c0-1.1-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z" /></svg>
+        <span>جديدنا والعروض</span>
+      </span>
+      <button class="modal-close-btn" type="button" onclick="closeModal('loan')">✕ إغلاق</button>
+    </div>
+    <div class="price-div">
+      <div class="wrapper">
+        <div class="loan-body" id="loan-news-container">
+          <p id="loan-news-title" style="font-weight: 800; font-size: 1.1rem; color: #fde047; margin-bottom: 8px;">زبائن شبكة الخالد نت الكرام</p>
+          <p id="loan-news-content">أهلاً وسهلاً بكم في شبكة الخالد نت. كروت وباقات الإنترنت متوفرة في جميع نقاط البيع ومراكز التوزيع. للمحافظة على الرصيد يرجى اختيار السرعة المناسبة لاحتياجك.</p>
+          <div id="loan-news-code" class="loan-highlight-badge">خدمة العملاء: 776418435 - 734059346</div>
+          <br id="loan-news-break"><br id="loan-news-break-2">
+          <div id="loan-news-extra-header" style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--accent-cyan);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" /></svg>
+            <strong id="loan-news-extra-title" style="color: var(--accent-cyan);">البث المباشر والمباريات:</strong>
+          </div>
+          <p id="loan-news-extra-content">استمتع بمشاهدة البث المباشر للمباريات والدوريات العالمية مجاناً عبر منصة وسيرفر الشبكة.</p>
+          <div id="loan-news-extra-badge" class="loan-highlight-badge">بث المباريات</div>
+        </div>
+        <button class="button app-submit modal-cancel-btn" type="button" onclick="closeModal('loan')">
+          <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
+          <span>رجوع</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تحديد السرعة المودال المتطابقة تماماً مع صفحة تسجيل الدخول -->
+<div class="app" id="speed-modal" style="display: none;">
+  <div class="modal-sheet-card compact-speed-card">
+    <div class="modal-header">
+      <span class="title">
+        <svg viewBox="0 0 24 24" class="modal-title-icon">
+          <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+        </svg>
+        <span>تحديد سرعة الإنترنت</span>
+      </span>
+      <button class="modal-close-btn" type="button" onclick="closeSpeedModal()">✕ إغلاق</button>
+    </div>
+    <div class="speed-cards-list" id="speedModalList">
+      <div class="speed-card-option" data-speed="@512K" data-speed-title="سرعة 512 كيلو" onclick="selectStatusSpeed('@512K', 'سرعة 512 كيلو')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 512 كيلو</span></div>
+      </div>
+      <div class="speed-card-option" data-speed="@1M" data-speed-title="سرعة 1 ميجا" onclick="selectStatusSpeed('@1M', 'سرعة 1 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 1 ميجا</span></div>
+      </div>
+      <div class="speed-card-option active" data-speed="@2M" data-speed-title="سرعة 2 ميجا" onclick="selectStatusSpeed('@2M', 'سرعة 2 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 2 ميجا <span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span></span></div>
+      </div>
+      <div class="speed-card-option" data-speed="@4M" data-speed-title="سرعة 4 ميجا" onclick="selectStatusSpeed('@4M', 'سرعة 4 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 4 ميجا</span></div>
+      </div>
+      <div class="speed-card-option" data-speed="@8M" data-speed-title="سرعة 8 ميجا" onclick="selectStatusSpeed('@8M', 'سرعة 8 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 8 ميجا</span></div>
+      </div>
+      <div class="speed-card-option" data-speed="@12M" data-speed-title="سرعة 12 ميجا" onclick="selectStatusSpeed('@12M', 'سرعة 12 ميجا')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">سرعة 12 ميجا</span></div>
+      </div>
+      <div class="speed-card-option" data-speed="" data-speed-title="بدون تحديد (تلقائي)" onclick="selectStatusSpeed('', 'بدون تحديد (تلقائي)')">
+        <div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>
+        <div class="speed-card-info"><span class="speed-card-name">بدون تحديد (تلقائي)</span></div>
+      </div>
+    </div>
+    <button class="button app-submit modal-cancel-btn" type="button" onclick="closeSpeedModal()" style="margin-top: 14px;">
+      <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
+      <span>رجوع</span>
+    </button>
+  </div>
+</div>
+
+<script>
+// إدارة النوافذ المودال والشريط السفلي
+function openModal(id) {
+  var modals = ['price', 'sell-point', 'loan', 'speed-modal', 'status-speed-modal'];
+  modals.forEach(function(mId) {
+    var el = document.getElementById(mId);
+    if (el) el.style.display = 'none';
+  });
+
+  var target = document.getElementById(id);
+  if (target) {
+    target.style.display = 'flex';
+  }
+
+  // تحديث الزر النشط في الشريط السفلي
+  var navItems = document.querySelectorAll('.bottom-nav-bar .nav-item-btn');
+  navItems.forEach(function(btn) { btn.classList.remove('active'); });
+  if (id === 'price') {
+    var pBtn = document.getElementById('navPrice');
+    if (pBtn) pBtn.classList.add('active');
+  } else if (id === 'sell-point') {
+    var sBtn = document.getElementById('navSellPoint');
+    if (sBtn) sBtn.classList.add('active');
+  } else if (id === 'loan') {
+    var lBtn = document.getElementById('navLoan');
+    if (lBtn) lBtn.classList.add('active');
+  }
+}
+
+function closeModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+  goToHome();
+}
+
+function goToHome() {
+  var modals = ['price', 'sell-point', 'loan', 'speed-modal', 'status-speed-modal'];
+  modals.forEach(function(mId) {
+    var el = document.getElementById(mId);
+    if (el) el.style.display = 'none';
+  });
+  var navItems = document.querySelectorAll('.bottom-nav-bar .nav-item-btn');
+  navItems.forEach(function(btn) { btn.classList.remove('active'); });
+  var hBtn = document.getElementById('navHome');
+  if (hBtn) hBtn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openSpeedModal() {
+  var m = document.getElementById('speed-modal') || document.getElementById('status-speed-modal');
+  if (m) m.style.display = 'flex';
+}
+
+function closeSpeedModal() {
+  var m1 = document.getElementById('speed-modal');
+  if (m1) m1.style.display = 'none';
+  var m2 = document.getElementById('status-speed-modal');
+  if (m2) m2.style.display = 'none';
+}
+
+// نظام الإشعارات المنبثقة من أعلى الشاشة المتوافق 100% مع أندرويد 14 وريدمي
+window._statusToastTimer = null;
+function showStatusToast(msg, isSuccess) {
+  var c = document.getElementById('statusToastContainer') || document.querySelector('.error-container');
+  var p = document.getElementById('error');
+  var iconWrap = document.getElementById('statusToastIconWrap');
+  if (p && msg) p.textContent = msg;
+  if (iconWrap) {
+    if (isSuccess) {
+      iconWrap.innerHTML = '<svg viewBox="0 0 24 24" style="fill: #10B981; width: 20px; height: 20px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+    } else {
+      iconWrap.innerHTML = '<svg viewBox="0 0 24 24" style="fill: var(--accent-gold); width: 20px; height: 20px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>';
+    }
+  }
+  if (c) {
+    c.classList.add('active');
+    setTimeout(function() { if (c) c.classList.add('zoom'); }, 20);
+    clearTimeout(window._statusToastTimer);
+    window._statusToastTimer = setTimeout(function() {
+      hideStatusToast();
+    }, 4500);
+  }
+}
+
+function hideStatusToast() {
+  clearTimeout(window._statusToastTimer);
+  var c = document.getElementById('statusToastContainer') || document.querySelector('.error-container');
+  if (c) {
+    c.classList.remove('active');
+    c.classList.remove('zoom');
+  }
+}
+
+var statusSpeedLabelMap = {
+  '@512K': 'سرعة 512 كيلو',
+  '@1M': 'سرعة 1 ميجا',
+  '@2M': 'سرعة 2 ميجا',
+  '@4M': 'سرعة 4 ميجا',
+  '@8M': 'سرعة 8 ميجا',
+  '@12M': 'سرعة 12 ميجا',
+  '': 'بدون تحديد (تلقائي)'
+};
+
+function formatSpeedLabel(val) {
+  var raw = (val !== void 0 && val !== null) ? String(val).trim() : '';
+  if (statusSpeedLabelMap[raw]) return statusSpeedLabelMap[raw];
+  var withAt = raw.indexOf('@') === 0 ? raw.toUpperCase() : ('@' + raw.toUpperCase());
+  if (statusSpeedLabelMap[withAt]) return statusSpeedLabelMap[withAt];
+  var spdClean = raw.replace('@', '').toUpperCase();
+  if (spdClean === '512K') return 'سرعة 512 كيلو';
+  if (spdClean === '1M') return 'سرعة 1 ميجا';
+  if (spdClean === '2M') return 'سرعة 2 ميجا';
+  if (spdClean === '4M') return 'سرعة 4 ميجا';
+  if (spdClean === '8M') return 'سرعة 8 ميجا';
+  if (spdClean === '12M') return 'سرعة 12 ميجا';
+  return raw || 'بدون تحديد (تلقائي)';
+}
+
+function stripKnownSpeedSuffix(userStr) {
+  var s = (userStr || '').trim();
+  if (!s) return '';
+  if (window.hotspotConfig && Array.isArray(window.hotspotConfig.speeds)) {
+    for (var i = 0; i < window.hotspotConfig.speeds.length; i++) {
+      var v = window.hotspotConfig.speeds[i].value;
+      if (v && s.toUpperCase().endsWith(String(v).toUpperCase())) {
+        return s.slice(0, s.length - String(v).length);
+      }
+    }
+  }
+  return s.replace(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i, '');
+}
+
+function selectStatusSpeed(val, speedTitle) {
+  var label = speedTitle || formatSpeedLabel(val);
+
+  // تحديث نصوص السرعة في الواجهة
+  var spdEl = document.getElementById('sspeed');
+  if (spdEl) spdEl.textContent = label;
+
+  var triggerText = document.getElementById('selectedSpeedDisplay') || document.getElementById('statusSpeedTriggerText');
+  if (triggerText) triggerText.textContent = label;
+
+  var speedSelectEl = document.getElementById('speed');
+  if (speedSelectEl) speedSelectEl.value = val;
+
+  // تحديث النقطة المحددة في خيارات السرعة
+  var cards = document.querySelectorAll('#speed-modal .speed-card-option, #status-speed-modal .speed-card-option, .speed-grid-card');
+  cards.forEach(function(c) {
+    var cVal = c.getAttribute('data-speed');
+    if (cVal === null) cVal = c.getAttribute('data-status-speed');
+    if (cVal === val) {
+      c.classList.add('active');
+    } else {
+      c.classList.remove('active');
+    }
+  });
+
+  closeSpeedModal();
+
+  // إشعار فوري منبثق للمستخدم
+  showStatusToast('جارٍ تطبيق ' + label + '...', false);
+
+  try {
+    var rawUser = '$(username)';
+    if (!rawUser || rawUser.indexOf('$(') !== -1) {
+      if (typeof getLoginCardCookie === 'function') rawUser = getLoginCardCookie().username;
+      if (!rawUser) {
+        try { rawUser = localStorage.getItem('hotspot_username') || ''; } catch (e) {}
+      }
+    }
+
+    var cleanCard = stripKnownSpeedSuffix(rawUser);
+    if (!cleanCard && typeof stripCardSpeedSuffix === 'function') {
+      cleanCard = stripCardSpeedSuffix(rawUser);
+    }
+
+    var pass = '';
+    if (typeof getLoginCardCookie === 'function') {
+      pass = getLoginCardCookie().password || '';
+    }
+    if (!pass) {
+      try { pass = localStorage.getItem('hotspot_password') || ''; } catch (e) {}
+    }
+    if (!pass && cleanCard) {
+      pass = cleanCard;
+    }
+
+    if (cleanCard) {
+      if (typeof setLoginCardCookie === 'function') {
+        setLoginCardCookie(cleanCard, pass, val);
+      } else {
+        try {
+          localStorage.setItem('hotspot_username', cleanCard);
+          localStorage.setItem('hotspot_speed', val);
+          document.cookie = 'speed=' + encodeURIComponent(val) + ';path=/;max-age=2592000';
+          document.cookie = 'username=' + encodeURIComponent(cleanCard) + ';path=/;max-age=2592000';
+        } catch (e) {}
+      }
+
+      var fullUserWithSpeed = cleanCard + (val || '');
+
+      // روابط المايكروتك الرسمية لقطع الجلسة ثم تسجيل الدخول بالسرعة الجديدة
+      var logoutUrl = '$(link-logout)';
+      if (!logoutUrl || logoutUrl.indexOf('$(') !== -1) logoutUrl = '/logout';
+      var sepLogout = logoutUrl.indexOf('?') === -1 ? '?' : '&';
+      var logoutReqUrl = logoutUrl + sepLogout + 'var=callBack&_t=' + Date.now();
+
+      var loginUrl = '$(link-login-only)';
+      if (!loginUrl || loginUrl.indexOf('$(') !== -1) loginUrl = '$(link-login)';
+      if (!loginUrl || loginUrl.indexOf('$(') !== -1) loginUrl = '/login';
+      var sepLogin = loginUrl.indexOf('?') === -1 ? '?' : '&';
+      var loginReqUrl = loginUrl + sepLogin +
+        'username=' + encodeURIComponent(fullUserWithSpeed) +
+        '&password=' + encodeURIComponent(pass) +
+        '&var=callBack&_t=' + Date.now();
+
+      var logoutReq = new XMLHttpRequest();
+      logoutReq.open('GET', logoutReqUrl, true);
+      logoutReq.timeout = 4000;
+
+      var proceedLogin = function() {
+        var loginReq = new XMLHttpRequest();
+        loginReq.open('GET', loginReqUrl, true);
+        loginReq.timeout = 4000;
+        loginReq.onreadystatechange = function() {
+          if (loginReq.readyState === 4) {
+            showStatusToast('تم تغيير السرعة بنجاح إلى: ' + label, true);
+          }
+        };
+        loginReq.ontimeout = function() {
+          showStatusToast('تم تغيير السرعة بنجاح إلى: ' + label, true);
+        };
+        loginReq.onerror = function() {
+          showStatusToast('تم تغيير السرعة بنجاح إلى: ' + label, true);
+        };
+        loginReq.send();
+      };
+
+      logoutReq.onreadystatechange = function() {
+        if (logoutReq.readyState === 4) {
+          proceedLogin();
+        }
+      };
+      logoutReq.ontimeout = function() {
+        proceedLogin();
+      };
+      logoutReq.onerror = function() {
+        proceedLogin();
+      };
+      logoutReq.send();
+    } else {
+      showStatusToast('تم تحديد ' + label, true);
+    }
+  } catch (e) {
+    showStatusToast('تم تحديد ' + label, true);
+  }
+}
+
+function toArabicBytes(bytes) {
+  var num = Number(bytes);
+  if (isNaN(num)) return bytes || '-';
+  if (num < 1024) return num + ' بايت';
+  if (num < 1048576) return Math.round(num / 1024) + ' كيلوبايت';
+  if (num < 1073741824) return Math.round(num / 1048576) + ' ميجابايت';
+  return Number((num / 1073741824).toFixed(2)) + ' جيجابايت';
+}
+
+function toArabicTime(timeStr) {
+  if (!timeStr) return '-';
+  var str = timeStr, d = '', h = '', m = '', s = '';
+  if (str.indexOf('d') >= 0) { var sp = str.split('d'); d = sp[0] + ' يوم '; str = sp[1]; }
+  if (str.indexOf('h') >= 0) { var sp = str.split('h'); h = sp[0] + ' ساعة '; str = sp[1]; }
+  if (str.indexOf('m') >= 0) { var sp = str.split('m'); m = sp[0] + ' دقيقة '; str = sp[1]; }
+  if (str.indexOf('s') >= 0) { var sp = str.split('s'); s = sp[0] + ' ثانية'; }
+  return (d + h + m + s).trim() || timeStr;
+}
+
+(function formatAllMetrics() {
+  var bOut = document.getElementById('bytes_out');
+  if (bOut && bOut.textContent) bOut.textContent = toArabicBytes(bOut.textContent.trim());
+
+  var bIn = document.getElementById('bytes_in');
+  if (bIn && bIn.textContent) bIn.textContent = toArabicBytes(bIn.textContent.trim());
+
+  var bRemain = document.getElementById('remain_bytes_total');
+  if (bRemain) {
+    var rVal = (bRemain.textContent || '').trim();
+    if (!rVal || rVal === '-' || rVal.indexOf('$(') !== -1) {
+      bRemain.textContent = 'مفتوح';
+    } else {
+      bRemain.textContent = toArabicBytes(rVal);
+    }
+  }
+
+  var up = document.getElementById('uptime');
+  if (up && up.textContent) up.textContent = toArabicTime(up.textContent.trim());
+
+  var sLeft = document.getElementById('session_time_left');
+  if (sLeft) {
+    var sVal = (sLeft.textContent || '').trim();
+    if (!sVal || sVal === '-' || sVal.indexOf('$(') !== -1) {
+      sLeft.textContent = 'مفتوح';
+    } else {
+      sLeft.textContent = toArabicTime(sVal);
+    }
+  }
+
+  var spdEl = document.getElementById('sspeed');
+  var selDisplay = document.getElementById('selectedSpeedDisplay');
+  var raw = '';
+  if (spdEl) raw = (spdEl.textContent || '').trim();
+  if (!raw || raw.indexOf('$(') !== -1) {
+    var uRaw = '$(username)';
+    var m = uRaw.match(/@(512K|1M|2M|4M|8M|12M|[0-9]+[KMkm])$/i);
+    if (m) raw = '@' + m[1].toUpperCase();
+    else {
+      try {
+        raw = localStorage.getItem('hotspot_speed') || '@2M';
+      } catch (e) { raw = '@2M'; }
+    }
+  }
+  var normalizedCode = raw.indexOf('@') === 0 ? raw.toUpperCase() : (raw ? ('@' + raw.toUpperCase()) : '');
+  var formattedLabel = formatSpeedLabel(normalizedCode);
+  if (spdEl) spdEl.textContent = formattedLabel;
+  if (selDisplay) selDisplay.textContent = formattedLabel;
+  var speedSelectEl = document.getElementById('speed');
+  if (speedSelectEl) speedSelectEl.value = normalizedCode;
+
+  var cards = document.querySelectorAll('#speed-modal .speed-card-option, #status-speed-modal .speed-card-option, .speed-grid-card');
+  for (var i = 0; i < cards.length; i++) {
+    var cardVal = cards[i].getAttribute('data-speed');
+    if (cardVal === null) cardVal = cards[i].getAttribute('data-status-speed');
+    if (cardVal === normalizedCode) {
+      cards[i].classList.add('active');
+    } else {
+      cards[i].classList.remove('active');
+    }
+  }
+})();
+
+function goToLoginManual() {
+  try {
+    sessionStorage.setItem('prevent_auto_login', '1');
+    sessionStorage.removeItem('hotspot_is_logged_in');
+    localStorage.removeItem('hotspot_is_logged_in');
+    document.cookie = 'hotspot_is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  } catch (e) {}
+  var loginUrl = '$(link-login)';
+  if (!loginUrl || loginUrl.indexOf('$(') !== -1) loginUrl = 'login.html';
+  window.location.href = loginUrl;
+  return false;
+}
+
+// تحديث تلقائي صامت في الخلفية لبيانات الاستهلاك والرصيد والوقت المتبقي كل 3 ثوانٍ دون أي إعادة تحميل أو وميض
+(function startLiveStatusPolling() {
+  var isMikrotikLive = '$(logged-in)';
+  if (!isMikrotikLive || isMikrotikLive.indexOf('$(') !== -1) return;
+  setInterval(function() {
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/status?var=callBack&_t=' + Date.now(), true);
+      xhr.timeout = 4000;
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200 && xhr.responseText) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            if (!data) return;
+            if (data.logged_in === 'no' || data.logged_in === false) {
+              var loginTarget = '$(link-login)';
+              if (!loginTarget || loginTarget.indexOf('$(') !== -1) loginTarget = 'login.html';
+              window.location.replace(loginTarget);
+              return;
+            }
+            if (data.bytes_out !== void 0) {
+              var elOut = document.getElementById('bytes_out');
+              if (elOut) elOut.textContent = toArabicBytes(data.bytes_out);
+            }
+            if (data.bytes_in !== void 0) {
+              var elIn = document.getElementById('bytes_in');
+              if (elIn) elIn.textContent = toArabicBytes(data.bytes_in);
+            }
+            if (data.remain_bytes_total !== void 0) {
+              var elRem = document.getElementById('remain_bytes_total');
+              if (elRem) {
+                var rVal = String(data.remain_bytes_total).trim();
+                elRem.textContent = (!rVal || rVal === '-' || rVal.indexOf('$(') !== -1) ? 'مفتوح' : toArabicBytes(rVal);
+              }
+            }
+            if (data.uptime !== void 0) {
+              var elUp = document.getElementById('uptime');
+              if (elUp) elUp.textContent = toArabicTime(data.uptime);
+            }
+            if (data.session_time_left !== void 0) {
+              var elLeft = document.getElementById('session_time_left');
+              if (elLeft) {
+                var sVal = String(data.session_time_left).trim();
+                elLeft.textContent = (!sVal || sVal === '-' || sVal.indexOf('$(') !== -1) ? 'مفتوح' : toArabicTime(sVal);
+              }
+            }
+          } catch (eParse) {}
+        }
+      };
+      xhr.send();
+    } catch (ePoll) {}
+  }, 3000);
+})();
+
+window.Config = function(cfg) {
+  if (!cfg) return;
+  window.hotspotConfig = cfg;
+  if (typeof hotspotConfig !== 'undefined') {
+    hotspotConfig = cfg;
+  }
+  if (cfg['network-name']) {
+    var netName = String(cfg['network-name']).trim();
+    var brandEls = document.querySelectorAll('[data-network-name]');
+    for (var i = 0; i < brandEls.length; i++) {
+      brandEls[i].textContent = netName;
+    }
+    document.title = netName + ' - حالة الاتصال';
+  }
+  if (cfg['news-line']) {
+    var newsEls = document.querySelectorAll('[data-news-line]');
+    for (var j = 0; j < newsEls.length; j++) {
+      newsEls[j].textContent = String(cfg['news-line']).trim();
+    }
+  }
+  if (cfg['service-number']) {
+    var num = String(cfg['service-number']).trim();
+    var srvEls = document.querySelectorAll('[data-service-number]');
+    for (var sIdx = 0; sIdx < srvEls.length; sIdx++) {
+      srvEls[sIdx].textContent = 'خدمة العملاء: ' + num;
+    }
+    var cleanNum = num.replace(/\D/g, '');
+    var waNum = cleanNum.startsWith('967') ? cleanNum : ('967' + cleanNum);
+    var waLinks = document.querySelectorAll('.support-btn-whatsapp');
+    for (var k = 0; k < waLinks.length; k++) {
+      waLinks[k].href = 'whatsapp://send?phone=' + waNum + '&text=' + encodeURIComponent('مرحبا خدمة عملاء ' + (cfg['network-name'] ? String(cfg['network-name']).trim() : ''));
+    }
+    var telLinks = document.querySelectorAll('.support-btn-call, a[href^="tel:"]');
+    for (var l = 0; l < telLinks.length; l++) {
+      telLinks[l].href = 'tel:' + cleanNum;
+    }
+  }
+  if (Array.isArray(cfg.profiles) && document.getElementById('profiles')) {
+    var pBody = document.getElementById('profiles');
+    pBody.innerHTML = cfg.profiles.map(function(p) {
+      return '<tr><td>' + (p.price || '') + '</td><td>' + (p.time || '') + '</td><td>' + (p.transfer || '-') + '</td><td>' + (p.validity || '-') + '</td></tr>';
+    }).join('');
+  }
+  if (Array.isArray(cfg['sell-points']) && document.getElementById('sell-points')) {
+    var spBody = document.getElementById('sell-points');
+    spBody.innerHTML = cfg['sell-points'].map(function(s) {
+      return '<tr><td>' + (s.name || '') + '</td></tr>';
+    }).join('');
+  }
+  if (cfg['news-title']) {
+    var nt = document.getElementById('loan-news-title');
+    if (nt) nt.textContent = cfg['news-title'];
+  }
+  if (cfg['news-content']) {
+    var nc = document.getElementById('loan-news-content');
+    if (nc) nc.innerHTML = cfg['news-content'];
+  }
+  if (cfg['news-code']) {
+    var ncd = document.getElementById('loan-news-code');
+    if (ncd) ncd.textContent = cfg['news-code'];
+  }
+  if (cfg['news-extra-title']) {
+    var net = document.getElementById('loan-news-extra-title');
+    if (net) net.textContent = cfg['news-extra-title'];
+  }
+  if (cfg['news-extra-content']) {
+    var nec = document.getElementById('loan-news-extra-content');
+    if (nec) nec.textContent = cfg['news-extra-content'];
+  }
+  if (cfg['news-extra-badge']) {
+    var neb = document.getElementById('loan-news-extra-badge');
+    if (neb) neb.textContent = cfg['news-extra-badge'];
+  }
+  if (cfg['price-button'] === false) {
+    var pBtns = document.querySelectorAll('[data-price-button]');
+    for (var pb = 0; pb < pBtns.length; pb++) pBtns[pb].style.display = 'none';
+  }
+  if (cfg['sell-point-button'] === false) {
+    var spBtns = document.querySelectorAll('[data-sell-point-button]');
+    for (var spb = 0; spb < spBtns.length; spb++) spBtns[spb].style.display = 'none';
+  }
+  if (cfg['loan-button'] === false) {
+    var lnBtns = document.querySelectorAll('[data-loan-button]');
+    for (var lnb = 0; lnb < lnBtns.length; lnb++) lnBtns[lnb].style.display = 'none';
+  }
+  if (cfg['show-esterahah-button'] === true) {
+    var estBtnsShow = document.querySelectorAll('[data-esterahah-link]');
+    for (var ebs = 0; ebs < estBtnsShow.length; ebs++) estBtnsShow[ebs].style.display = 'inline-flex';
+  } else if (cfg['show-esterahah-button'] === false) {
+    var estBtnsHide = document.querySelectorAll('[data-esterahah-link]');
+    for (var ebh = 0; ebh < estBtnsHide.length; ebh++) estBtnsHide[ebh].style.display = 'none';
+  }
+  if (cfg['redirect-to-mobasher'] !== undefined) {
+    var mobLinks = document.querySelectorAll('[data-mobasher-link]');
+    for (var ml = 0; ml < mobLinks.length; ml++) {
+      if (cfg['redirect-to-mobasher'] === '') {
+        mobLinks[ml].style.display = 'none';
+      } else {
+        mobLinks[ml].setAttribute('href', cfg['redirect-to-mobasher']);
+      }
+    }
+  }
+  if (cfg['redirect-to-esterahah'] !== undefined) {
+    var estLinks = document.querySelectorAll('[data-esterahah-link]');
+    for (var el = 0; el < estLinks.length; el++) {
+      if (cfg['redirect-to-esterahah']) {
+        estLinks[el].setAttribute('href', cfg['redirect-to-esterahah']);
+      }
+    }
+  }
+  if (Array.isArray(cfg.speeds) && cfg.speeds.length > 0) {
+    statusSpeedLabelMap = {};
+    var listEl = document.getElementById('speedModalList');
+    var activeSpeeds = [];
+    for (var spIdx = 0; spIdx < cfg.speeds.length; spIdx++) {
+      var item = cfg.speeds[spIdx];
+      if (item.value === '1M/8M' && cfg['enable-ultra-speed'] === false) continue;
+      activeSpeeds.push(item);
+      statusSpeedLabelMap[item.value] = item.name;
+    }
+
+    var uRawNow = '$(username)';
+    var currentSpeedCode = '';
+    for (var cIdx = 0; cIdx < activeSpeeds.length; cIdx++) {
+      var scv = activeSpeeds[cIdx].value;
+      if (scv && uRawNow.toUpperCase().endsWith(String(scv).toUpperCase())) {
+        currentSpeedCode = scv;
+        break;
+      }
+    }
+    if (!currentSpeedCode) {
+      try { currentSpeedCode = localStorage.getItem('hotspot_speed') || ''; } catch (e) {}
+    }
+    if (!currentSpeedCode) {
+      for (var dIdx = 0; dIdx < activeSpeeds.length; dIdx++) {
+        if (activeSpeeds[dIdx].default === true) {
+          currentSpeedCode = activeSpeeds[dIdx].value;
+          break;
+        }
+      }
+    }
+    if (!currentSpeedCode && activeSpeeds.length > 0) currentSpeedCode = activeSpeeds[0].value;
+
+    if (listEl) {
+      var listHtml = '';
+      for (var mIdx = 0; mIdx < activeSpeeds.length; mIdx++) {
+        var spItem = activeSpeeds[mIdx];
+        var isAct = spItem.value === currentSpeedCode ? ' active' : '';
+        var recTag = spItem.recommended ? ' <span style="opacity:0.85;font-size:0.85em;color:var(--accent-gold);">(الموصى بها)</span>' : '';
+        var safeVal = String(spItem.value || '').replace(/'/g, "\\'");
+        var safeName = String(spItem.name || '').replace(/'/g, "\\'");
+        listHtml += '<div class="speed-card-option' + isAct + '" data-speed="' + (spItem.value || '') + '" data-speed-title="' + (spItem.name || '') + '" onclick="selectStatusSpeed(\'' + safeVal + '\', \'' + safeName + '\')">' +
+          '<div class="speed-card-indicator"><div class="speed-radio-dot"></div></div>' +
+          '<div class="speed-card-info"><span class="speed-card-name">' + (spItem.name || '') + recTag + '</span></div>' +
+          '</div>';
+      }
+      listEl.innerHTML = listHtml;
+    }
+
+    var spdNowEl = document.getElementById('sspeed');
+    var selDisplayNow = document.getElementById('selectedSpeedDisplay');
+    var finalLabel = statusSpeedLabelMap[currentSpeedCode] || formatSpeedLabel(currentSpeedCode);
+    if (spdNowEl) spdNowEl.textContent = finalLabel;
+    if (selDisplayNow) selDisplayNow.textContent = finalLabel;
+    var speedSelectBox = document.getElementById('speed');
+    if (speedSelectBox) {
+      var selBoxHtml = '<option value="" disabled hidden>أختيار سرعة الإنترنت</option>';
+      for (var sb = 0; sb < activeSpeeds.length; sb++) {
+        selBoxHtml += '<option value="' + activeSpeeds[sb].value + '" ' + (activeSpeeds[sb].value === currentSpeedCode ? 'selected' : '') + '>' + activeSpeeds[sb].name + '</option>';
+      }
+      speedSelectBox.innerHTML = selBoxHtml;
+      speedSelectBox.value = currentSpeedCode;
+    }
+  }
+  if (cfg['enable-loyalty-system'] === true) {
+    document.documentElement.classList.remove('loyalty-system-disabled');
+    var unreg = document.getElementById('loyalty-unregistered-section-status');
+    if (unreg) unreg.style.display = 'block';
+  } else if (cfg['enable-loyalty-system'] === false) {
+    document.documentElement.classList.add('loyalty-system-disabled');
+    var unregHide = document.getElementById('loyalty-unregistered-section-status');
+    if (unregHide) unregHide.style.display = 'none';
+    var regHide = document.getElementById('loyalty-registered-section-status');
+    if (regHide) regHide.style.display = 'none';
+  }
+};
+</script>
+<script src="config/config.js"></script>
+<script src="js/hotCookie.min.js"></script>
+<script src="js/templates.min.js"></script>
+<script src="js/hotOptions.min.js"></script>
 </body>
-</html>
+</html>$(else) { "logged_in": "$(logged-in)", "mac": "$(mac-esc)","sspeed" : "$(domain)_" ,"update" : "$(domain)_", "ip": "$(ip)", "bytes_in": "$(bytes-in)", "bytes_out": "$(bytes-out)", "remain_bytes_total": "$(remain-bytes-total)", "session_time_left":	"$(session-time-left)", "uptime": "$(uptime)", "bytesm": "m056fd9fdfdsffsdffdfd1697455$(username)dsfd6571fgfgfgfgdf53sdfdsfgsd14", "trial": "$(trial)", "action": "onStatusQuery" } $(endif)
