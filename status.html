@@ -121,17 +121,34 @@ function instantLogoutAction(isErase, btnEl) {
     }
   } catch (e) {}
 
+  if (document.logout) {
+    var eraseInput = document.getElementById('statusEraseCookieInput');
+    if (isErase) {
+      if (!eraseInput) {
+        eraseInput = document.createElement('input');
+        eraseInput.type = 'hidden';
+        eraseInput.name = 'erase-cookie';
+        eraseInput.id = 'statusEraseCookieInput';
+        document.logout.appendChild(eraseInput);
+      }
+      eraseInput.value = 'on';
+    } else {
+      if (eraseInput && eraseInput.parentNode) {
+        eraseInput.parentNode.removeChild(eraseInput);
+      }
+    }
+    // إذا كانت نافذة منبثقة أصلية لميكروتك
+    if (window.name === 'hotspot_status') {
+      return openLogout();
+    }
+    document.logout.submit();
+    return false;
+  }
+
   var logoutBase = '$(link-logout)';
   if (!logoutBase || logoutBase.indexOf('$(') !== -1) logoutBase = 'logout.html';
   var targetUrl = isErase ? (logoutBase + (logoutBase.indexOf('?') === -1 ? '?erase-cookie=on' : '&erase-cookie=on')) : logoutBase;
 
-  if (window.name === 'hotspot_status') {
-    try {
-      open(targetUrl, 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
-      window.close();
-      return false;
-    } catch (e) {}
-  }
   setTimeout(function() {
     window.location.href = targetUrl;
   }, 8);
