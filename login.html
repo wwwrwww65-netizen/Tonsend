@@ -65,6 +65,55 @@ return undefined;
 };
 }
 })();
+window.toArabicError = function(e) {
+if (!e || typeof e !== "string") return "";
+var raw = e.trim().toLowerCase();
+if (raw === "" || raw.indexOf("$(") !== -1) return "";
+var map = [
+{ key: "access denied at this time", msg: "بطاقة سهرة لا يمكن استخدامها في هذا الوقت" },
+{ key: "radius timeout", msg: "عزيزي المشترك نعتذر عن انقطاع الخدمة بسبب الصيانة" },
+{ key: "simultaneous session limit reached", msg: "المعذرة ، هذا الكرت مستخدم حالياً في جهاز آخر" },
+{ key: "no more sessions are allowed", msg: "المعذرة ، هذا الكرت مستخدم حالياً في جهاز آخر" },
+{ key: "uptime limit reached", msg: "عذراً لقد انتهى الوقت المتاح لك.." },
+{ key: "no more online time", msg: "عذراً لقد انتهى الوقت المتاح لك.." },
+{ key: "traffic limit", msg: "لا يمكنك تسجيل الدخول , انتهى رصيد هذه البطاقة" },
+{ key: "transfer limit reached", msg: "لا يمكنك تسجيل الدخول , انتهى رصيد هذه البطاقة" },
+{ key: "no valid profile found", msg: "لقد انتهت صلاحية هذه البطاقة" },
+{ key: "invalid calling-station-id", msg: "هذا الحساب مقترن بجهاز آخر!" },
+{ key: "allowed to log in from this mac", msg: "هذا الحساب مقترن بجهاز آخر" },
+{ key: "server is not responding", msg: "يرجى الانتظار، يتم الآن اعادة تشغيل الشبكة، هذه العملية قد تستغرق بعض الوقت" },
+{ key: "web browser did not send", msg: "يرجى محاولة ادخال الكرت مرة اخرى" },
+{ key: "invalid password", msg: "تاكد من كتابة كلمة المرور بشكل صحيح" },
+{ key: "invalid username or password", msg: "خطأ في إسم المستخدم او كلمة المرور حاول مرة اخرى" },
+{ key: "not found", msg: "اسم المستخدم غير موجود، تأكد من كتابة الكرت بشكل صحيح" }
+];
+for (var i = 0; i < map.length; i++) {
+if (raw.indexOf(map[i].key) !== -1) return map[i].msg;
+}
+return e;
+};
+window._errToastTimer = null;
+window.showErrorPopup = function(customMsg) {
+var c = document.querySelector(".error-container");
+var p = document.getElementById("error");
+if (customMsg && p) p.innerText = customMsg;
+if (c) {
+c.classList.add("active");
+setTimeout(function() { if (c) c.classList.add("zoom"); }, 20);
+clearTimeout(window._errToastTimer);
+window._errToastTimer = setTimeout(function() {
+if (typeof window.hideErrorPopup === "function") window.hideErrorPopup();
+}, 5000);
+}
+};
+window.hideErrorPopup = function() {
+clearTimeout(window._errToastTimer);
+var c = document.querySelector(".error-container");
+if (c) {
+c.classList.remove("active");
+c.classList.remove("zoom");
+}
+};
 </script>
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 <link rel="preload" href="fonts/almarai-800-ar.woff2" as="font" type="font/woff2" crossorigin>
@@ -406,8 +455,8 @@ d="M12 3C6.95 3 2.38 5.05 0 8.41L1.44 9.9C3.47 6.94 7.47 5 12 5c4.53 0 8.53 1.94
 <span class="screen-background-shape screen-background-shape7"></span>
 <span class="screen-background-shape screen-background-shape8"></span>
 </div>
-<div class="error-container">
-<div class="error" id="error-toast">
+<div class="error-container $(if error)active$(endif)">
+<div class="error" id="error-toast" onclick="if(typeof hideErrorPopup==='function')hideErrorPopup()">
 <div class="toast-icon-wrap">
 <svg viewBox="0 0 24 24">
 <path
@@ -415,7 +464,7 @@ d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2
 </svg>
 </div>
 <div class="fade-in">
-<p id="error"></p>
+<p id="error">$(if error)<script type="text/javascript">document.write(window.toArabicError ? window.toArabicError("$(error)") : "$(error)");</script>$(endif)</p>
 </div>
 </div>
 </div>
@@ -2732,6 +2781,11 @@ restoreBottomNavOnBlur();
 });
 }
 function resetWindowScrollToTop() {
+var toast = document.querySelector('.error-container');
+if (toast && toast.classList.contains('active')) return;
+var errEl = document.getElementById('error');
+if (errEl && errEl.innerText && errEl.innerText.trim() !== '') return;
+if (window.__mikrotikInitState && window.__mikrotikInitState.error && window.__mikrotikInitState.error.indexOf("$(") === -1 && window.__mikrotikInitState.error.trim() !== "") return;
 try {
 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 } catch (e) {
@@ -2762,7 +2816,10 @@ statusWasActive = false;
 statusObserver.observe(statusSection, { attributes: true, attributeFilter: ['class', 'style'] });
 }
 if (document.login) {
-document.login.addEventListener('submit', function () {
+document.login.addEventListener('submit', function (ev) {
+if (ev && ev.defaultPrevented) return;
+var errEl = document.getElementById('error');
+if (errEl && errEl.innerText && errEl.innerText.trim() !== '') return;
 setTimeout(resetWindowScrollToTop, 100);
 setTimeout(resetWindowScrollToTop, 350);
 });
@@ -2773,7 +2830,7 @@ window.addEventListener('hashchange', resetWindowScrollToTop);
 var e, m = new Date().toDateString();
 if (m.indexOf('Fri') !== -1) {
 e = document.getElementById('error');
-if (e) {
+if (e && (!e.innerText || e.innerText.trim() === '')) {
 e.innerText = "جمعة مباركة";
 if (typeof showErrorPopup === 'function') {
 showErrorPopup();

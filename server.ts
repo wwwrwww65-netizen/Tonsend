@@ -51,7 +51,7 @@ function getUptimeString(startTime: number): string {
 }
 
 // Function to render MikroTik template files with live simulated variables
-function renderMikrotikTemplate(filePath: string, state: typeof sessionState): string {
+function renderMikrotikTemplate(filePath: string, state: typeof sessionState, errorMsg: string = ''): string {
   if (!fs.existsSync(filePath)) return '';
   let content = fs.readFileSync(filePath, 'utf-8');
 
@@ -63,6 +63,17 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
     if (startIdx !== -1 && elseIdx !== -1 && endIdx !== -1 && elseIdx > startIdx) {
       content = content.substring(startIdx + '$(if var == "")'.length, elseIdx);
     }
+  }
+
+  // Handle error conditions
+  if (errorMsg) {
+    content = content.replace(/\$\(if error\)([\s\S]*?)\$\(endif\)/g, '$1');
+    content = content.replace(/\$\(error\)/g, errorMsg);
+    content = content.replace(/\$\(error-orig\)/g, errorMsg);
+  } else {
+    content = content.replace(/\$\(if error\)([\s\S]*?)\$\(endif\)/g, '');
+    content = content.replace(/\$\(error\)/g, '');
+    content = content.replace(/\$\(error-orig\)/g, '');
   }
 
   // Handle simple conditions
@@ -78,7 +89,6 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   content = content.replace(/\$\(if domain\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, state.speed ? '$1' : '$2');
   content = content.replace(/\$\(if chap-id\)([\s\S]*?)\$\(else\)([\s\S]*?)\$\(endif\)/g, '$1');
   content = content.replace(/\$\(if chap-id\)([\s\S]*?)\$\(endif\)/g, '$1');
-  content = content.replace(/\$\(if error\)([\s\S]*?)\$\(endif\)/g, '');
 
   // Replace MikroTik variables
   content = content.replace(/\$\(username\)/g, state.isLoggedIn ? state.username : '');
@@ -104,8 +114,6 @@ function renderMikrotikTemplate(filePath: string, state: typeof sessionState): s
   content = content.replace(/\$\(link-redirect-esc\)/g, '%2Fstatus');
   content = content.replace(/\$\(chap-id\)/g, '01');
   content = content.replace(/\$\(chap-challenge\)/g, 'abc123challenge');
-  content = content.replace(/\$\(error-orig\)/g, '');
-  content = content.replace(/\$\(error\)/g, '');
 
   return content;
 }
@@ -216,7 +224,8 @@ app.get(['/', '/login', '/login.html'], (req, res) => {
   }
 
   res.clearCookie('hotspot_is_logged_in', { path: '/' });
-  const rendered = renderMikrotikTemplate(path.join(__dirname, 'login.html'), sessionState);
+  const errorParam = typeof req.query.error === 'string' ? req.query.error : '';
+  const rendered = renderMikrotikTemplate(path.join(__dirname, 'login.html'), sessionState, errorParam);
   res.send(rendered);
 });
 

@@ -3202,23 +3202,28 @@ body.block-page-active .bottom-nav-bar {
 
 .error-container {
   position: fixed;
-  top: -120px;
-  right: 50%;
-  transform: translateX(50%);
-  z-index: 1000;
+  top: -140px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 9999999 !important;
   width: calc(100% - 32px);
   max-width: 460px;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s ease, opacity 0.3s ease;
   pointer-events: none;
+  opacity: 0;
 }
 
 .error-container.active {
   top: 16px;
+  top: max(16px, calc(env(safe-area-inset-top, 0px) + 12px));
+  opacity: 1;
   pointer-events: auto;
 }
 
 .error-container.zoom {
-  transform: translateX(50%) scale(1.02);
+  transform: scale(1.02);
 }
 
 .error {
