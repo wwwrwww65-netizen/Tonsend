@@ -47,6 +47,9 @@ let sessionState: SessionState = {
   mac: '44:65:7F:8A:2B:11',
 };
 
+// Variable to store card string for auto-login when applying services from status.html
+let pendingAutoLogin: string | null = null;
+
 // Periodic simulated byte counter increment
 setInterval(() => {
   if (sessionState.isLoggedIn) {
@@ -88,29 +91,40 @@ function renderMikrotikTemplate(filePath: string, req: express.Request): string 
   const errorMsg = (req.query.error as string) || '';
 
   // Process MikroTik conditionals $(if ...)...$(endif)
-  content = content.replace(/\$\(if chap-id\)[\s\S]*?\$\(endif\)/gi, '');
-  content = content.replace(/\$\(if refresh-timeout\)[\s\S]*?\$\(endif\)/gi, '');
-  content = content.replace(/\$\(if advert-pending == 'yes'\)[\s\S]*?\$\(endif\)/gi, '');
-  content = content.replace(/\$\(if login-by == 'trial'\)[\s\S]*?\$\(endif\)/gi, '');
-  content = content.replace(/\$\(if session-time-left\)[\s\S]*?\$\(endif\)/gi, '');
-  content = content.replace(/\$\(if blocked == 'yes'\)[\s\S]*?\$\(endif\)/gi, '');
-  content = content.replace(/\$\(if login-by-mac != 'yes'\)/gi, '');
-
   if (errorMsg) {
     content = content.replace(/\$\(if error\)([\s\S]*?)\$\(endif\)/gi, '$1');
   } else {
     content = content.replace(/\$\(if error\)[\s\S]*?\$\(endif\)/gi, '');
   }
 
+  content = content.replace(/\$\(if chap-id\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if refresh-timeout\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if advert-pending == 'yes'\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if login-by == 'trial'\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if session-time-left\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if blocked == 'yes'\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if popup == 'true'\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if popup\)[\s\S]*?\$\(endif\)/gi, '');
+  content = content.replace(/\$\(if login-by-mac != 'yes'\)/gi, '');
+  content = content.replace(/\$\(if login-by == 'trial'\)/gi, '');
+  content = content.replace(/\$\(elif\s+[^)]+\)/gi, '');
+  content = content.replace(/\$\(else\)/gi, '');
+  content = content.replace(/\$\(endif\)/gi, '');
+
   // Replace MikroTik variables
   const replacements: Record<string, string> = {
-    '$(link-login)': '/login',
+    'http://a.com': '/status',
+    'a.com': 'status',
+    '$(link-login)': pendingAutoLogin && filePath.endsWith('logout.html')
+      ? `/login?username=${encodeURIComponent(pendingAutoLogin)}`
+      : '/login',
     '$(link-login-only)': '/login',
     '$(link-status)': '/status',
     '$(link-logout)': '/logout',
     '$(link-orig)': '/status',
     '$(link-orig-esc)': '/status',
     '$(link-redirect)': '/status',
+    '$(link-redirect-esc)': '/status',
     '$(username)': sessionState.username,
     '$(uptime)': uptime,
     '$(bytes-in-nice)': bytesInNice,
@@ -130,10 +144,205 @@ function renderMikrotikTemplate(filePath: string, req: express.Request): string 
     content = content.split(key).join(val);
   }
 
-  // Clean any remaining unparsed $(...) macros safely
+  // Clean any remaining unparsed MikroTik $(...) variable tags safely without touching JavaScript code
   content = content.replace(/\$\([a-zA-Z0-9_-]+\)/g, '');
 
+  // Inject seamless auto-login synchronizer for status.html without modifying file on disk
+  if (filePath.endsWith('status.html')) {
+    const statusSyncScript = `
+<script>
+(function() {
+  function getFullUname() {
+    var uEl = document.getElementById('uname');
+    var rawCard = uEl ? uEl.value : '';
+    var cleanCard = rawCard.split('@')[0].trim();
+    if (!cleanCard) cleanCard = '${sessionState.username}';
+
+    var s = (document.getElementById('speed') && document.getElementById('speed').value) || '@512K/1M|';
+    var s1 = (document.getElementById('speedd') && document.getElementById('speedd').value) || '0|';
+    var s2 = (document.getElementById('speeddd') && document.getElementById('speeddd').value) || 'pm|';
+    var s3 = (document.getElementById('speedddd') && document.getElementById('speedddd').value) || 'all|';
+    var s4 = (document.getElementById('speeddddd') && document.getElementById('speeddddd').value) || '*no**|';
+    var s5 = (document.getElementById('speedddddd') && document.getElementById('speedddddd').value) || 'non***';
+
+    return cleanCard + s + s1 + s2 + s3 + s4 + s5;
+  }
+
+  function syncServices() {
+    var full = getFullUname();
+    if (full) {
+      document.cookie = 'uname=' + encodeURIComponent(full) + ';path=/;max-age=259200;SameSite=Lax';
+      try { localStorage.setItem('hotspot_uname', full); } catch(e) {}
+      var myForm = document.getElementById('my');
+      if (myForm) {
+        var inp = document.getElementById('server_sync_uname');
+        if (!inp) {
+          inp = document.createElement('input');
+          inp.type = 'hidden';
+          inp.id = 'server_sync_uname';
+          inp.name = 'uname';
+          myForm.appendChild(inp);
+        }
+        inp.value = full;
+
+        var appInp = document.getElementById('server_sync_apply');
+        if (!appInp) {
+          appInp = document.createElement('input');
+          appInp.type = 'hidden';
+          appInp.id = 'server_sync_apply';
+          appInp.name = 'apply_services';
+          myForm.appendChild(appInp);
+        }
+        appInp.value = '1';
+      }
+    }
+  }
+
+  var selects = ['speed', 'speedd', 'speeddd', 'speedddd', 'speeddddd', 'speedddddd'];
+  selects.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('change', syncServices);
+  });
+
+  var btn = document.getElementById('aa');
+  if (btn) {
+    btn.addEventListener('click', function() {
+      syncServices();
+    });
+  }
+})();
+</script>
+`;
+    content = content.replace('</body>', statusSyncScript + '</body>');
+  }
+
+  // Inject auto-login redirect helper for logout.html
+  if (filePath.endsWith('logout.html')) {
+    const logoutSyncScript = `
+<script>
+(function() {
+  try {
+    var form = document.getElementById('my');
+    if (form && !form.action.includes('username=')) {
+      var stored = localStorage.getItem('hotspot_uname');
+      if (stored) {
+        form.action = '/login?username=' + encodeURIComponent(stored);
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+`;
+    content = content.replace('</body>', logoutSyncScript + '</body>');
+  }
+
+  // Inject auto-login check for login.html if loaded with valid stored card
+  if (filePath.endsWith('login.html')) {
+    const loginSyncScript = `
+<script>
+(function() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    if (!params.get('error') && !params.get('stay') && !params.get('username')) {
+      var stored = localStorage.getItem('hotspot_uname');
+      if (stored && document.cookie.indexOf('uname=') !== -1) {
+        window.location.href = '/login?username=' + encodeURIComponent(stored);
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+`;
+    content = content.replace('</head>', loginSyncScript + '</head>');
+  }
+
   return content;
+}
+
+function parseCookies(header: string | undefined): Record<string, string> {
+  const list: Record<string, string> = {};
+  if (!header) return list;
+  header.split(';').forEach(cookie => {
+    let [name, ...rest] = cookie.split('=');
+    name = name?.trim();
+    if (name) {
+      const rawVal = rest.join('=').trim();
+      try {
+        list[name] = decodeURIComponent(rawVal);
+      } catch (e) {
+        list[name] = rawVal;
+      }
+    }
+  });
+  return list;
+}
+
+// /login routes (GET and POST)
+function handleAuth(rawUser: string, rawSpeed: string, req: express.Request, res: express.Response) {
+  let user = (rawUser || '777723089').trim();
+  let domain = '512K/1M|0|pm|all|*no**|non***';
+  let speed = rawSpeed || '512K/1M';
+
+  // Decode URI components if encoded (e.g. from hotCookie or query string)
+  try {
+    user = decodeURIComponent(user);
+  } catch (e) {}
+
+  // If username contains the MikroTik domain suffix from rem(): e.g. "777723089@1M/4M|0|pm|all|*yes**|non***"
+  if (user.includes('@')) {
+    const parts = user.split('@');
+    user = parts[0];
+    domain = parts[1];
+    speed = domain.split('|')[0];
+  } else if (speed.startsWith('@')) {
+    domain = speed.slice(1);
+    speed = domain.split('|')[0];
+  }
+
+  const cleanUser = user.trim();
+
+  // Test Card 1: Used on another device (الكرت مستخدم في جهاز آخر)
+  if (cleanUser === '999' || cleanUser.toLowerCase().includes('used')) {
+    return res.redirect('/login?error=simultaneous%20session%20limit%20reached');
+  }
+
+  // Test Card 2: Expired card / uptime limit (انتهى رصيد هذا الكرت)
+  if (cleanUser === '888' || cleanUser.toLowerCase().includes('expired')) {
+    return res.redirect('/login?error=uptime%20limit%20reached');
+  }
+
+  // Test Card 3: Profile expired (انتهت صلاحية الرصيد)
+  if (cleanUser === '777' || cleanUser.toLowerCase().includes('profile')) {
+    return res.redirect('/login?error=no%20valid%20profile%20found');
+  }
+
+  // Test Card 4: User not found (المستخدم غير موجود)
+  if (cleanUser === '000' || cleanUser.toLowerCase().includes('notfound')) {
+    return res.redirect('/login?error=user%20not%20found');
+  }
+
+  // Test Card 5: Tied to another MAC (مخصص لجهاز آخر)
+  if (cleanUser === '111' || cleanUser.toLowerCase().includes('mac')) {
+    return res.redirect('/login?error=invalid%20Calling-Station-Id');
+  }
+
+  sessionState.isLoggedIn = true;
+  sessionState.username = user;
+  sessionState.speed = speed;
+  sessionState.domain = domain;
+  sessionState.startTime = Date.now();
+  pendingAutoLogin = null;
+
+  res.cookie('hotspot_is_logged_in', '1', { path: '/' });
+  res.cookie('uname', encodeURIComponent(user + (domain ? '@' + domain : '')), { path: '/', maxAge: 259200000 });
+
+  // Serve intermediary page alogin.html as per README.md lifecycle map
+  const aloginPath = path.join(__dirname, 'alogin.html');
+  if (fs.existsSync(aloginPath)) {
+    const rendered = renderMikrotikTemplate(aloginPath, req);
+    return res.setHeader('Content-Type', 'text/html; charset=UTF-8').send(rendered);
+  }
+  return res.redirect('/status');
 }
 
 // /login routes (GET and POST)
@@ -148,7 +357,28 @@ app.get(['/login', '/login.html'], (req, res) => {
       uptime: getUptimeString(sessionState.startTime),
       bytes_in: String(sessionState.bytesIn),
       bytes_out: String(sessionState.bytesOut),
+      remain_bytes_total: String(sessionState.remainBytes),
+      remain_bytes_total_nice: formatBytes(sessionState.remainBytes),
     });
+  }
+
+  // Support direct GET login as used by hotCookie.min.js (login?username=...&password=...)
+  if (req.query.username) {
+    return handleAuth(req.query.username as string, (req.query.speed as string) || '', req, res);
+  }
+
+  // If pending auto-login is set from service customizer, re-authenticate immediately
+  if (pendingAutoLogin && !req.query.error && req.query.stay !== 'true') {
+    return handleAuth(pendingAutoLogin, '', req, res);
+  }
+
+  // If no error parameter, check if browser has a valid stored card in cookies from rem()
+  const cookies = parseCookies(req.headers.cookie);
+  const cookieUname = cookies['uname'] || cookies['uname_raw'];
+  const hasError = req.query.error;
+
+  if (cookieUname && cookieUname !== '' && !hasError && req.query.stay !== 'true') {
+    return handleAuth(cookieUname, '', req, res);
   }
 
   const loginFile = path.join(__dirname, 'login.html');
@@ -161,16 +391,8 @@ app.get(['/login', '/login.html'], (req, res) => {
 
 app.post(['/login', '/login.html'], (req, res) => {
   const username = (req.body.username as string) || (req.query.username as string) || '777723089';
-  const speed = (req.body.speed as string) || (req.query.speed as string) || '512K/1M';
-
-  sessionState.isLoggedIn = true;
-  sessionState.username = username;
-  sessionState.speed = speed;
-  sessionState.domain = speed.startsWith('@') ? speed.slice(1) : speed;
-  sessionState.startTime = Date.now();
-
-  res.cookie('hotspot_is_logged_in', '1', { path: '/' });
-  res.redirect('/status');
+  const speed = (req.body.speed as string) || (req.query.speed as string) || '';
+  return handleAuth(username, speed, req, res);
 });
 
 // /status routes
@@ -185,7 +407,10 @@ app.get(['/status', '/status.html'], (req, res) => {
       uptime: getUptimeString(sessionState.startTime),
       bytes_in: String(sessionState.bytesIn),
       bytes_out: String(sessionState.bytesOut),
+      bytes_in_nice: formatBytes(sessionState.bytesIn),
+      bytes_out_nice: formatBytes(sessionState.bytesOut),
       remain_bytes_total: String(sessionState.remainBytes),
+      remain_bytes_total_nice: formatBytes(sessionState.remainBytes),
     });
   }
 
@@ -197,10 +422,36 @@ app.get(['/status', '/status.html'], (req, res) => {
   return res.status(404).send('status.html not found');
 });
 
-// /logout routes
-app.get(['/logout', '/logout.html'], (req, res) => {
-  sessionState.isLoggedIn = false;
-  res.clearCookie('hotspot_is_logged_in', { path: '/' });
+// /logout routes with intermediary logout.html page as per README.md
+app.all(['/logout', '/logout.html'], (req, res) => {
+  const isApplying = req.query.apply_services === '1' || req.body?.apply_services === '1';
+  let targetUname = (req.query.uname as string) || (req.body?.uname as string) || '';
+
+  if (!targetUname) {
+    const cookies = parseCookies(req.headers.cookie);
+    targetUname = cookies['uname'] || cookies['uname_raw'] || '';
+  }
+
+  if (isApplying || (targetUname && targetUname !== '' && !req.query.disconnect && req.query.stay !== 'true')) {
+    try {
+      targetUname = decodeURIComponent(targetUname);
+    } catch (e) {}
+    pendingAutoLogin = targetUname;
+    if (targetUname.includes('@')) {
+      const parts = targetUname.split('@');
+      sessionState.username = parts[0];
+      sessionState.domain = parts[1];
+      sessionState.speed = parts[1].split('|')[0];
+    }
+    res.cookie('uname', encodeURIComponent(targetUname), { path: '/', maxAge: 259200000 });
+  } else {
+    // Normal logout or disconnect
+    pendingAutoLogin = null;
+    sessionState.isLoggedIn = false;
+    res.clearCookie('hotspot_is_logged_in', { path: '/' });
+    res.clearCookie('uname', { path: '/' });
+    res.clearCookie('uname_raw', { path: '/' });
+  }
 
   const logoutFile = path.join(__dirname, 'logout.html');
   if (fs.existsSync(logoutFile)) {
@@ -210,13 +461,14 @@ app.get(['/logout', '/logout.html'], (req, res) => {
   return res.redirect('/login');
 });
 
-// /alogin and /rlogin routes
-app.get(['/alogin', '/alogin.html'], (req, res) => {
+// /alogin and /rlogin routes with intermediary alogin.html as per README.md
+app.all(['/alogin', '/alogin.html'], (req, res) => {
   const aloginPath = path.join(__dirname, 'alogin.html');
   if (fs.existsSync(aloginPath)) {
-    return res.sendFile(aloginPath);
+    const rendered = renderMikrotikTemplate(aloginPath, req);
+    return res.setHeader('Content-Type', 'text/html; charset=UTF-8').send(rendered);
   }
-  res.redirect('/status');
+  return res.redirect('/status');
 });
 
 app.get(['/rlogin', '/rlogin.html'], (req, res) => {

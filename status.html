@@ -180,7 +180,7 @@
                         <!-- Track Background -->
                         <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round"/>
                         <!-- Active Colored Arc -->
-                        <path d="M 20 100 A 80 80 0 0 1 170 65" fill="none" stroke="url(#gaugeGradient)" stroke-width="14" stroke-linecap="round"/>
+                        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGradient)" stroke-width="14" stroke-linecap="round" id="gaugeActiveArc" pathLength="100" stroke-dasharray="100" stroke-dashoffset="25"/>
                     </svg>
 
                     <div class="gauge-content">
@@ -389,6 +389,7 @@
                 <form action="$(link-logout)" id="my" name="logout_ec" class="action-form">
                     <input type="hidden" name="erase-cookie" value="on">
                     <button class="pro-btn action-logout-btn" type="submit">
+                        <div class="btn-spinner" style="display:none;"></div>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                         <span>تسجيل الخروج</span>
                     </button>
@@ -398,6 +399,7 @@
                 <form action="$(link-logout)" id="aaa" name="logout_switch" class="action-form">
                     <input type="hidden" name="erase-cookie" value="on">
                     <button class="pro-btn action-disconnect-btn" onclick='return delrem();' type='submit'>
+                        <div class="btn-spinner red" style="display:none;"></div>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
                         <span>قطع الاتصال</span>
                     </button>
@@ -589,6 +591,124 @@
             modals.forEach(function(m) { m.style.display = 'none'; });
             resetNavToHome();
         }
+
+        // Attach loading state to logout and disconnect buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            var formMy = document.getElementById('my');
+            if (formMy) {
+                formMy.addEventListener('submit', function() {
+                    var btn = formMy.querySelector('.action-logout-btn');
+                    if (btn) {
+                        var span = btn.querySelector('span');
+                        var svg = btn.querySelector('svg');
+                        var spinner = btn.querySelector('.btn-spinner');
+                        if (svg) svg.style.display = 'none';
+                        if (spinner) spinner.style.display = 'inline-block';
+                        if (span) span.innerText = 'جاري الخروج...';
+                        btn.classList.add('is-loading');
+                    }
+                });
+            }
+
+            var formAaa = document.getElementById('aaa');
+            if (formAaa) {
+                formAaa.addEventListener('submit', function() {
+                    var btn = formAaa.querySelector('.action-disconnect-btn');
+                    if (btn) {
+                        var span = btn.querySelector('span');
+                        var svg = btn.querySelector('svg');
+                        var spinner = btn.querySelector('.btn-spinner');
+                        if (svg) svg.style.display = 'none';
+                        if (spinner) spinner.style.display = 'inline-block';
+                        if (span) span.innerText = 'جاري القطع...';
+                        btn.classList.add('is-loading');
+                    }
+                });
+            }
+
+            // Live Ticking Uptime Counter (عداد الوقت المستهلك الحي ثانية بثانية)
+            var uptimeElem = document.querySelector('.time-item.uptime .time-value');
+            if (uptimeElem) {
+                var initialText = uptimeElem.innerText.trim();
+                var totalSec = 0;
+                var hMatch = initialText.match(/(\d+)\s*h/i);
+                var mMatch = initialText.match(/(\d+)\s*m/i);
+                var sMatch = initialText.match(/(\d+)\s*s/i);
+                if (hMatch) totalSec += parseInt(hMatch[1], 10) * 3600;
+                if (mMatch) totalSec += parseInt(mMatch[1], 10) * 60;
+                if (sMatch) totalSec += parseInt(sMatch[1], 10);
+                if (!hMatch && !mMatch && !sMatch && !isNaN(parseInt(initialText, 10))) {
+                    totalSec = parseInt(initialText, 10);
+                }
+
+                setInterval(function() {
+                    totalSec++;
+                    var hours = Math.floor(totalSec / 3600);
+                    var mins = Math.floor((totalSec % 3600) / 60);
+                    var secs = totalSec % 60;
+                    var str = '';
+                    if (hours > 0) str += hours + 'h ';
+                    if (mins > 0 || hours > 0) str += mins + 'm ';
+                    str += secs + 's';
+                    uptimeElem.innerText = str;
+                }, 1000);
+            }
+
+            // Function to update progress bars and gauge arc accurately based on real data
+            function updateDynamicMeters(bytesIn, bytesOut, remainBytes, inNice, outNice, remNice) {
+                var downloadElem = document.querySelector('.metric-card.download .metric-number');
+                var uploadElem = document.querySelector('.metric-card.upload .metric-number');
+                var gaugeValElem = document.querySelector('.gauge-value');
+                var downloadBar = document.querySelector('.metric-card.download .metric-progress-fill');
+                var uploadBar = document.querySelector('.metric-card.upload .metric-progress-fill');
+                var activeArc = document.getElementById('gaugeActiveArc');
+
+                if (outNice && downloadElem) downloadElem.innerText = outNice;
+                if (inNice && uploadElem) uploadElem.innerText = inNice;
+                if (remNice && gaugeValElem) gaugeValElem.innerText = remNice;
+
+                var bOut = parseFloat(bytesOut) || 0;
+                var bIn = parseFloat(bytesIn) || 0;
+                var bRem = parseFloat(remainBytes) || 0;
+                var total = bOut + bIn + bRem;
+
+                if (total > 0 && activeArc) {
+                    var remainPct = Math.min(100, Math.max(0, Math.round((bRem / total) * 100)));
+                    activeArc.style.strokeDashoffset = (100 - remainPct).toString();
+                }
+                var netTotal = bOut + bIn;
+                if (netTotal > 0) {
+                    var dlPct = Math.min(100, Math.max(15, Math.round((bOut / netTotal) * 100)));
+                    var ulPct = Math.min(100, Math.max(15, Math.round((bIn / netTotal) * 100)));
+                    if (downloadBar) downloadBar.style.width = dlPct + '%';
+                    if (uploadBar) uploadBar.style.width = ulPct + '%';
+                }
+            }
+
+            // Periodic background check (polls status?var=callBack if available)
+            setInterval(function() {
+                try {
+                    fetch('status?var=callBack')
+                        .then(function(res) {
+                            if (res.ok) return res.json();
+                            throw new Error('No json');
+                        })
+                        .then(function(data) {
+                            if (data && data.logged_in === 'yes') {
+                                updateDynamicMeters(
+                                    data.bytes_in,
+                                    data.bytes_out,
+                                    data.remain_bytes_total,
+                                    data.bytes_in_nice,
+                                    data.bytes_out_nice,
+                                    data.remain_bytes_total_nice
+                                );
+                            }
+                        })
+                        .catch(function() {});
+                } catch(e) {}
+            }, 3000);
+        });
     </script>
 
  $(endif)
