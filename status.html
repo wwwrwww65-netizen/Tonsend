@@ -98,11 +98,68 @@
         <!-- Main Status View -->
         <div class="container mb-3" id="mainContainer">
             
-            <!-- 1. Top Live Stream Button (البث المباشر) -->
-            <a href="http://mub.yetech.co:88/" class="top-live-banner-btn w-100" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-                <span>البث المباشر والقنوات</span>
-            </a>
+            <!-- 1. Top Status Success Hero Card (حاوية نجاح تسجيل الدخول وتأكيد الاتصال) -->
+            <div class="hero-cloud-card daytime-cloud-theme status-hero-card">
+                <!-- Ambient Cloud Bubbles & Soft Sky Glow -->
+                <div class="cloud-ambient-bubble bubble-left" aria-hidden="true"></div>
+                <div class="cloud-ambient-bubble bubble-right" aria-hidden="true"></div>
+                <div class="cloud-sky-glow" aria-hidden="true"></div>
+
+                <!-- Live Online Pill Badge (متصل بالإنترنت الآن) -->
+                <div class="status-live-chip">
+                    <span class="live-dot-pulse"></span>
+                    <svg class="status-chip-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                        <circle cx="12" cy="20" r="1" fill="currentColor"/>
+                    </svg>
+                    <span>متصل بالإنترنت الآن</span>
+                </div>
+
+                <!-- Big Success Headline -->
+                <h1 class="status-success-title">تم تسجيل دخولك بنجاح !</h1>
+
+                <!-- Subtitle with Reconnect / Browse Link -->
+                <p class="status-success-sub">
+                    إذا لم يتم الاتصال تلقائياً اضغط <a href="$(link-orig)" class="status-reconnect-link">هنا</a>
+                </p>
+            </div>
+
+            <!-- 2. Ticker Reminder Banner (الشريط التذكيري العلوي) -->
+            <div class="ticker-wrap status-ticker-wrap">
+                <div class="ticker">
+                    <span class="item-collection-1">
+                        <span class="item">بسم الله الرحمن الرحيم { قل للمؤمنين يغضوا من أبصارهم } • لا تدع الإنترنت يلهيك عن الصلاة ➜</span>
+                    </span>
+                    <span class="item-collection-2">
+                        <span class="item">بسم الله الرحمن الرحيم { قل للمؤمنين يغضوا من أبصارهم } • لا تدع الإنترنت يلهيك عن الصلاة ➜</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- 3. Dual Quick Portal Buttons (الاستراحة والبث المباشر جوار بعض) -->
+            <div class="dual-portal-buttons-grid w-100">
+                <!-- زر الاستراحة -->
+                <a href="http://est.yetech.co/" class="portal-quick-btn rest-portal" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                        <line x1="6" y1="1" x2="6" y2="4"/>
+                        <line x1="10" y1="1" x2="10" y2="4"/>
+                        <line x1="14" y1="1" x2="14" y2="4"/>
+                    </svg>
+                    <span>الاستراحة</span>
+                </a>
+
+                <!-- زر البث المباشر -->
+                <a href="http://mub.yetech.co:88/" class="portal-quick-btn live-stream" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+                        <polyline points="17 2 12 7 7 2"/>
+                    </svg>
+                    <span>البث المباشر</span>
+                </a>
+            </div>
 
             <!-- Hidden SVG for ID compatibility -->
             <svg height="0" width="0" id="Layer_1" style="display:none;"></svg>
@@ -194,37 +251,17 @@
                 </div>
             </div>
 
-            <!-- 5. Main Action Buttons (تسجيل الخروج & قطع الاتصال) -->
-            <div class="status-actions-row w-100">
-                <!-- Form #my for standard logout -->
-                <form action="$(link-logout)" id="my" name="logout_ec" class="action-form">
-                    <input type="hidden" name="erase-cookie" value="on">
-                    <button class="pro-btn action-logout-btn" type="submit">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                        <span>تسجيل الخروج</span>
-                    </button>
-                </form>
-
-                <!-- Form #aaa for Disconnect / Switch Card with delrem() -->
-                <form action="$(link-logout)" id="aaa" name="logout_switch" class="action-form">
-                    <input type="hidden" name="erase-cookie" value="on">
-                    <button class="pro-btn action-disconnect-btn" onclick='return delrem();' type='submit'>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
-                        <span>قطع الاتصال</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- 6. Network Features & Active Services Card (معلومات الكرت والخدمات) -->
+            <!-- 5. Network Features & Active Services Card (معلومات الكرت والخدمات) -->
             <div class="services-info-card w-100">
                 <div class="card-subtitle-badge">⚙️ تفاصيل الخدمات النشطة في حسابك</div>
                 
                 <div class="service-badges-grid">
-                    <div class="service-badge-item">
+                    <div class="service-badge-item full-width">
                         <span class="badge-label">سرعتك الحالية:</span>
                         <span class="badge-val blue" id="spee">--</span>
                     </div>
-                    <div class="service-badge-item">
+                    <!-- Hidden visually per user request, preserving exact IDs for MikroTik/JS scripts -->
+                    <div class="service-badge-item d-none">
                         <span class="badge-label">المستخدمين:</span>
                         <span class="badge-val" id="shared">--</span>
                     </div>
@@ -232,7 +269,8 @@
                         <span class="badge-label">التصفح:</span>
                         <span class="badge-val green" id="web">--</span>
                     </div>
-                    <div class="service-badge-item">
+                    <!-- Hidden visually per user request, preserving exact IDs for MikroTik/JS scripts -->
+                    <div class="service-badge-item d-none">
                         <span class="badge-label">خدمة VPN:</span>
                         <span class="badge-val" id="vbn">--</span>
                     </div>
@@ -240,7 +278,8 @@
                         <span class="badge-label">التحديثات:</span>
                         <span class="badge-val amber" id="update">--</span>
                     </div>
-                    <div class="service-badge-item">
+                    <!-- Hidden visually per user request, preserving exact IDs for MikroTik/JS scripts -->
+                    <div class="service-badge-item d-none">
                         <span class="badge-label">الربط بالماك:</span>
                         <span class="badge-val" id="mac">--</span>
                     </div>
@@ -258,7 +297,7 @@
                 </table>
             </div>
 
-            <!-- 7. Service Customizer Controls (تخصيص السرعة والخدمات) -->
+            <!-- 6. Service Customizer Controls (تخصيص السرعة والخدمات) -->
             <div class="service-customizer-card w-100">
                 <div class="customizer-header">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -269,7 +308,7 @@
                 <input id='paswd' type="hidden" name="password">
 
                 <div class="row">
-                    <div class="col-6 mb-2">
+                    <div class="col-12 mb-2">
                         <div class="select-group">
                             <label for="speed" class="form-label text-right">اختر سرعتك</label>
                             <select id="speed" name="speed" onchange='return rem();'>
@@ -281,7 +320,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-6 mb-2">
+                    <!-- Hidden visually per user request, preserving exact IDs for MikroTik/JS scripts -->
+                    <div class="col-6 mb-2 d-none">
                         <div class="select-group">
                             <label for="speedd" class="form-label text-right">عدد المستخدمين</label>
                             <select id="speedd" name="speedd" onchange='return rem();'>
@@ -289,7 +329,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-6 mb-2">
+                    <!-- Hidden visually per user request, preserving exact IDs for MikroTik/JS scripts -->
+                    <div class="col-6 mb-2 d-none">
                         <div class="select-group">
                             <label for="speeddd" class="form-label text-right">خدمة VPN</label>
                             <select id="speeddd" name="speeddd" onchange='return rem();'>
@@ -321,7 +362,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-6 mb-2">
+                    <!-- Hidden visually per user request, preserving exact IDs for MikroTik/JS scripts -->
+                    <div class="col-6 mb-2 d-none">
                         <div class="select-group">
                             <label for="speedddddd" class="form-label text-right">الــمــاك</label>
                             <select id="speedddddd" name="speedddddd" onchange='return rem();'>
@@ -341,6 +383,27 @@
                 </button>
             </div>
 
+            <!-- 7. Main Action Buttons (تسجيل الخروج & قطع الاتصال) placed right above customer care -->
+            <div class="status-actions-row w-100 mb-2">
+                <!-- Form #my for standard logout -->
+                <form action="$(link-logout)" id="my" name="logout_ec" class="action-form">
+                    <input type="hidden" name="erase-cookie" value="on">
+                    <button class="pro-btn action-logout-btn" type="submit">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <span>تسجيل الخروج</span>
+                    </button>
+                </form>
+
+                <!-- Form #aaa for Disconnect / Switch Card with delrem() -->
+                <form action="$(link-logout)" id="aaa" name="logout_switch" class="action-form">
+                    <input type="hidden" name="erase-cookie" value="on">
+                    <button class="pro-btn action-disconnect-btn" onclick='return delrem();' type='submit'>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+                        <span>قطع الاتصال</span>
+                    </button>
+                </form>
+            </div>
+
             <!-- 8. Customer Care Card -->
             <div class="customer-care-card w-100 mb-2">
                 <div class="care-header">
@@ -357,12 +420,6 @@
                         <span>اتصال هاتفي</span>
                     </a>
                 </div>
-            </div>
-
-            <!-- 9. Partner Banners -->
-            <div class="partner-banners w-100">
-                <a href="http://est.yetech.co/" target="_blank"><img src="rest2.png" alt="بنر الشركاء" class="banner-img" /></a>
-                <a href="http://mub.yetech.co:88/" target="_blank"><img src="33.png" alt="بنر القنوات" class="banner-img" /></a>
             </div>
 
             <!-- Price Modal Card (نافذة الأسعار المنبثقة وسط الشاشة) -->
