@@ -104,11 +104,13 @@ function renderMikrotikTemplate(filePath: string, req: express.Request): string 
 
   // Replace MikroTik variables
   const replacements: Record<string, string> = {
+    '$(link-login)': '/login',
     '$(link-login-only)': '/login',
     '$(link-status)': '/status',
     '$(link-logout)': '/logout',
     '$(link-orig)': '/status',
     '$(link-orig-esc)': '/status',
+    '$(link-redirect)': '/status',
     '$(username)': sessionState.username,
     '$(uptime)': uptime,
     '$(bytes-in-nice)': bytesInNice,

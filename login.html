@@ -13,6 +13,7 @@
     <script src="js/hotInImprover.min.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <title>شبكة دمشق</title>
+    <meta name="description" content="بوابة تسجيل الدخول لشبكة الإنترنت اللاسلكي بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات" />
 </head>
 
 <body dir="rtl">
@@ -41,26 +42,54 @@ $(endif)
         <!-- Main Login Card -->
         <div class="container mb-3" id="mainContainer">
             
-            <!-- 1. Hero Cloud Header Card -->
-            <div class="hero-cloud-card">
-                <div class="cloud-ambient-glow" aria-hidden="true"></div>
-                <div class="wifi-badge-wrapper">
-                    <div class="wifi-pulse-ring"></div>
-                    <div class="wifi-badge">
-                        <svg height="26px" width="26px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 8.5C7.5 3 16.5 3 22 8.5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-                            <path d="M5 12C9 8 15 8 19 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-                            <path d="M8.5 15.5C10.5 13.5 13.5 13.5 15.5 15.5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-                            <circle cx="12" cy="19" r="1.5" fill="#ffffff"/>
+            <!-- 1. Daytime Cloud Hero Container -->
+            <div class="hero-cloud-card daytime-cloud-theme">
+                <!-- Ambient Cloud Bubbles & Soft Sky Glow -->
+                <div class="cloud-ambient-bubble bubble-left" aria-hidden="true"></div>
+                <div class="cloud-ambient-bubble bubble-right" aria-hidden="true"></div>
+                <div class="cloud-sky-glow" aria-hidden="true"></div>
+
+                <!-- Central Modern Wi-Fi Cloud Emblem -->
+                <div class="hero-emblem-container">
+                    <div class="emblem-orbital-ring ring-outer"></div>
+                    <div class="emblem-orbital-ring ring-inner"></div>
+                    <div class="emblem-core-badge">
+                        <!-- Modern Streamlined Wi-Fi Wave Icon -->
+                        <svg class="emblem-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2.5 8.2C7.8 2.9 16.2 2.9 21.5 8.2" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5.8 11.7C9.3 8.2 14.7 8.2 18.2 11.7" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9.1 15.2C10.7 13.6 13.3 13.6 14.9 15.2" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="12" cy="19.2" r="1.6" fill="#ffffff"/>
                         </svg>
                     </div>
                 </div>
-                <h1 class="netowrk-name">شبكة دمشق</h1>
-                <p class="hero-subtitle">• شبكة الإنترنت اللاسلكي •</p>
-                <p class="hero-tagline">كل ما تحتاجه .. في مكان واحد</p>
-                <div class="hero-status-tag">
-                    <span class="status-live-dot"></span>
-                    <span>تغطية نشطة فائقة السرعة</span>
+
+                <!-- Brand & Network Title Typography -->
+                <div class="hero-brand-block">
+                    <h1 class="netowrk-name hero-gradient-title">شبكة دمشق</h1>
+                    <div class="hero-service-kicker">
+                        <span class="kicker-sparkle">✦</span>
+                        <span class="hero-subtitle">بوابة الإنترنت اللاسلكي فائق السرعة</span>
+                        <span class="kicker-sparkle">✦</span>
+                    </div>
+                </div>
+
+                <!-- Quick Network Features Strip (3 Mini Metrics) -->
+                <div class="hero-feature-pills">
+                    <div class="hero-feature-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                        <span>خدمة 24/7</span>
+                    </div>
+                    <div class="hero-feature-divider"></div>
+                    <div class="hero-feature-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>اتصال مشفر</span>
+                    </div>
+                    <div class="hero-feature-divider"></div>
+                    <div class="hero-feature-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <span>سرعة مضاعفة</span>
+                    </div>
                 </div>
             </div>
 
@@ -218,47 +247,61 @@ $(endif)
                 <button class="pro-btn" onclick="toggle('price')" type="button"><span>الأسعار</span></button>
             </div>
 
-            <!-- Price Modal Card -->
-            <div id="price" class="modal-card-overlay w-100">
+            <!-- Price Modal Card (نافذة الأسعار المنبثقة وسط الشاشة) -->
+            <div id="price" class="modal-card-overlay w-100" onclick="if(event.target === this) closeAllModals()">
                 <div class="modal-card">
                     <div class="modal-header">
-                        <span class="modal-title">💳 جدول الأسعار والباقات</span>
-                        <button class="modal-close-btn" onclick="toggle('login')" type="button">✕ إغلاق</button>
+                        <div class="modal-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                            <span>جدول الأسعار والباقات</span>
+                        </div>
+                        <button class="modal-close-btn" onclick="closeAllModals()" type="button">✕ إغلاق</button>
                     </div>
-                    <div class="table-container">
-                        <table class="table responsive">
-                            <thead>
-                                <tr>
-                                    <th scope="col">الفئة</th>
-                                    <th scope="col">الوقت</th>
-                                    <th scope="col">الرصيد</th>
-                                    <th scope="col">الصلاحية</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>100 ريال</td><td>3 ساعات</td><td>1 جيجا</td><td>يوم واحد</td></tr>
-                                <tr><td>200 ريال</td><td>8 ساعات</td><td>2.5 جيجا</td><td>يومان</td></tr>
-                                <tr><td>500 ريال</td><td>24 ساعة</td><td>7 جيجا</td><td>7 أيام</td></tr>
-                                <tr><td>1000 ريال</td><td>60 ساعة</td><td>15 جيجا</td><td>15 يوماً</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="modal-body-scrollable">
+                        <div class="table-container">
+                            <table class="table responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">الفئة</th>
+                                        <th scope="col">الوقت</th>
+                                        <th scope="col">الرصيد</th>
+                                        <th scope="col">الصلاحية</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>100 ريال</td><td>3 ساعات</td><td>1 جيجا</td><td>يوم واحد</td></tr>
+                                    <tr><td>200 ريال</td><td>8 ساعات</td><td>2.5 جيجا</td><td>يومان</td></tr>
+                                    <tr><td>500 ريال</td><td>24 ساعة</td><td>7 جيجا</td><td>7 أيام</td></tr>
+                                    <tr><td>1000 ريال</td><td>60 ساعة</td><td>15 جيجا</td><td>15 يوماً</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <button class="modal-back-btn" onclick="toggle('login')" type="button">
-                        <span>العودة للرئيسية ➔</span>
+                    <button class="modal-back-btn" onclick="closeAllModals()" type="button">
+                        <span>رجوع ➔</span>
                     </button>
+                    <a href="tel:777723089" class="modal-contact-pill">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>خدمة العملاء: 777723089</span>
+                    </a>
                 </div>
             </div>
 
-            <!-- Location / POS Modal Card -->
-            <div id="location" class="modal-card-overlay w-100">
+            <!-- Location / POS Modal Card (نافذة نقاط البيع المنبثقة وسط الشاشة) -->
+            <div id="location" class="modal-card-overlay w-100" onclick="if(event.target === this) closeAllModals()">
                 <div class="modal-card">
                     <div class="modal-header">
-                        <span class="modal-title">📍 نقاط البيع والتوزيع</span>
-                        <button class="modal-close-btn" onclick="toggle('login')" type="button">✕ إغلاق</button>
+                        <div class="modal-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>نقاط البيع والتوزيع</span>
+                        </div>
+                        <button class="modal-close-btn" onclick="closeAllModals()" type="button">✕ إغلاق</button>
                     </div>
-                    <div class="pos-item-box">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        <span>جميع البقالات والمحلات المجاورة للشبكة</span>
+                    <div class="modal-body-scrollable">
+                        <div class="pos-item-box">
+                            <span>جميع البقالات والمحلات المجاورة للشبكة</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
                     </div>
                     <div class="table-container d-none">
                         <table class="table responsive">
@@ -266,13 +309,61 @@ $(endif)
                             <tbody></tbody>
                         </table>
                     </div>
-                    <button class="modal-back-btn" onclick="toggle('login')" type="button">
-                        <span>العودة للرئيسية ➔</span>
+                    <button class="modal-back-btn" onclick="closeAllModals()" type="button">
+                        <span>رجوع ➔</span>
                     </button>
                     <a href="tel:777723089" class="modal-contact-pill">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                         <span>خدمة العملاء: 777723089</span>
                     </a>
+                </div>
+            </div>
+
+            <!-- Offers Modal Card (نافذة العروض الحصرية المنبثقة وسط الشاشة) -->
+            <div id="offers" class="modal-card-overlay w-100" onclick="if(event.target === this) closeAllModals()">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <span>العروض والتطوير</span>
+                        </div>
+                        <button class="modal-close-btn" onclick="closeAllModals()" type="button">✕ إغلاق</button>
+                    </div>
+                    <div class="modal-body-scrollable">
+                        <div class="offers-notice-box">
+                            <div class="offers-notice-badge">
+                                <span class="pulse-dot"></span>
+                                <span>التطوير مستمر لإرضائكم</span>
+                            </div>
+
+                            <div class="offers-notice-icon-wrap">
+                                <div class="notice-icon-circle">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <h3 class="offers-notice-title">التطوير مستمر.. نتمنى لكم أوقاتاً ممتعة!</h3>
+
+                            <div class="offers-message-card">
+                                <p class="offers-text-paragraph">
+                                    عملاءنا الكرام، نعمل دائماً وبشكل مستمر على تطوير وتحديث خدمات شبكة دمشق نت ورفع جودة الاتصال وتحديث منظومة البث لنضمن لكم دائماً أفضل خدمة تليق بكم وتنال كامل رضاكم.
+                                </p>
+                                <p class="offers-text-paragraph highlight">
+                                    هدفنا وسعينا الأول هو تقديم تجربة تصفح ممتازة، وراحتكم ورضاكم هي غايتنا الدائمة.
+                                </p>
+                            </div>
+
+                            <div class="offers-quote-banner">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                <span>"شكراً جزيلاً لثقتكم واختياركم شبكة دمشق نت.. نتمنى لكم أسعد الأوقات"</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="modal-back-btn" onclick="closeAllModals()" type="button">
+                        <span>رجوع ➔</span>
+                    </button>
                 </div>
             </div>
 
@@ -280,22 +371,22 @@ $(endif)
 
         <!-- 7. Floating Bottom Navigation Bar (Mobile App Style) -->
         <nav class="bottom-nav-bar">
-            <button type="button" class="nav-item active" onclick="toggle('login'); setActiveNav(this)">
+            <button type="button" class="nav-item active" onclick="closeAllModals(); setActiveNav(this)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 <span>الرئيسية</span>
             </button>
-            <button type="button" class="nav-item" onclick="toggle('price'); setActiveNav(this)">
+            <button type="button" class="nav-item" onclick="openModal('price', this)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                 <span>الأسعار</span>
             </button>
-            <div class="nav-center-fab" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <div class="nav-center-fab" onclick="closeAllModals(); window.scrollTo({top: 0, behavior: 'smooth'})">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M2 8.5C7.5 3 16.5 3 22 8.5"/><path d="M5 12C9 8 15 8 19 12"/><path d="M8.5 15.5C10.5 13.5 13.5 13.5 15.5 15.5"/><circle cx="12" cy="19" r="1" fill="#ffffff"/></svg>
             </div>
-            <button type="button" class="nav-item" onclick="toggle('location'); setActiveNav(this)">
+            <button type="button" class="nav-item" onclick="openModal('location', this)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span>نقاط البيع</span>
             </button>
-            <button type="button" class="nav-item" onclick="window.open('https://wa.me/967777723089', '_blank')">
+            <button type="button" class="nav-item" onclick="openModal('offers', this)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>العروض</span>
             </button>
@@ -402,8 +493,63 @@ $(endif)
 
         function setActiveNav(element) {
             document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
-            element.classList.add('active');
+            if (element) {
+                element.classList.add('active');
+            }
         }
+
+        function resetNavToHome() {
+            var homeNav = document.querySelector('.bottom-nav-bar .nav-item:first-child');
+            if (homeNav) setActiveNav(homeNav);
+        }
+
+        function closeAllModals() {
+            var priceEl = document.getElementById('price');
+            var locEl = document.getElementById('location');
+            var offersEl = document.getElementById('offers');
+            if (priceEl) priceEl.style.display = 'none';
+            if (locEl) locEl.style.display = 'none';
+            if (offersEl) offersEl.style.display = 'none';
+            var loginEl = document.getElementById('login');
+            if (loginEl) loginEl.style.display = 'block';
+            resetNavToHome();
+        }
+
+        function openModal(modalId, navElem) {
+            var priceEl = document.getElementById('price');
+            var locEl = document.getElementById('location');
+            var offersEl = document.getElementById('offers');
+            var loginEl = document.getElementById('login');
+
+            // Hide everything first so no overlapping occurs
+            if (priceEl) priceEl.style.display = 'none';
+            if (locEl) locEl.style.display = 'none';
+            if (offersEl) offersEl.style.display = 'none';
+            if (loginEl) loginEl.style.display = 'none';
+
+            // Show target modal
+            var target = document.getElementById(modalId);
+            if (target) {
+                target.style.display = 'block';
+            }
+
+            if (navElem) {
+                setActiveNav(navElem);
+            }
+        }
+
+        function openOffersModal(elem) {
+            openModal('offers', elem);
+        }
+
+        // Ensure global toggle closes offers when transitioning to price/location/login
+        var _originalToggle = (typeof toggle === 'function') ? toggle : null;
+        window.toggle = function(name) {
+            openModal(name);
+            if (typeof _originalToggle === 'function') {
+                _originalToggle(name);
+            }
+        };
 
         function handleLoginClick(btn) {
             var unameVal = document.getElementById('uname').value.trim();

@@ -1,6 +1,6 @@
 {
-  "name": "الخالد نت - MikroTik Hotspot",
-  "description": "بوابة تسجيل الدخول لشبكة الخالد نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات",
+  "name": "دمشق نت - MikroTik Hotspot",
+  "description": "بوابة تسجيل الدخول لشبكة دمشق نت اللاسلكية بنظام ميكروتك (MikroTik Hotspot Portal) مع اختيار السرعات، حفظ الكروت، والباقات",
   "requestFramePermissions": [
     "camera"
   ],
